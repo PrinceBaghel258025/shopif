@@ -10,9 +10,20 @@ import { AuthContext } from "./services/context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function App() {
-  const pages = import.meta.glob("./pages/**/!(*.test.[jt]sx)*.([jt]sx)", { eager: true });
+  const breakpoints = {
+    base: "0px",
+    sm: "320px",
+    md: "768px",
+    lg: "960px",
+    xl: "1200px",
+    "2xl": "1536px",
+  };
+
+  const pages = import.meta.glob("./pages/**/!(*.test.[jt]sx)*.([jt]sx)", {
+    eager: true,
+  });
   const { t } = useTranslation();
-  const theme = extendTheme({});
+  const theme = extendTheme({ breakpoints });
   const queryClient = new QueryClient();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -22,20 +33,20 @@ export default function App() {
   const auth = useMemo(
     () => ({
       setToken: (token) => {
-        localStorage.setItem('knox-token', token);
+        localStorage.setItem("knox-token", token);
         setIsAuthenticated(true);
       },
-      getToken: () => localStorage.getItem('knox-token'),
-      getShop: () => localStorage.getItem('shop'),
+      getToken: () => localStorage.getItem("knox-token"),
+      getShop: () => localStorage.getItem("shop"),
       setShop: (shop) => {
-        localStorage.setItem('shop', shop);
+        localStorage.setItem("shop", shop);
       },
       removeShop: () => {
-        localStorage.removeItem('shop');
+        localStorage.removeItem("shop");
       },
       removeToken: () => {
-        localStorage.removeItem('knox-token');
-        localStorage.removeItem('shop');
+        localStorage.removeItem("knox-token");
+        localStorage.removeItem("shop");
         setIsAuthenticated(false);
       },
     }),
@@ -54,12 +65,15 @@ export default function App() {
     const token = auth.getToken();
     if (!token) throw new Error("No token found");
 
-    const response = await fetch("https://g9bvvvyptqo7uxa0.agspert-ai.com/api/token_test/", {
-      headers: {
-        Authorization: token,
-      },
-      method: 'OPTIONS',
-    });
+    const response = await fetch(
+      "https://g9bvvvyptqo7uxa0.agspert-ai.com/api/token_test/",
+      {
+        headers: {
+          Authorization: token,
+        },
+        method: "OPTIONS",
+      }
+    );
 
     if (!response.ok) throw new Error("Invalid token");
     return response.status;
@@ -82,7 +96,7 @@ export default function App() {
 
         const newTokenData = await fetchNewToken();
         if (newTokenData?.token) {
-          auth.setToken('Token ' + newTokenData.token);
+          auth.setToken("Token " + newTokenData.token);
           auth.setShop(newTokenData?.shop);
         } else {
           auth.removeToken();
@@ -105,7 +119,7 @@ export default function App() {
       setIsLoading(true);
       const newTokenData = await fetchNewToken();
       if (newTokenData?.token) {
-        auth.setToken('Token ' + newTokenData.token);
+        auth.setToken("Token " + newTokenData.token);
         auth.setShop(newTokenData?.shop);
       } else {
         auth.removeToken();
@@ -122,12 +136,14 @@ export default function App() {
 
   return (
     <PolarisProvider>
-      <AuthContext.Provider value={{
-        isLoading,
-        isAuthenticated,
-        ...auth,
-        refetchToken: retryAuthentication
-      }}>
+      <AuthContext.Provider
+        value={{
+          isLoading,
+          isAuthenticated,
+          ...auth,
+          refetchToken: retryAuthentication,
+        }}
+      >
         <ChakraProvider theme={theme}>
           <QueryClientProvider client={queryClient}>
             <BrowserRouter>

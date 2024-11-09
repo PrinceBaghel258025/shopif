@@ -129,8 +129,8 @@ const HomePage2 = () => {
   ];
 
   return (
-    <HStack p={3} alignItems={"start"}>
-      <Stack w={"70%"} h={"96dvh"} spacing={3} overflow={"scroll"}>
+    <Stack p={3} alignItems={"start"} direction={{ base: "column", md: "row" }}>
+      <Stack spacing={3} overflow={"scroll"} w={{ base: "100%", md: "70%" }}>
         <Stack className="step-1" spacing={0}>
           <Text>Click on link to get a demo experience</Text>
           <Link
@@ -254,7 +254,7 @@ const HomePage2 = () => {
         </Stack>
       </Stack>
 
-      <Stack w={"30%"}>
+      <Stack w={{ base: "100%", md: "30%" }}>
         <ProductStoryContext.Provider value={productStoryContextValue}>
           {isViewDemo ? (
             <Stack spacing={0}>
@@ -351,7 +351,7 @@ const HomePage2 = () => {
           )}
         </ProductStoryContext.Provider>
       </Stack>
-    </HStack>
+    </Stack>
   );
 };
 

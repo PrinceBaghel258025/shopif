@@ -23,6 +23,14 @@ import {
   AccordionPanel,
   IconButton,
   useToast,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
+  useDisclosure,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { FaArrowRight } from "react-icons/fa";
 import CarouselComponent from "../components/ProductStoryVisualizer/CarouselComponent";
@@ -109,12 +117,20 @@ const Card = memo(
     onEdit,
     templateId,
     className = "",
+    templateData,
+    contents,
+    sheetData,
   }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const toast = useToast();
     const tagBg = useColorModeValue("blue.50", "blue.900");
     const tagColor = useColorModeValue("blue.600", "blue.200");
     const queryClient = useQueryClient();
+
+    const modalOptions = useDisclosure();
+    const { onOpen } = modalOptions;
+
+    const isMobile = useBreakpointValue({ base: true, md: false });
 
     const [publishedIds, setPublishedIds] = useState(
       template?.products?.map((pro) => pro?.id) || []
@@ -190,14 +206,14 @@ const Card = memo(
                 selectedTags.length === 0
                   ? "Products Removed"
                   : isRepublish
-                    ? "Story Republished"
-                    : "Story Published",
+                  ? "Story Republished"
+                  : "Story Published",
               description:
                 selectedTags.length === 0
                   ? "All products have been successfully removed from the story."
                   : isRepublish
-                    ? "Your story has been successfully republished with the updated products."
-                    : "Your story has been successfully published.",
+                  ? "Your story has been successfully republished with the updated products."
+                  : "Your story has been successfully published.",
               status: "success",
               duration: 5000,
               isClosable: true,
@@ -304,114 +320,139 @@ const Card = memo(
     const buttonText = isRepublishMode() ? "Republish" : "Publish";
 
     return (
-      <Stack
-        bg="white"
-        borderRadius="xl"
-        borderWidth={templateId === template?.id ? 2 : 0}
-        borderColor={templateId === template?.id ? "green" : "white"}
-        className={className}
-        onClick={() => {
-          searchParams.set("templateId", template?.id);
-          setSearchParams(searchParams.toString());
+      <>
+        <Stack
+          bg="white"
+          borderRadius="xl"
+          borderWidth={templateId === template?.id ? 2 : 0}
+          borderColor={templateId === template?.id ? "green" : "white"}
+          className={className}
+          onClick={() => {
+            searchParams.set("templateId", template?.id);
+            setSearchParams(searchParams.toString());
 
-          onPreview(template);
-        }}
-      >
-        <Stack p={3}>
-          <HStack justifyContent="space-between">
-            <Text size="sm" fontWeight="semibold">
-              {template?.name}
-            </Text>
-            <HStack>
-              <Button
-                onClick={() => {
-                  onEdit(template);
-                }}
-                fontSize="xs"
-                size={"sm"}
-                p={2}
-                px={4}
-              >
-                Edit
-              </Button>
+            onPreview(template);
+          }}
+        >
+          <Stack p={3}>
+            <HStack justifyContent="space-between">
+              <Text size="sm" fontWeight="semibold">
+                {template?.name}
+              </Text>
+              <HStack>
+                <Button
+                  onClick={() => {
+                    onEdit(template);
+                  }}
+                  fontSize="xs"
+                  size={"sm"}
+                  p={2}
+                  px={4}
+                >
+                  Edit
+                </Button>
 
-              <Button
-                className="publish-story-btn"
-                fontSize="xs"
-                p={2}
-                px={4}
-                isLoading={isUpdatingStoryTemplate}
-                onClick={handleUpdateStoryTemplate}
-                isDisabled={isButtonDisabled}
-                size={"sm"}
-              >
-                {buttonText}
-              </Button>
+                <Button
+                  onClick={() => {
+                    isMobile && onOpen();
+                  }}
+                  fontSize="xs"
+                  size={"sm"}
+                  p={2}
+                  px={4}
+                  display={{ base: "flex", md: "none" }}
+                >
+                  Preview
+                </Button>
 
-              <Button
-                className="remove-all-btn"
-                fontSize="xs"
-                p={2}
-                px={4}
-                isLoading={isUpdatingStoryTemplate}
-                onClick={handleRemoveAll}
-                isDisabled={selectedTags.length === 0}
-                size={"sm"}
-              >
-                Remove All
-              </Button>
+                <Button
+                  className="publish-story-btn"
+                  fontSize="xs"
+                  p={2}
+                  px={4}
+                  isLoading={isUpdatingStoryTemplate}
+                  onClick={handleUpdateStoryTemplate}
+                  isDisabled={isButtonDisabled}
+                  size={"sm"}
+                >
+                  {buttonText}
+                </Button>
+
+                <Button
+                  className="remove-all-btn"
+                  fontSize="xs"
+                  p={2}
+                  px={4}
+                  isLoading={isUpdatingStoryTemplate}
+                  onClick={handleRemoveAll}
+                  isDisabled={selectedTags.length === 0}
+                  size={"sm"}
+                >
+                  Remove All
+                </Button>
+              </HStack>
             </HStack>
-          </HStack>
 
-          <Stack spacing={1}>
-            <Box>
-              <ProductSelector
-                availableProducts={availableProducts}
-                onSelect={(product) => onSelectProduct(template?.id, product)}
-                isDisabled={availableProducts.length === 0}
-              />
-            </Box>
-
-            <Stack direction="row" flexWrap="wrap" spacing={2}>
-              {selectedTags.map((product) => (
-                <ProductTag
-                  key={product?.id}
-                  tag={product?.name}
-                  onRemove={() => onRemoveProduct(template?.id, product)}
-                  tagBg={tagBg}
-                  tagColor={tagColor}
+            <Stack spacing={1}>
+              <Box>
+                <ProductSelector
+                  availableProducts={availableProducts}
+                  onSelect={(product) => onSelectProduct(template?.id, product)}
+                  isDisabled={availableProducts.length === 0}
                 />
-              ))}
+              </Box>
+
+              <Stack direction="row" flexWrap="wrap" spacing={2}>
+                {selectedTags.map((product) => (
+                  <ProductTag
+                    key={product?.id}
+                    tag={product?.name}
+                    onRemove={() => onRemoveProduct(template?.id, product)}
+                    tagBg={tagBg}
+                    tagColor={tagColor}
+                  />
+                ))}
+              </Stack>
             </Stack>
           </Stack>
+
+          {selectedTags?.length !== 0 && (
+            <CardAccordion
+              label={
+                <Text fontWeight={"semibold"}>
+                  {hasChanges && filterNewAddedProducts?.length !== 0
+                    ? "Products"
+                    : "Live Products"}
+                </Text>
+              }
+              body={
+                <>
+                  {selectedTags?.map((product) => {
+                    return (
+                      <ProductCard
+                        key={product?.id}
+                        product={product}
+                        onRemove={() => onRemoveProduct(template?.id, product)}
+                        filterNewAddedProducts={filterNewAddedProducts}
+                      />
+                    );
+                  })}
+                </>
+              }
+            />
+          )}
         </Stack>
 
-        {selectedTags?.length !== 0 && (
-          <CardAccordion
-            label={
-              <Text fontWeight={"semibold"}>
-                {hasChanges && filterNewAddedProducts?.length !== 0
-                  ? "Products"
-                  : "Live Products"}
-              </Text>
-            }
-            body={
-              <>
-                {selectedTags?.map((product) => {
-                  return (
-                    <ProductCard
-                      key={product?.id}
-                      product={product}
-                      onRemove={() => onRemoveProduct(template?.id, product)}
-                      filterNewAddedProducts={filterNewAddedProducts}
-                    />
-                  );
-                })}
-              </>
-            }
-          />
-        )}
-      </Stack>
+        <Stack display={{ base: "flex", md: "none" }}>
+          <DrawerWrapper modalOptions={modalOptions}>
+            <StoryPreview
+              templateData={templateData}
+              contents={contents}
+              sheetData={sheetData}
+            />
+          </DrawerWrapper>
+        </Stack>
+      </>
     );
   }
 );
@@ -642,12 +683,10 @@ const Stories = () => {
   return (
     <ProductStoryContext.Provider value={productStoryContextValue}>
       <ProductDriverContext.Provider value={{ driver: driverObj }}>
-        <HStack p={5} h={"100dvh"}>
+        <Stack p={5} direction={{ base: "column", md: "row" }}>
           <Stack
             spacing={3}
-            // w={contents?.length > 0 || sheetData?.length > 0 ? "70%" : "100%"}
-            w={"70%"}
-            h={"100%"}
+            w={{ base: "100%", md: "70%" }}
             overflowY={"scroll"}
           >
             {storyTemplates
@@ -665,53 +704,24 @@ const Stories = () => {
                   onPreview={handlePreview}
                   onEdit={handleEdit}
                   templateId={Number(templateId)}
+                  templateData={templateData}
+                  contents={contents}
+                  sheetData={sheetData}
                 />
               ))}
           </Stack>
 
-          {/* {(contents?.length > 0 || sheetData?.length > 0) && ( */}
-          <Stack w="30%" alignItems="center" spacing={0}>
-            {templateData && (
-              <Text fontSize={"lg"} fontWeight={"semibold"}>
-                {templateData?.name}
-              </Text>
-            )}
-
-            <Stack
-              className="preview-experience-card"
-              w="277.4px"
-              h="572.85px"
-              borderWidth={5}
-              borderColor="black"
-              borderRadius={50}
-              overflow="hidden"
-              boxShadow="lg"
-              position="relative"
-            >
-              {!templateData ? (
-                <Stack
-                  alignSelf={"center"}
-                  mt={250}
-                  textAlign={"center"}
-                  spacing={0}
-                >
-                  <Text fontWeight={"semibold"} fontSize={"lg"}>
-                    Select Story Template
-                  </Text>
-                  <Text fontWeight={"semibold"} fontSize={"lg"}>
-                    for Preview
-                  </Text>
-                </Stack>
-              ) : (
-                <CarouselComponent
-                  productData={contents || []}
-                  defaultSheetData={sheetData || []}
-                />
-              )}
-            </Stack>
+          <Stack
+            display={{ base: "none", md: "flex" }}
+            w={{ base: "100%", md: "30%" }}
+          >
+            <StoryPreview
+              templateData={templateData}
+              contents={contents}
+              sheetData={sheetData}
+            />
           </Stack>
-          {/* )} */}
-        </HStack>
+        </Stack>
       </ProductDriverContext.Provider>
     </ProductStoryContext.Provider>
   );
@@ -787,6 +797,62 @@ const CardAccordion = ({ label, body, headerStyles }) => {
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
+  );
+};
+
+const StoryPreview = ({ templateData, contents, sheetData }) => {
+  return (
+    <Stack alignItems="center" spacing={0}>
+      {templateData && (
+        <Text fontSize={"lg"} fontWeight={"semibold"}>
+          {templateData?.name}
+        </Text>
+      )}
+
+      <Stack
+        className="preview-experience-card"
+        w="277.4px"
+        h="572.85px"
+        borderWidth={5}
+        borderColor="black"
+        borderRadius={50}
+        overflow="hidden"
+        boxShadow="lg"
+        position="relative"
+      >
+        {!templateData ? (
+          <Stack alignSelf={"center"} mt={250} textAlign={"center"} spacing={0}>
+            <Text fontWeight={"semibold"} fontSize={"lg"}>
+              Select Story Template
+            </Text>
+            <Text fontWeight={"semibold"} fontSize={"lg"}>
+              for Preview
+            </Text>
+          </Stack>
+        ) : (
+          <CarouselComponent
+            productData={contents || []}
+            defaultSheetData={sheetData || []}
+          />
+        )}
+      </Stack>
+    </Stack>
+  );
+};
+
+const DrawerWrapper = ({ children, modalOptions }) => {
+  const { isOpen, onClose } = modalOptions;
+
+  return (
+    <Drawer onClose={onClose} isOpen={isOpen} size={"sm"}>
+      <DrawerOverlay />
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerBody>
+          <Stack>{children}</Stack>
+        </DrawerBody>
+      </DrawerContent>
+    </Drawer>
   );
 };
 
