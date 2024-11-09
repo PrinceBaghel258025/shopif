@@ -4,7 +4,8 @@
   "main": "web/index.js",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "run-p -sr vite:dev shopify:dev",
+    "dev": "shopify app dev",
+    "ext:dev": "run-p -sr vite:dev",
     "build": "run-s vite:build shopify:build",
     "deploy": "run-s vite:build cleanup shopify:deploy",
     "shopify": "shopify",

@@ -3,7 +3,7 @@
 client_id = "b592f6b30431fac8d607f05d8c76bb1c"
 name = "vite-store-ext"
 handle = "vite-store-ext"
-application_url = "https://decor-niger-collect-weekly.trycloudflare.com"
+application_url = "https://thu-produce-club-planning.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://decor-niger-collect-weekly.trycloudflare.com/auth/callback",
-  "https://decor-niger-collect-weekly.trycloudflare.com/auth/shopify/callback",
-  "https://decor-niger-collect-weekly.trycloudflare.com/api/auth/callback"
+  "https://thu-produce-club-planning.trycloudflare.com/auth/callback",
+  "https://thu-produce-club-planning.trycloudflare.com/auth/shopify/callback",
+  "https://thu-produce-club-planning.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
