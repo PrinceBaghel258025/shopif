@@ -130,7 +130,12 @@ const HomePage2 = () => {
 
   return (
     <Stack p={3} alignItems={"start"} direction={{ base: "column", md: "row" }}>
-      <Stack spacing={3} overflow={"scroll"} w={{ base: "100%", md: "70%" }}>
+      <Stack
+        spacing={3}
+        overflow={"scroll"}
+        w={{ base: "100%", md: "70%" }}
+        h={"96dvh"}
+      >
         <Stack className="step-1" spacing={0}>
           <Text>Click on link to get a demo experience</Text>
           <Link
