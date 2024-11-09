@@ -8,17 +8,30 @@
 
 <script>
   const home = {{ request.path | json }}
+  window.productId = {{ product | json }};
+  window.productHandle = {{ product.handle | json }};
 </script>
 
 {% schema %}
 {
-  "name": "Sample React Extension",
+  "name": "Product Story",
   "templates": [
-    "page"
+    "product"
   ],
   "target": "section",
   "settings": [
-
+    {
+      "type": "text",
+      "id": "story_title",
+      "label": "Story Title",
+      "default": "Product Story"
+    },
+    {
+      "type": "richtext",
+      "id": "default_story",
+      "label": "Default Story",
+      "default": "<p>Discover the unique story behind this product...</p>"
+    }
   ]
 }
 {% endschema %}
