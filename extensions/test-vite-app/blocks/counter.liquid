@@ -8,8 +8,7 @@
 
 <script>
   const home = {{ request.path | json }}
-  window.productId = {{ product | json }};
-  window.productHandle = {{ product.handle | json }};
+  window.product = {{ product | json }};
 </script>
 
 {% schema %}
