@@ -324,7 +324,7 @@ const Card = memo(
         <Stack
           bg="white"
           borderRadius="xl"
-          borderWidth={templateId === template?.id ? 2 : 0}
+          borderWidth={templateId === template?.id ? 1 : 0}
           borderColor={templateId === template?.id ? "green" : "white"}
           className={className}
           onClick={() => {
@@ -683,7 +683,7 @@ const Stories = () => {
   return (
     <ProductStoryContext.Provider value={productStoryContextValue}>
       <ProductDriverContext.Provider value={{ driver: driverObj }}>
-        <Stack p={5} direction={{ base: "column", md: "row" }}>
+        <Stack p={5} direction={{ base: "column", md: "row" }} h={"100dvh"}>
           <Stack
             spacing={3}
             w={{ base: "100%", md: "70%" }}
