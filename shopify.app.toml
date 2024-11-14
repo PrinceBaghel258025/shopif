@@ -3,7 +3,7 @@
 client_id = "b592f6b30431fac8d607f05d8c76bb1c"
 name = "vite-store-ext"
 handle = "vite-store-ext"
-application_url = "https://basement-downloads-minor-self.trycloudflare.com"
+application_url = "https://knew-streaming-northern-davis.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://basement-downloads-minor-self.trycloudflare.com/auth/callback",
-  "https://basement-downloads-minor-self.trycloudflare.com/auth/shopify/callback",
-  "https://basement-downloads-minor-self.trycloudflare.com/api/auth/callback"
+  "https://knew-streaming-northern-davis.trycloudflare.com/auth/callback",
+  "https://knew-streaming-northern-davis.trycloudflare.com/auth/shopify/callback",
+  "https://knew-streaming-northern-davis.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
