@@ -70,11 +70,15 @@ app.get("/api/knox-token", async (_req, res) => {
     last_name: "a",
   };
   console.log("body", body, shopData.body?.data?.shop);
-  const response = await axios.post("https://g9bvvvyptqo7uxa0.agspert-ai.com/shopify/auth/login/", JSON.stringify(body), {
-    headers: {
-      "Content-Type": "application/json",
+  const response = await axios.post(
+    "https://g9bvvvyptqo7uxa0.agspert-ai.com/shopify/auth/login/",
+    JSON.stringify(body),
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
-  })
+  );
   // const response = await fetch(
   //   "https://g9bvvvyptqo7uxa0.agspert-ai.com/shopify/auth/login/",
   //   {
@@ -140,12 +144,24 @@ app.get("/api/products", async (_req, res) => {
   try {
     const productsData = await client.request(`
       query {
-        products(first: 10) {
+        products(first: 100) {
           edges {
             node {
               id
               title
               description
+              handle
+              metafields(first: 10){
+                edges{
+                  node{
+                    id
+                    key
+                    value
+                    jsonValue
+                    createdAt
+                  }
+                }
+              }
             }
           }
         }
@@ -172,6 +188,103 @@ app.post("/api/products", async (_req, res) => {
     error = e.message;
   }
   res.status(status).send({ success: status === 200, error });
+});
+
+app.post("/api/themes/update-metafields", async (req, res) => {
+  const { showProductStory, selectedProductId } = req.body;
+
+  try {
+    const client = new shopify.api.clients.Graphql({
+      session: res.locals.shopify.session,
+    });
+
+    // Update metafields to control display of the #root section
+    const response = await client.query({
+      data: {
+        query: `
+          mutation updateProductMetafields($id: ID!, $showProductStory: String!) {
+            productUpdate(
+              input: {
+                id: $id
+                metafields: [
+                  {
+                    namespace: "custom"
+                    key: "show_product_story"
+                    value: $showProductStory
+                    type: "single_line_text_field"
+                  }
+                ]
+              }
+            ) {
+              product {
+                id
+              }
+              userErrors {
+                field
+                message
+              }
+            }
+          }
+        `,
+        variables: {
+          id: `gid://shopify/Product/${selectedProductId}`,
+          showProductStory: showProductStory.toString(),
+        },
+      },
+    });
+
+    // Check for user errors
+    if (response.body.data?.productUpdate?.userErrors?.length > 0) {
+      throw new Error(response.body.data.productUpdate.userErrors[0].message);
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "Metafields updated successfully",
+      data: response.body.data,
+    });
+  } catch (error) {
+    console.error("Failed to update metafields:", error);
+    res.status(500).send({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+app.get("/api/themes", async (_req, res) => {
+  const client = new shopify.api.clients.Graphql({
+    session: res.locals.shopify.session,
+  });
+
+  try {
+    const themesData = await client.request(`
+      query  {
+         themes(first: 100) {
+              edges {
+              node {
+                  id
+                  name
+                  role
+                  processing
+                  createdAt
+                  updatedAt
+                  themeStoreId
+                  processingFailed
+                  prefix
+                }
+              }
+            }
+          }
+      `);
+
+    const themes = themesData.data.themes.edges.map((edge) => edge.node);
+
+    res.status(200).send(themes);
+  } catch (error) {
+    console.log(`Failed to fetch themes: ${error.message}`);
+    res.status(500).send({ error: error.message });
+  }
 });
 
 app.post("/webhooks/app-uninstalled", express.json(), (req, res) => {

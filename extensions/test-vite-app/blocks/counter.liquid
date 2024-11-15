@@ -1,14 +1,19 @@
-<div id="root">
-  {% liquid
-    # Relative to entrypointsDir
-    render 'vite-tag' with 'theme.css'
-    render 'vite-tag' with 'theme.jsx'
-  %}
-</div>
+{% if product.metafields.custom.show_product_story == 'true' %}
+  <div id="root">
+    {% liquid
+      # Relative to entrypointsDir
+      render 'vite-tag' with 'theme.css'
+      render 'vite-tag' with 'theme.jsx'
+    %}
+  </div>
+{% endif %}
 
 <script>
   const home = {{ request.path | json }}
   window.product = {{ product | json }};
+  window.productMetafields = {
+    showProductStory: {{ product.metafields.custom.show_product_story | json | default: 'false' }}
+  };
 </script>
 
 {% schema %}

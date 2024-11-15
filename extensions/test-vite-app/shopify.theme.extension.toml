@@ -1,2 +1,15 @@
+[[extensions]]
 name = "test-vite-app"
+handle = "test-vite-app"
 type = "theme"
+
+[extensions.settings]
+    [[extensions.targeting]]
+    target = "section"
+    module = { import = "./blocks/counter.liquid" }
+    auto_append = true
+
+    [extensions.capabilities]
+    api_access = true
+    block_progress = true
+    network_access = true

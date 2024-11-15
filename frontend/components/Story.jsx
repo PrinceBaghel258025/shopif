@@ -18,6 +18,9 @@ const Story = () => {
   };
 
   const shopifyProductData = window.product;
+  const productMetafields = window.productMetafields;
+
+  console.log("productMetafields==>", productMetafields);
 
   const { data: storyData, isError: isStoryDataError } = useGetStory({
     productId: shopifyProductData?.id,
