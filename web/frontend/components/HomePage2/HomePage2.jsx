@@ -541,16 +541,31 @@ const TopCardsPopover = ({ modalOptions, selectedTabIndex }) => {
                 onTabChange={setSelectedTab}
               >
                 <Stack alignItems={"center"}>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
+                  <Text>
+                    Unique Experiences Lorem ipsum dolor sit amet consectetur
+                    adipisicing elit. Natus adipisci saepe voluptate recusandae
+                    fuga fugit esse! Nesciunt reprehenderit iure accusantium in,
+                    minima odio asperiores repellendus voluptatibus placeat
+                    velit eos explicabo.
+                  </Text>
                 </Stack>
                 <Stack alignItems={"center"}>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
+                  <Text>
+                    Unique Links Lorem ipsum dolor sit amet consectetur
+                    adipisicing elit. Natus adipisci saepe voluptate recusandae
+                    fuga fugit esse! Nesciunt reprehenderit iure accusantium in,
+                    minima odio asperiores repellendus voluptatibus placeat
+                    velit eos explicabo.
+                  </Text>
                 </Stack>
                 <Stack alignItems={"center"}>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
+                  <Text>
+                    Live Products Lorem ipsum dolor sit amet consectetur
+                    adipisicing elit. Atque et eaque quidem quisquam dignissimos
+                    est delectus fugit labore quasi iusto. Harum debitis
+                    deleniti molestias accusamus nihil, suscipit incidunt sunt
+                    adipisci.
+                  </Text>
                 </Stack>
               </TabbedContent>
             </Stack>
