@@ -31,6 +31,7 @@ import {
   DrawerBody,
   useDisclosure,
   useBreakpointValue,
+  Switch,
 } from "@chakra-ui/react";
 import { FaArrowRight } from "react-icons/fa";
 import CarouselComponent from "../components/ProductStoryVisualizer/CarouselComponent";
@@ -54,9 +55,10 @@ import { MdRemoveCircleOutline } from "react-icons/md";
 import { PRODUCT_LIST_QUERY_KEY } from "../apiHooks/ApiHooksQueryKeys";
 import { useProductMetafields } from "../apiHooks/useThemes";
 import AddSection from "../components/AddSection";
+import { useGetSingleProduct } from "../apiHooks/useShopifyProduct";
 
 // Memoized Tag component
-const ProductTag = memo(({ tag, onRemove, tagBg, tagColor, product }) => (
+const ProductTag = memo(({ tag, onRemove, tagBg, tagColor }) => (
   <Tag
     size="sm"
     borderRadius="full"
@@ -65,14 +67,10 @@ const ProductTag = memo(({ tag, onRemove, tagBg, tagColor, product }) => (
     color={tagColor}
     p={1}
     px={3}
-    w={"100%"}
-    justifyContent={"space-between"}
   >
     <TagLabel>{tag}</TagLabel>
-    <HStack>
-      <AddSection product={product} />
-      <TagCloseButton onClick={() => onRemove(tag)} />
-    </HStack>
+
+    <TagCloseButton onClick={() => onRemove(tag)} />
   </Tag>
 ));
 
@@ -203,10 +201,12 @@ const Card = memo(
       };
 
       // Added Product List
-      const addProductMetaData = selectedTags?.map((pro) => ({
-        id: Number(pro?.source_id),
-        story: true,
-      }));
+      const addProductMetaData = selectedTags
+        ?.filter((pro) => pro && pro.source_id)
+        .map((pro) => ({
+          id: Number(pro.source_id),
+          story: true,
+        }));
 
       const productList = products?.filter((pro) =>
         publishedIds?.includes(pro?.id)
@@ -217,10 +217,12 @@ const Card = memo(
       );
 
       // Removed Product List
-      const removeProductMetaData = removedProductList?.map((pro) => ({
-        id: Number(pro?.source_id),
-        story: false,
-      }));
+      const removeProductMetaData = removedProductList
+        ?.filter((pro) => pro && pro.source_id)
+        ?.map((pro) => ({
+          id: Number(pro?.source_id),
+          story: false,
+        }));
 
       const productMetaData = [
         ...(addProductMetaData || []),
@@ -265,6 +267,10 @@ const Card = memo(
             productMetafileds(productMetaData, {
               onSuccess: () => {
                 console.log("Add Meta filed Successfully");
+
+                queryClient.invalidateQueries({
+                  queryKey: ["single-shopify-product"],
+                });
               },
               onError: (error) => {
                 console.log("Error while adding meta fields", error);
@@ -488,7 +494,6 @@ const Card = memo(
                     onRemove={() => onRemoveProduct(template?.id, product)}
                     tagBg={tagBg}
                     tagColor={tagColor}
-                    product={product}
                   />
                 ))}
               </Stack>
@@ -809,10 +814,64 @@ const Stories = () => {
 const ProductCard = ({ product, onRemove, filterNewAddedProducts }) => {
   const { data: products } = useProducts();
 
+  const { mutate: productMetafileds } = useProductMetafields();
+
   const isNewProduct = filterNewAddedProducts?.includes(product?.id);
-  console.log("filterNewAddedProducts", filterNewAddedProducts, isNewProduct);
 
   const productData = products?.find((pro) => pro?.id === product?.id);
+
+  const { data: shopifyProductData } = useGetSingleProduct(
+    productData?.source_id
+  );
+
+  const metaData = shopifyProductData?.product?.metafields?.edges?.find(
+    (meta) => meta?.node?.key === "show_product_story"
+  );
+
+  const isMetaData = metaData?.node?.value === "true";
+  console.log("shopifyProductData==>", isMetaData);
+
+  const [isPublished, setIsPublished] = useState(false);
+
+  const toast = useToast();
+
+  // Update isPublished state when publishedIds changes
+  useEffect(() => {
+    setIsPublished(metaData?.node?.value === "true");
+  }, [shopifyProductData]);
+
+  const handleSwitchChange = (e) => {
+    const newState = e.target.checked;
+    setIsPublished(newState);
+
+    const productMetaData = [
+      {
+        id: Number(productData?.source_id),
+        story: newState,
+      },
+    ];
+
+    productMetafileds(productMetaData, {
+      onSuccess: () => {
+        console.log("Add Meta filed Successfully");
+        setIsPublished(newState);
+
+        toast({
+          title: newState
+            ? "Story Added in Product theme"
+            : "Story Removed in Product theme",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+      },
+      onError: (error) => {
+        console.log("Error while adding meta fields", error);
+        setIsPublished(!newState);
+      },
+    });
+  };
 
   return (
     <HStack
@@ -834,6 +893,14 @@ const ProductCard = ({ product, onRemove, filterNewAddedProducts }) => {
       </HStack>
 
       <HStack>
+        <Switch
+          isChecked={isPublished}
+          onChange={handleSwitchChange}
+          colorScheme="green"
+        />
+
+        <AddSection product={product} />
+
         {!isNewProduct && (
           <a href={productData?.story_url} target="_blank">
             <IconButton icon={<FaArrowUpRightFromSquare />} />
