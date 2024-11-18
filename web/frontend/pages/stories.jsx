@@ -141,7 +141,7 @@ const Card = memo(
     const modalOptions = useDisclosure();
     const { onOpen } = modalOptions;
 
-    const isMobile = useBreakpointValue({ base: true, md: false });
+    const isMobile = useBreakpointValue({ base: true, lg: false });
 
     const [publishedIds, setPublishedIds] = useState(
       template?.products?.map((pro) => pro?.id) || []
@@ -444,7 +444,7 @@ const Card = memo(
                   size={"sm"}
                   p={2}
                   px={4}
-                  display={{ base: "flex", md: "none" }}
+                  display={{ base: "flex", lg: "none" }}
                 >
                   Preview
                 </Button>
@@ -527,7 +527,7 @@ const Card = memo(
           )}
         </Stack>
 
-        <Stack display={{ base: "flex", md: "none" }}>
+        <Stack display={{ base: "flex", lg: "none" }}>
           <DrawerWrapper modalOptions={modalOptions}>
             <StoryPreview
               templateData={templateData}
@@ -767,10 +767,10 @@ const Stories = () => {
   return (
     <ProductStoryContext.Provider value={productStoryContextValue}>
       <ProductDriverContext.Provider value={{ driver: driverObj }}>
-        <Stack p={5} direction={{ base: "column", md: "row" }} h={"100dvh"}>
+        <Stack p={5} direction={{ base: "column", lg: "row" }} h={"100dvh"}>
           <Stack
             spacing={3}
-            w={{ base: "100%", md: "70%" }}
+            w={{ base: "100%", lg: "70%" }}
             overflowY={"scroll"}
           >
             {storyTemplates
@@ -796,8 +796,8 @@ const Stories = () => {
           </Stack>
 
           <Stack
-            display={{ base: "none", md: "flex" }}
-            w={{ base: "100%", md: "30%" }}
+            display={{ base: "none", lg: "flex" }}
+            w={{ base: "100%", lg: "30%" }}
           >
             <StoryPreview
               templateData={templateData}

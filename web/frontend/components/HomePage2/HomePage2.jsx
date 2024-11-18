@@ -129,11 +129,11 @@ const HomePage2 = () => {
   ];
 
   return (
-    <Stack p={3} alignItems={"start"} direction={{ base: "column", md: "row" }}>
+    <Stack p={3} alignItems={"start"} direction={{ base: "column", lg: "row" }}>
       <Stack
         spacing={3}
         overflow={"scroll"}
-        w={{ base: "100%", md: "70%" }}
+        w={{ base: "100%", lg: "70%" }}
         h={"96dvh"}
       >
         <Stack className="step-1" spacing={0}>
@@ -259,7 +259,7 @@ const HomePage2 = () => {
         </Stack>
       </Stack>
 
-      <Stack w={{ base: "100%", md: "30%" }}>
+      <Stack w={{ base: "100%", lg: "30%" }}>
         <ProductStoryContext.Provider value={productStoryContextValue}>
           {isViewDemo ? (
             <Stack spacing={0}>
