@@ -899,7 +899,7 @@ const ProductCard = ({ product, onRemove, filterNewAddedProducts }) => {
           colorScheme="green"
         />
 
-        <AddSection product={product} />
+        <AddSection shopifyProductData={shopifyProductData} />
 
         {!isNewProduct && (
           <a href={productData?.story_url} target="_blank">
