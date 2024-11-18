@@ -56,6 +56,7 @@ import { PRODUCT_LIST_QUERY_KEY } from "../apiHooks/ApiHooksQueryKeys";
 import { useProductMetafields } from "../apiHooks/useThemes";
 import AddSection from "../components/AddSection";
 import { useGetSingleProduct } from "../apiHooks/useShopifyProduct";
+import { MdOutlineTour } from "react-icons/md";
 
 // Memoized Tag component
 const ProductTag = memo(({ tag, onRemove, tagBg, tagColor }) => (
@@ -125,6 +126,7 @@ const Card = memo(
     templateData,
     contents,
     sheetData,
+    driverObj,
   }) => {
     const { data: storyTemplates } = useStoryTemplate();
 
@@ -533,6 +535,7 @@ const Card = memo(
               templateData={templateData}
               contents={contents}
               sheetData={sheetData}
+              driverObj={driverObj}
             />
           </DrawerWrapper>
         </Stack>
@@ -661,14 +664,17 @@ const Stories = () => {
     keyboardControl: false,
     doneBtnText: "Finish",
   });
+
   useEffect(() => {
-    if (products?.length > 0) {
+    if (products?.length === 1) {
       setTimeout(() => {
         driverObj.drive();
       }, 1000);
     }
   }, [products]);
+
   console.log("cardSelections", cardSelections);
+
   // Get all selected products across all cards
   const getAllSelectedProducts = useCallback(() => {
     return Object.values(cardSelections).flat();
@@ -791,6 +797,7 @@ const Stories = () => {
                   templateData={templateData}
                   contents={contents}
                   sheetData={sheetData}
+                  driverObj={driverObj}
                 />
               ))}
           </Stack>
@@ -803,6 +810,7 @@ const Stories = () => {
               templateData={templateData}
               contents={contents}
               sheetData={sheetData}
+              driverObj={driverObj}
             />
           </Stack>
         </Stack>
@@ -946,14 +954,23 @@ const CardAccordion = ({ label, body, headerStyles }) => {
   );
 };
 
-const StoryPreview = ({ templateData, contents, sheetData }) => {
+const StoryPreview = ({ templateData, contents, sheetData, driverObj }) => {
   return (
-    <Stack alignItems="center" spacing={0}>
-      {templateData && (
+    <Stack alignItems="center" spacing={0.5}>
+      <HStack w={"60%"} alignSelf={"center"} justifyContent={"space-between"}>
         <Text fontSize={"lg"} fontWeight={"semibold"}>
-          {templateData?.name}
+          {templateData && templateData?.name}
         </Text>
-      )}
+
+        <IconButton
+          icon={<MdOutlineTour color="blue" />}
+          onClick={() => {
+            driverObj.drive();
+          }}
+          borderRadius={"full"}
+          bg={"gray.200"}
+        />
+      </HStack>
 
       <Stack
         className="preview-experience-card"

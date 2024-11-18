@@ -1,12 +1,7 @@
-import { Card, Page, Layout, Text, Spinner, Button } from "@shopify/polaris";
+import { Card, Page, Layout, Text, Button } from "@shopify/polaris";
 import { useContext } from "react";
 import { AuthContext } from "../services/context";
 import HomePage2 from "../components/HomePage2/HomePage2";
-import { Stack } from "@chakra-ui/react";
-import AddSection from "../components/AddSection";
-import { ProductsCard } from "../components/ProductsCard";
-import { useGetProductThemeEditor, useGetThemes } from "../apiHooks/useThemes";
-import ProductMetaFields from "../components/ProductMetaFields";
 
 export default function HomePage() {
   const { isLoading, isAuthenticated, refetchToken } = useContext(AuthContext);
@@ -56,23 +51,5 @@ export default function HomePage() {
     );
   }
 
-  // Temporary rendering
-  const { data } = useGetThemes();
-  const { data: themeEditorProductData } = useGetProductThemeEditor();
-  console.log("themeEditorProductData DATA==>", themeEditorProductData);
-  // Temporary rendering
-
-  return (
-    <Stack>
-      {/* Temporary rendering  */}
-      <AddSection />
-
-      {/* <ProductMetaFields />
-
-      <ProductsCard />  */}
-      {/* Temprary rendering  */}
-
-      <HomePage2 />
-    </Stack>
-  );
+  return <HomePage2 />;
 }

@@ -26,11 +26,14 @@ import QRCode from "../../assets/AgSpeak_qr_code.png";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import TabbedContent from "../Generic/TabbedContent";
+import { useProducts } from "../../apiHooks/useProducts";
 
 const HomePage2 = () => {
   const [selectedGeofence, setSelectedGeofence] = useState(null);
   const [isViewDemo, setIsViewDemo] = useState(false);
   const [qrStats, setQrStats] = useState({ qrstats: {}, heatMapData: [] });
+
+  const { data: products } = useProducts();
 
   const contents = [];
   const sheetData = [];
@@ -109,9 +112,14 @@ const HomePage2 = () => {
     keyboardControl: false,
     doneBtnText: "Finish",
   });
-  // useEffect(() => {
-  //   driverObj.drive();
-  // }, []);
+
+  useEffect(() => {
+    if (products?.length === 0) {
+      setTimeout(() => {
+        driverObj.drive();
+      }, 1000);
+    }
+  }, [products]);
 
   const topCardsData = [
     {
@@ -296,6 +304,7 @@ const HomePage2 = () => {
                 gap={3}
                 alignItems={"center"}
                 alignSelf={"flex-end"}
+                onClick={() => driverObj.drive()}
               >
                 <Text
                   textTransform={"uppercase"}
