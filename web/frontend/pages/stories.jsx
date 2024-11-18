@@ -666,7 +666,11 @@ const Stories = () => {
   });
 
   useEffect(() => {
-    if (products?.length === 1) {
+    const hasRunBefore = localStorage.getItem("driverHasRun-storyPage");
+
+    if (products?.length === 1 && !hasRunBefore) {
+      localStorage.setItem("driverHasRun-storyPage", "true");
+
       setTimeout(() => {
         driverObj.drive();
       }, 1000);

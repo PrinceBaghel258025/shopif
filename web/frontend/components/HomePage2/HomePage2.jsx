@@ -114,7 +114,11 @@ const HomePage2 = () => {
   });
 
   useEffect(() => {
-    if (products?.length === 0) {
+    const hasRunBefore = localStorage.getItem("driverHasRun-homePage");
+
+    if (products?.length === 0 && !hasRunBefore) {
+      localStorage.setItem("driverHasRun-homePage", "true");
+
       setTimeout(() => {
         driverObj.drive();
       }, 1000);
