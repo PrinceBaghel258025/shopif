@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useAppBridge } from "@shopify/app-bridge-react";
-import { Button } from "@chakra-ui/react";
+import { Button, HStack } from "@chakra-ui/react";
 import { useGetThemes } from "../apiHooks/useThemes";
 import { AuthContext } from "../services/context";
 
@@ -22,12 +22,25 @@ const AddSection = ({ shopifyProductData }) => {
 
   const redirectUrl = `${app?.origin}/store/${store}/themes/${themeId}/editor?previewPath=/${productSection}/${productHandle}`;
 
+  //https://hellostorexyz.myshopify.com/products/the-collection-snowboard-liquid
+  const previewStoreUrl = `https://${getShop()}/${productSection}/${
+    shopifyProductData?.product?.handle
+  }`;
+
   return (
-    <a href={redirectUrl} target="_blank">
-      <Button size={"xs"} py={2}>
-        View
-      </Button>
-    </a>
+    <HStack>
+      <a href={redirectUrl} target="_blank">
+        <Button size={"xs"} py={2}>
+          Editor
+        </Button>
+      </a>
+
+      <a href={previewStoreUrl} target="_blank">
+        <Button size={"xs"} py={2}>
+          Preview
+        </Button>
+      </a>
+    </HStack>
   );
 };
 
