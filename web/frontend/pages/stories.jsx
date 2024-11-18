@@ -53,9 +53,10 @@ import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import { MdRemoveCircleOutline } from "react-icons/md";
 import { PRODUCT_LIST_QUERY_KEY } from "../apiHooks/ApiHooksQueryKeys";
 import { useProductMetafields } from "../apiHooks/useThemes";
+import AddSection from "../components/AddSection";
 
 // Memoized Tag component
-const ProductTag = memo(({ tag, onRemove, tagBg, tagColor }) => (
+const ProductTag = memo(({ tag, onRemove, tagBg, tagColor, product }) => (
   <Tag
     size="sm"
     borderRadius="full"
@@ -64,9 +65,14 @@ const ProductTag = memo(({ tag, onRemove, tagBg, tagColor }) => (
     color={tagColor}
     p={1}
     px={3}
+    w={"100%"}
+    justifyContent={"space-between"}
   >
     <TagLabel>{tag}</TagLabel>
-    <TagCloseButton onClick={() => onRemove(tag)} />
+    <HStack>
+      <AddSection product={product} />
+      <TagCloseButton onClick={() => onRemove(tag)} />
+    </HStack>
   </Tag>
 ));
 
@@ -482,6 +488,7 @@ const Card = memo(
                     onRemove={() => onRemoveProduct(template?.id, product)}
                     tagBg={tagBg}
                     tagColor={tagColor}
+                    product={product}
                   />
                 ))}
               </Stack>

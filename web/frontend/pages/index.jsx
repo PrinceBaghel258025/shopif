@@ -67,9 +67,9 @@ export default function HomePage() {
       {/* Temporary rendering  */}
       <AddSection />
 
-      <ProductMetaFields />
+      {/* <ProductMetaFields />
 
-      <ProductsCard />
+      <ProductsCard />  */}
       {/* Temprary rendering  */}
 
       <HomePage2 />

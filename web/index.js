@@ -176,6 +176,96 @@ app.get("/api/products", async (_req, res) => {
   }
 });
 
+app.get("/api/products/:productId", async (req, res) => {
+  const { productId } = req.params;
+
+  // Validate product ID
+  if (!productId) {
+    return res.status(400).send({ error: "Product ID is required" });
+  }
+
+  const client = new shopify.api.clients.Graphql({
+    session: res.locals.shopify.session,
+  });
+
+  try {
+    const productData = await client.request(
+      `
+      query getProduct($productId: ID!) {
+        product(id: $productId) {
+          id
+          title
+          description
+          handle
+          metafields(first: 10) {
+            edges {
+              node {
+                id
+                key
+                value
+                jsonValue
+                createdAt
+              }
+            }
+          }
+          images(first: 5) {
+            edges {
+              node {
+                id
+                url
+                altText
+              }
+            }
+          }
+          variants(first: 5) {
+            edges {
+              node {
+                id
+                title
+                price
+                availableForSale
+                sku
+              }
+            }
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+            maxVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+        }
+      }
+    `,
+      {
+        variables: {
+          productId: `gid://shopify/Product/${productId}`,
+        },
+      }
+    );
+
+    // Check if product exists
+    if (!productData.data.product) {
+      return res.status(404).send({ error: "Product not found" });
+    }
+
+    res.status(200).send({ product: productData.data.product });
+  } catch (error) {
+    console.error(`Failed to fetch product details: ${error.message}`);
+
+    // Check for specific GraphQL errors
+    if (error.message.includes("Invalid ID")) {
+      return res.status(400).send({ error: "Invalid product ID format" });
+    }
+
+    res.status(500).send({ error: "Failed to fetch product details" });
+  }
+});
+
 app.post("/api/products", async (_req, res) => {
   let status = 200;
   let error = null;
