@@ -3,7 +3,7 @@
 client_id = "b592f6b30431fac8d607f05d8c76bb1c"
 name = "vite-store-ext"
 handle = "vite-store-ext"
-application_url = "https://spot-assisted-costumes-liabilities.trycloudflare.com"
+application_url = "https://happiness-mask-somewhere-awesome.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_online_store_pages,read_products,read_themes,write_products,write
 
 [auth]
 redirect_urls = [
-  "https://spot-assisted-costumes-liabilities.trycloudflare.com/auth/callback",
-  "https://spot-assisted-costumes-liabilities.trycloudflare.com/auth/shopify/callback",
-  "https://spot-assisted-costumes-liabilities.trycloudflare.com/api/auth/callback"
+  "https://happiness-mask-somewhere-awesome.trycloudflare.com/auth/callback",
+  "https://happiness-mask-somewhere-awesome.trycloudflare.com/auth/shopify/callback",
+  "https://happiness-mask-somewhere-awesome.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

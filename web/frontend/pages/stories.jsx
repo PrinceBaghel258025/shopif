@@ -122,6 +122,7 @@ const ProductSelector = memo(({ availableProducts, onSelect, isDisabled }) => {
           borderColor="gray.200"
           zIndex={1}
           w={"100%"}
+          mb={2}
         >
           <Input
             placeholder="Search products..."
@@ -182,10 +183,9 @@ const Card = memo(
     contents,
     sheetData,
     driverObj,
+    products,
   }) => {
     const { data: storyTemplates } = useStoryTemplate();
-
-    const { data: products } = useProducts();
 
     const { mutate: productMetafileds } = useProductMetafields();
 
@@ -575,6 +575,7 @@ const Card = memo(
                         product={product}
                         onRemove={() => onRemoveProduct(template?.id, product)}
                         filterNewAddedProducts={filterNewAddedProducts}
+                        products={products}
                       />
                     );
                   })}
@@ -857,6 +858,7 @@ const Stories = () => {
                   contents={contents}
                   sheetData={sheetData}
                   driverObj={driverObj}
+                  products={products}
                 />
               ))}
           </Stack>
@@ -878,9 +880,12 @@ const Stories = () => {
   );
 };
 
-const ProductCard = ({ product, onRemove, filterNewAddedProducts }) => {
-  const { data: products } = useProducts();
-
+const ProductCard = ({
+  product,
+  onRemove,
+  filterNewAddedProducts,
+  products,
+}) => {
   const { mutate: productMetafileds } = useProductMetafields();
 
   const isNewProduct = filterNewAddedProducts?.includes(product?.id);
