@@ -190,52 +190,130 @@ app.post("/api/products", async (_req, res) => {
   res.status(status).send({ success: status === 200, error });
 });
 
+// app.post("/api/themes/update-metafields", async (req, res) => {
+//   const { showProductStory, selectedProductId } = req.body;
+
+//   try {
+//     const client = new shopify.api.clients.Graphql({
+//       session: res.locals.shopify.session,
+//     });
+
+//     // Update metafields to control display of the #root section
+//     const response = await client.query({
+//       data: {
+//         query: `
+//           mutation updateProductMetafields($id: ID!, $showProductStory: String!) {
+//             productUpdate(
+//               input: {
+//                 id: $id
+//                 metafields: [
+//                   {
+//                     namespace: "custom"
+//                     key: "show_product_story"
+//                     value: $showProductStory
+//                     type: "single_line_text_field"
+//                   }
+//                 ]
+//               }
+//             ) {
+//               product {
+//                 id
+//               }
+//               userErrors {
+//                 field
+//                 message
+//               }
+//             }
+//           }
+//         `,
+//         variables: {
+//           id: `gid://shopify/Product/${selectedProductId}`,
+//           showProductStory: showProductStory.toString(),
+//         },
+//       },
+//     });
+
+//     // Check for user errors
+//     if (response.body.data?.productUpdate?.userErrors?.length > 0) {
+//       throw new Error(response.body.data.productUpdate.userErrors[0].message);
+//     }
+
+//     res.status(200).send({
+//       success: true,
+//       message: "Metafields updated successfully",
+//       data: response.body.data,
+//     });
+//   } catch (error) {
+//     console.error("Failed to update metafields:", error);
+//     res.status(500).send({
+//       success: false,
+//       error: error.message,
+//     });
+//   }
+// });
+
 app.post("/api/themes/update-metafields", async (req, res) => {
-  const { showProductStory, selectedProductId } = req.body;
+  // Bulk update metafields
+  const { products } = req.body; // Expect array of {id, story}
 
   try {
     const client = new shopify.api.clients.Graphql({
       session: res.locals.shopify.session,
     });
 
-    // Update metafields to control display of the #root section
+    // Create mutation string for each product
+    const mutations = products
+      .map(
+        (product, index) => `
+      product${index}: productUpdate(
+        input: {
+          id: "gid://shopify/Product/${product.id}"
+          metafields: [
+            {
+              namespace: "custom"
+              key: "show_product_story"
+              value: "${product.story.toString()}"
+              type: "single_line_text_field"
+            }
+          ]
+        }
+      ) {
+        product {
+          id
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    `
+      )
+      .join("\n");
+
+    // Execute bulk mutation
     const response = await client.query({
       data: {
         query: `
-          mutation updateProductMetafields($id: ID!, $showProductStory: String!) {
-            productUpdate(
-              input: {
-                id: $id
-                metafields: [
-                  {
-                    namespace: "custom"
-                    key: "show_product_story"
-                    value: $showProductStory
-                    type: "single_line_text_field"
-                  }
-                ]
-              }
-            ) {
-              product {
-                id
-              }
-              userErrors {
-                field
-                message
-              }
-            }
+          mutation bulkUpdateProductMetafields {
+            ${mutations}
           }
         `,
-        variables: {
-          id: `gid://shopify/Product/${selectedProductId}`,
-          showProductStory: showProductStory.toString(),
-        },
       },
     });
 
-    // Check for user errors
-    if (response.body.data?.productUpdate?.userErrors?.length > 0) {
-      throw new Error(response.body.data.productUpdate.userErrors[0].message);
+    // Check for user errors across all operations
+    const userErrors = Object.values(response.body.data).reduce(
+      (errors, result) => {
+        if (result.userErrors && result.userErrors.length > 0) {
+          errors.push(...result.userErrors);
+        }
+        return errors;
+      },
+      []
+    );
+
+    if (userErrors.length > 0) {
+      throw new Error(JSON.stringify(userErrors));
     }
 
     res.status(200).send({
@@ -245,6 +323,82 @@ app.post("/api/themes/update-metafields", async (req, res) => {
     });
   } catch (error) {
     console.error("Failed to update metafields:", error);
+    res.status(500).send({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+app.get("/api/themes/product-sections", async (_req, res) => {
+  const client = new shopify.api.clients.Graphql({
+    session: res.locals.shopify.session,
+  });
+
+  try {
+    const response = await client.request(`
+      query getThemeSections {
+        currentTheme: theme(role: MAIN) {
+          id
+          name
+          sections: templates(first: 1, templates: PRODUCT) {
+            edges {
+              node {
+                id
+                name
+                sections: body {
+                  content
+                  type
+                  settings
+                  blocks {
+                    type
+                    settings
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `);
+
+    // Extract and format the sections data
+    const templateData = response.data.currentTheme.sections.edges[0]?.node;
+
+    if (!templateData) {
+      return res.status(404).send({
+        success: false,
+        error: "No product template found",
+      });
+    }
+
+    const formattedResponse = {
+      themeId: response.data.currentTheme.id,
+      themeName: response.data.currentTheme.name,
+      template: {
+        id: templateData.id,
+        name: templateData.name,
+        sections: templateData.sections.map((section) => ({
+          type: section.type,
+          content: section.content,
+          settings: JSON.parse(section.settings || "{}"),
+          blocks:
+            section.blocks?.map((block) => ({
+              id: block.id,
+              type: block.type,
+              settings: JSON.parse(block.settings || "{}"),
+            })) || [],
+        })),
+      },
+    };
+
+    res.status(200).send({
+      success: true,
+      data: formattedResponse,
+    });
+  } catch (error) {
+    console.error("Failed to fetch product sections:", error);
     res.status(500).send({
       success: false,
       error: error.message,

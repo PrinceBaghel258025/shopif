@@ -52,6 +52,7 @@ import "driver.js/dist/driver.css";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import { MdRemoveCircleOutline } from "react-icons/md";
 import { PRODUCT_LIST_QUERY_KEY } from "../apiHooks/ApiHooksQueryKeys";
+import { useProductMetafields } from "../apiHooks/useThemes";
 
 // Memoized Tag component
 const ProductTag = memo(({ tag, onRemove, tagBg, tagColor }) => (
@@ -121,6 +122,12 @@ const Card = memo(
     contents,
     sheetData,
   }) => {
+    const { data: storyTemplates } = useStoryTemplate();
+
+    const { data: products } = useProducts();
+
+    const { mutate: productMetafileds } = useProductMetafields();
+
     const [searchParams, setSearchParams] = useSearchParams();
     const toast = useToast();
     const tagBg = useColorModeValue("blue.50", "blue.900");
@@ -189,12 +196,41 @@ const Card = memo(
         product_ids: selectedTags?.map((product) => product?.id),
       };
 
+      // Added Product List
+      const addProductMetaData = selectedTags?.map((pro) => ({
+        id: Number(pro?.source_id),
+        story: true,
+      }));
+
+      const productList = products?.filter((pro) =>
+        publishedIds?.includes(pro?.id)
+      );
+
+      const removedProductList = productList?.filter(
+        (pro) => !selectedTags?.map((s) => s?.id)?.includes(pro?.id)
+      );
+
+      // Removed Product List
+      const removeProductMetaData = removedProductList?.map((pro) => ({
+        id: Number(pro?.source_id),
+        story: false,
+      }));
+
+      const productMetaData = [
+        ...(addProductMetaData || []),
+        ...(removeProductMetaData || []),
+      ];
+
       updateStoryTemplate(
         { id: template?.id, formData: updatedStoryTemplate },
         {
           onSuccess: () => {
             // Update the publishedIds with the new selection
             setPublishedIds(selectedTags?.map((pro) => pro?.id));
+
+            queryClient.invalidateQueries({
+              queryKey: [STORY_TEMPLATE_QUERY_KEY],
+            });
 
             queryClient.invalidateQueries({
               queryKey: [PRODUCT_LIST_QUERY_KEY],
@@ -219,7 +255,17 @@ const Card = memo(
               isClosable: true,
               position: "top-right",
             });
+
+            productMetafileds(productMetaData, {
+              onSuccess: () => {
+                console.log("Add Meta filed Successfully");
+              },
+              onError: (error) => {
+                console.log("Error while adding meta fields", error);
+              },
+            });
           },
+
           onError: (error) => {
             toast({
               title: "Operation Failed",
@@ -240,6 +286,19 @@ const Card = memo(
         product_ids: [],
       };
 
+      const filterTemplate = storyTemplates
+        ?.find((temp) => temp?.id === template?.id)
+        ?.products?.map((pro) => pro?.id);
+
+      const productList = products?.filter((pro) =>
+        filterTemplate?.includes(pro?.id)
+      );
+
+      const removeProductMetaData = productList?.map((pro) => ({
+        id: Number(pro?.source_id),
+        story: false,
+      }));
+
       updateStoryTemplate(
         { id: template?.id, formData: updatedStoryTemplate },
         {
@@ -250,6 +309,10 @@ const Card = memo(
             // Clear selected tags by calling onRemoveProduct for each tag
             selectedTags.forEach((product) => {
               onRemoveProduct(template?.id, product);
+            });
+
+            queryClient.invalidateQueries({
+              queryKey: [STORY_TEMPLATE_QUERY_KEY],
             });
 
             queryClient.invalidateQueries({
@@ -264,6 +327,15 @@ const Card = memo(
               duration: 5000,
               isClosable: true,
               position: "top-right",
+            });
+
+            productMetafileds(removeProductMetaData, {
+              onSuccess: () => {
+                console.log("Remove Meta filed Successfully");
+              },
+              onError: (error) => {
+                console.log("Error while removing meta fields", error);
+              },
             });
           },
           onError: (error) => {

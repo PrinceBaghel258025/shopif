@@ -5,7 +5,7 @@ import HomePage2 from "../components/HomePage2/HomePage2";
 import { Stack } from "@chakra-ui/react";
 import AddSection from "../components/AddSection";
 import { ProductsCard } from "../components/ProductsCard";
-import { useGetThemes } from "../apiHooks/useThemes";
+import { useGetProductThemeEditor, useGetThemes } from "../apiHooks/useThemes";
 import ProductMetaFields from "../components/ProductMetaFields";
 
 export default function HomePage() {
@@ -58,7 +58,8 @@ export default function HomePage() {
 
   // Temporary rendering
   const { data } = useGetThemes();
-  console.log("theme DATA==>", data);
+  const { data: themeEditorProductData } = useGetProductThemeEditor();
+  console.log("themeEditorProductData DATA==>", themeEditorProductData);
   // Temporary rendering
 
   return (
