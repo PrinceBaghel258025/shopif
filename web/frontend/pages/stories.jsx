@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, memo } from "react";
+import React, { useState, useCallback, useEffect, memo, useMemo } from "react";
 import {
   Box,
   Button,
@@ -32,6 +32,8 @@ import {
   useDisclosure,
   useBreakpointValue,
   Switch,
+  Flex,
+  Input,
 } from "@chakra-ui/react";
 import { FaArrowRight } from "react-icons/fa";
 import CarouselComponent from "../components/ProductStoryVisualizer/CarouselComponent";
@@ -57,6 +59,7 @@ import { useProductMetafields } from "../apiHooks/useThemes";
 import AddSection from "../components/AddSection";
 import { useGetSingleProduct } from "../apiHooks/useShopifyProduct";
 import { MdOutlineTour } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
 
 // Memoized Tag component
 const ProductTag = memo(({ tag, onRemove, tagBg, tagColor }) => (
@@ -78,35 +81,87 @@ const ProductTag = memo(({ tag, onRemove, tagBg, tagColor }) => (
 ProductTag.displayName = "ProductTag";
 
 // Memoized Product Selector component
-const ProductSelector = memo(({ availableProducts, onSelect, isDisabled }) => (
-  <Menu>
-    <MenuButton
-      as={Button}
-      rightIcon={<FaArrowRight />}
-      w="full"
-      variant="outline"
-      textAlign="left"
-      isDisabled={isDisabled}
-      fontSize="sm"
-      className="products-selector"
+const ProductSelector = memo(({ availableProducts, onSelect, isDisabled }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter products based on the search query
+  const filteredProducts = useMemo(() => {
+    return availableProducts.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [availableProducts, searchQuery]);
+
+  return (
+    <Menu
+      isOpen={isMenuOpen}
+      closeOnSelect={false}
+      onClose={() => setIsMenuOpen(false)}
     >
-      {availableProducts.length > 0
-        ? "Select products..."
-        : "No more products available"}
-    </MenuButton>
-    <MenuList overflow={"scroll"} maxH={"80vh"}>
-      {availableProducts.map((product, index) => (
-        <MenuItem
-          className="first-product-selector"
-          key={product.id}
-          onClick={() => onSelect(product)}
+      <MenuButton
+        as={Button}
+        rightIcon={<FaArrowRight />}
+        w="full"
+        variant="outline"
+        textAlign="left"
+        isDisabled={isDisabled}
+        fontSize="sm"
+        className="products-selector"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
+        {availableProducts.length > 0
+          ? "Select products..."
+          : "No more products available"}
+      </MenuButton>
+
+      <MenuList overflow="scroll" maxH="80vh" p={1}>
+        <HStack
+          position="sticky"
+          top={0}
+          bg="white"
+          borderColor="gray.200"
+          zIndex={1}
+          w={"100%"}
         >
-          {product?.name}
-        </MenuItem>
-      ))}
-    </MenuList>
-  </Menu>
-));
+          <Input
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            size="sm"
+            borderRadius={"full"}
+          />
+        </HStack>
+        {/* <IconButton
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsMenuOpen(false)}
+          icon={<IoClose />}
+          position={"absolute"}
+          right={-1}
+          top={1}
+        /> */}
+
+        {/* Display filtered products */}
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <MenuItem
+              className="first-product-selector"
+              key={product.id}
+              onClick={() => onSelect(product)}
+              _hover={{ bg: "gray.100" }}
+            >
+              {product?.name}
+            </MenuItem>
+          ))
+        ) : (
+          <Box p={4} textAlign="center" color="gray.500">
+            No products found
+          </Box>
+        )}
+      </MenuList>
+    </Menu>
+  );
+});
 
 ProductSelector.displayName = "ProductSelector";
 

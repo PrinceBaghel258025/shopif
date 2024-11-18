@@ -3,7 +3,7 @@
 client_id = "b592f6b30431fac8d607f05d8c76bb1c"
 name = "vite-store-ext"
 handle = "vite-store-ext"
-application_url = "https://type-use-builders-anderson.trycloudflare.com"
+application_url = "https://spot-assisted-costumes-liabilities.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_online_store_pages,read_products,read_themes,write_products,write
 
 [auth]
 redirect_urls = [
-  "https://type-use-builders-anderson.trycloudflare.com/auth/callback",
-  "https://type-use-builders-anderson.trycloudflare.com/auth/shopify/callback",
-  "https://type-use-builders-anderson.trycloudflare.com/api/auth/callback"
+  "https://spot-assisted-costumes-liabilities.trycloudflare.com/auth/callback",
+  "https://spot-assisted-costumes-liabilities.trycloudflare.com/auth/shopify/callback",
+  "https://spot-assisted-costumes-liabilities.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
