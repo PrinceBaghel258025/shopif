@@ -255,23 +255,35 @@ const ImageSphere = ({
   } = useContext(ProductStoryContext);
   const infoPoints = getInfoPoints(slideId);
 
-  const t = new THREE.TextureLoader();
-  t.load(
-    `${image_url}?not-from-cache`,
-    (data) => {
-      imageTexture.current = data;
-      setLoadingPercentage(100);
-    },
-    (event) => {
-      const total = event.total || 1;
-      const loaded = event.loaded || 0;
-      setLoadingPercentage((loaded / total) * 100);
-    },
-    (err) => {
-      console.log("error in image sphere", err);
-      setTextureLoadingError(err?.message || "Error loading image");
-    }
-  );
+  // Fixed texture loading code
+  useEffect(() => {
+    const textureLoader = new THREE.TextureLoader();
+    const cleanImageUrl = image_url.split("?")[0];
+
+    textureLoader.load(
+      cleanImageUrl,
+      (texture) => {
+        texture.encoding = THREE.sRGBEncoding;
+        imageTexture.current = texture;
+        setLoadingPercentage(100);
+      },
+      (event) => {
+        const total = event.total || 1;
+        const loaded = event.loaded || 0;
+        setLoadingPercentage((loaded / total) * 100);
+      },
+      (error) => {
+        console.error("Error loading texture:", error);
+        setTextureLoadingError(error?.message || "Error loading image");
+      }
+    );
+
+    return () => {
+      if (imageTexture.current) {
+        imageTexture.current.dispose();
+      }
+    };
+  }, [image_url]);
 
   useEffect(() => {
     if (!isDisabled) {
@@ -364,7 +376,7 @@ const ImageSphere = ({
     <>
       {imageTexture.current ? (
         <>
-          <ambientLight intensity={2} />
+          <ambientLight intensity={0.8} />
           <mesh ref={sphereRef}>
             <sphereGeometry args={[1, 100, 100]} />
             <meshStandardMaterial
