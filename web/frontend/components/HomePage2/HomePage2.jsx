@@ -397,10 +397,10 @@ const TopStatCard = ({ label, value, selectedTabIndex }) => {
         </Text>
       </GridItem>
 
-      <TopCardsPopover
+      {/* <TopCardsPopover
         modalOptions={modalOptions}
         selectedTabIndex={selectedTabIndex}
-      />
+      /> */}
     </>
   );
 };
@@ -523,57 +523,57 @@ const AnalyticsCard = ({
   );
 };
 
-const TopCardsPopover = ({ modalOptions, selectedTabIndex }) => {
-  const { isOpen, onClose } = modalOptions;
+// const TopCardsPopover = ({ modalOptions, selectedTabIndex }) => {
+//   const { isOpen, onClose } = modalOptions;
 
-  const [selectedTab, setSelectedTab] = useState(selectedTabIndex);
+//   const [selectedTab, setSelectedTab] = useState(selectedTabIndex);
 
-  return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose} size={"lg"}>
-        <ModalOverlay />
-        <ModalContent borderRadius={15}>
-          <ModalBody py={6}>
-            <Stack alignItems={"center"}>
-              <TabbedContent
-                tabs={["Unique Experiences", "Unique Links", "Live Products"]}
-                selectedTabIndex={selectedTab}
-                onTabChange={setSelectedTab}
-              >
-                <Stack alignItems={"center"}>
-                  <Text>
-                    Unique Experiences Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Natus adipisci saepe voluptate recusandae
-                    fuga fugit esse! Nesciunt reprehenderit iure accusantium in,
-                    minima odio asperiores repellendus voluptatibus placeat
-                    velit eos explicabo.
-                  </Text>
-                </Stack>
-                <Stack alignItems={"center"}>
-                  <Text>
-                    Unique Links Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Natus adipisci saepe voluptate recusandae
-                    fuga fugit esse! Nesciunt reprehenderit iure accusantium in,
-                    minima odio asperiores repellendus voluptatibus placeat
-                    velit eos explicabo.
-                  </Text>
-                </Stack>
-                <Stack alignItems={"center"}>
-                  <Text>
-                    Live Products Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Atque et eaque quidem quisquam dignissimos
-                    est delectus fugit labore quasi iusto. Harum debitis
-                    deleniti molestias accusamus nihil, suscipit incidunt sunt
-                    adipisci.
-                  </Text>
-                </Stack>
-              </TabbedContent>
-            </Stack>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
-  );
-};
+//   return (
+//     <>
+//       <Modal isOpen={isOpen} onClose={onClose} size={"lg"}>
+//         <ModalOverlay />
+//         <ModalContent borderRadius={15}>
+//           <ModalBody py={6}>
+//             <Stack alignItems={"center"}>
+//               <TabbedContent
+//                 tabs={["Unique Experiences", "Unique Links", "Live Products"]}
+//                 selectedTabIndex={selectedTab}
+//                 onTabChange={setSelectedTab}
+//               >
+//                 <Stack alignItems={"center"}>
+//                   <Text>
+//                     Unique Experiences Lorem ipsum dolor sit amet consectetur
+//                     adipisicing elit. Natus adipisci saepe voluptate recusandae
+//                     fuga fugit esse! Nesciunt reprehenderit iure accusantium in,
+//                     minima odio asperiores repellendus voluptatibus placeat
+//                     velit eos explicabo.
+//                   </Text>
+//                 </Stack>
+//                 <Stack alignItems={"center"}>
+//                   <Text>
+//                     Unique Links Lorem ipsum dolor sit amet consectetur
+//                     adipisicing elit. Natus adipisci saepe voluptate recusandae
+//                     fuga fugit esse! Nesciunt reprehenderit iure accusantium in,
+//                     minima odio asperiores repellendus voluptatibus placeat
+//                     velit eos explicabo.
+//                   </Text>
+//                 </Stack>
+//                 <Stack alignItems={"center"}>
+//                   <Text>
+//                     Live Products Lorem ipsum dolor sit amet consectetur
+//                     adipisicing elit. Atque et eaque quidem quisquam dignissimos
+//                     est delectus fugit labore quasi iusto. Harum debitis
+//                     deleniti molestias accusamus nihil, suscipit incidunt sunt
+//                     adipisci.
+//                   </Text>
+//                 </Stack>
+//               </TabbedContent>
+//             </Stack>
+//           </ModalBody>
+//         </ModalContent>
+//       </Modal>
+//     </>
+//   );
+// };
 
 export default HomePage2;
