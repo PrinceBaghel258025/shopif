@@ -26,11 +26,14 @@ import QRCode from "../../assets/AgSpeak_qr_code.png";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import TabbedContent from "../Generic/TabbedContent";
+import { useProducts } from "../../apiHooks/useProducts";
 
 const HomePage2 = () => {
   const [selectedGeofence, setSelectedGeofence] = useState(null);
   const [isViewDemo, setIsViewDemo] = useState(false);
   const [qrStats, setQrStats] = useState({ qrstats: {}, heatMapData: [] });
+
+  const { data: products } = useProducts();
 
   const contents = [];
   const sheetData = [];
@@ -109,9 +112,18 @@ const HomePage2 = () => {
     keyboardControl: false,
     doneBtnText: "Finish",
   });
-  // useEffect(() => {
-  //   driverObj.drive();
-  // }, []);
+
+  useEffect(() => {
+    const hasRunBefore = localStorage.getItem("driverHasRun-homePage");
+
+    if (products?.length === 0 && !hasRunBefore) {
+      localStorage.setItem("driverHasRun-homePage", "true");
+
+      setTimeout(() => {
+        driverObj.drive();
+      }, 1000);
+    }
+  }, [products]);
 
   const topCardsData = [
     {
@@ -129,11 +141,11 @@ const HomePage2 = () => {
   ];
 
   return (
-    <Stack p={3} alignItems={"start"} direction={{ base: "column", md: "row" }}>
+    <Stack p={3} alignItems={"start"} direction={{ base: "column", lg: "row" }}>
       <Stack
         spacing={3}
         overflow={"scroll"}
-        w={{ base: "100%", md: "70%" }}
+        w={{ base: "100%", lg: "70%" }}
         h={"96dvh"}
       >
         <Stack className="step-1" spacing={0}>
@@ -259,7 +271,7 @@ const HomePage2 = () => {
         </Stack>
       </Stack>
 
-      <Stack w={{ base: "100%", md: "30%" }}>
+      <Stack w={{ base: "100%", lg: "30%" }}>
         <ProductStoryContext.Provider value={productStoryContextValue}>
           {isViewDemo ? (
             <Stack spacing={0}>
@@ -296,6 +308,7 @@ const HomePage2 = () => {
                 gap={3}
                 alignItems={"center"}
                 alignSelf={"flex-end"}
+                onClick={() => driverObj.drive()}
               >
                 <Text
                   textTransform={"uppercase"}
@@ -384,10 +397,10 @@ const TopStatCard = ({ label, value, selectedTabIndex }) => {
         </Text>
       </GridItem>
 
-      <TopCardsPopover
+      {/* <TopCardsPopover
         modalOptions={modalOptions}
         selectedTabIndex={selectedTabIndex}
-      />
+      /> */}
     </>
   );
 };
@@ -510,42 +523,57 @@ const AnalyticsCard = ({
   );
 };
 
-const TopCardsPopover = ({ modalOptions, selectedTabIndex }) => {
-  const { isOpen, onClose } = modalOptions;
+// const TopCardsPopover = ({ modalOptions, selectedTabIndex }) => {
+//   const { isOpen, onClose } = modalOptions;
 
-  const [selectedTab, setSelectedTab] = useState(selectedTabIndex);
+//   const [selectedTab, setSelectedTab] = useState(selectedTabIndex);
 
-  return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose} size={"lg"}>
-        <ModalOverlay />
-        <ModalContent borderRadius={15}>
-          <ModalBody py={6}>
-            <Stack alignItems={"center"}>
-              <TabbedContent
-                tabs={["Unique Experiences", "Unique Links", "Live Products"]}
-                selectedTabIndex={selectedTab}
-                onTabChange={setSelectedTab}
-              >
-                <Stack alignItems={"center"}>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
-                </Stack>
-                <Stack alignItems={"center"}>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
-                </Stack>
-                <Stack alignItems={"center"}>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
-                  <Text>Helllo Helllo Helllo Helllo Helllo Helllo Helllo</Text>
-                </Stack>
-              </TabbedContent>
-            </Stack>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
-  );
-};
+//   return (
+//     <>
+//       <Modal isOpen={isOpen} onClose={onClose} size={"lg"}>
+//         <ModalOverlay />
+//         <ModalContent borderRadius={15}>
+//           <ModalBody py={6}>
+//             <Stack alignItems={"center"}>
+//               <TabbedContent
+//                 tabs={["Unique Experiences", "Unique Links", "Live Products"]}
+//                 selectedTabIndex={selectedTab}
+//                 onTabChange={setSelectedTab}
+//               >
+//                 <Stack alignItems={"center"}>
+//                   <Text>
+//                     Unique Experiences Lorem ipsum dolor sit amet consectetur
+//                     adipisicing elit. Natus adipisci saepe voluptate recusandae
+//                     fuga fugit esse! Nesciunt reprehenderit iure accusantium in,
+//                     minima odio asperiores repellendus voluptatibus placeat
+//                     velit eos explicabo.
+//                   </Text>
+//                 </Stack>
+//                 <Stack alignItems={"center"}>
+//                   <Text>
+//                     Unique Links Lorem ipsum dolor sit amet consectetur
+//                     adipisicing elit. Natus adipisci saepe voluptate recusandae
+//                     fuga fugit esse! Nesciunt reprehenderit iure accusantium in,
+//                     minima odio asperiores repellendus voluptatibus placeat
+//                     velit eos explicabo.
+//                   </Text>
+//                 </Stack>
+//                 <Stack alignItems={"center"}>
+//                   <Text>
+//                     Live Products Lorem ipsum dolor sit amet consectetur
+//                     adipisicing elit. Atque et eaque quidem quisquam dignissimos
+//                     est delectus fugit labore quasi iusto. Harum debitis
+//                     deleniti molestias accusamus nihil, suscipit incidunt sunt
+//                     adipisci.
+//                   </Text>
+//                 </Stack>
+//               </TabbedContent>
+//             </Stack>
+//           </ModalBody>
+//         </ModalContent>
+//       </Modal>
+//     </>
+//   );
+// };
 
 export default HomePage2;

@@ -1,15 +1,14 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "b592f6b30431fac8d607f05d8c76bb1c"
-name = "vite-store-ext"
-handle = "vite-store-ext"
-application_url = "https://logical-bears-so-crime.trycloudflare.com"
+client_id = "3a9ba6e9b339bd49d6de03f53780e317"
+name = "Test-001"
+handle = "test-16361"
+application_url = "https://artificial-coverage-west-forward.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
 dev_store_url = "hellostorexyz.myshopify.com"
-include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -17,9 +16,9 @@ scopes = "read_online_store_pages,read_products,read_themes,write_products,write
 
 [auth]
 redirect_urls = [
-  "https://logical-bears-so-crime.trycloudflare.com/auth/callback",
-  "https://logical-bears-so-crime.trycloudflare.com/auth/shopify/callback",
-  "https://logical-bears-so-crime.trycloudflare.com/api/auth/callback"
+  "https://artificial-coverage-west-forward.trycloudflare.com/auth/callback",
+  "https://artificial-coverage-west-forward.trycloudflare.com/auth/shopify/callback",
+  "https://artificial-coverage-west-forward.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

@@ -19,10 +19,11 @@
 {% schema %}
 {
   "name": "Product Story",
-  "templates": [
-    "product"
-  ],
+  "class": "product-story-section",
   "target": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
   "settings": [
     {
       "type": "text",

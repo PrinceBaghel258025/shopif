@@ -1,4 +1,12 @@
-import React, { useState, useCallback, useEffect, memo } from "react";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  memo,
+  useMemo,
+  useRef,
+  useContext,
+} from "react";
 import {
   Box,
   Button,
@@ -31,10 +39,24 @@ import {
   DrawerBody,
   useDisclosure,
   useBreakpointValue,
+  Switch,
+  Flex,
+  Input,
+  Tooltip,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
 import { FaArrowRight } from "react-icons/fa";
 import CarouselComponent from "../components/ProductStoryVisualizer/CarouselComponent";
-import { ProductDriverContext, ProductStoryContext } from "../services/context";
+import {
+  AuthContext,
+  ProductDriverContext,
+  ProductStoryContext,
+} from "../services/context";
 import { useProducts } from "../apiHooks/useProducts";
 import {
   STORY_TEMPLATE_QUERY_KEY,
@@ -52,55 +74,175 @@ import "driver.js/dist/driver.css";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import { MdRemoveCircleOutline } from "react-icons/md";
 import { PRODUCT_LIST_QUERY_KEY } from "../apiHooks/ApiHooksQueryKeys";
+import { useProductMetafields } from "../apiHooks/useThemes";
+import AddSection from "../components/AddSection";
+import {
+  useGetShopifyProducts,
+  useGetSingleProduct,
+} from "../apiHooks/useShopifyProduct";
+import { MdOutlineTour } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
 
 // Memoized Tag component
-const ProductTag = memo(({ tag, onRemove, tagBg, tagColor }) => (
-  <Tag
-    size="sm"
-    borderRadius="full"
-    variant="subtle"
-    bg={tagBg}
-    color={tagColor}
-    p={1}
-    px={3}
-  >
-    <TagLabel>{tag}</TagLabel>
-    <TagCloseButton onClick={() => onRemove(tag)} />
-  </Tag>
-));
+const ProductTag = memo(
+  ({
+    tag,
+    onRemove,
+    tagBg,
+    tagColor,
+    product,
+    products,
+    shopifyProductList,
+  }) => {
+    const productData = products?.find((pro) => pro?.id === product?.id);
+    const findActiveProduct = shopifyProductList?.products?.find(
+      (pro) => pro?.id === `gid://shopify/Product/${productData?.source_id}`
+    );
+    const isActive = findActiveProduct?.status === "ACTIVE";
+    return (
+      <Tag
+        size="sm"
+        borderRadius="full"
+        variant="subtle"
+        bg={tagBg}
+        color={tagColor}
+        p={1}
+        px={3}
+      >
+        <HStack>
+          {shopifyProductList && (
+            <Tooltip
+              label={isActive ? "Active" : "Inactive"}
+              hasArrow
+              placement="top"
+            >
+              <Box
+                w={2.5}
+                h={2.5}
+                borderRadius={"full"}
+                bg={isActive ? "green" : "gray"}
+              />
+            </Tooltip>
+          )}
+          <TagLabel>{tag}</TagLabel>
+        </HStack>
+
+        <TagCloseButton onClick={() => onRemove(tag)} />
+      </Tag>
+    );
+  }
+);
 
 ProductTag.displayName = "ProductTag";
 
 // Memoized Product Selector component
-const ProductSelector = memo(({ availableProducts, onSelect, isDisabled }) => (
-  <Menu>
-    <MenuButton
-      as={Button}
-      rightIcon={<FaArrowRight />}
-      w="full"
-      variant="outline"
-      textAlign="left"
-      isDisabled={isDisabled}
-      fontSize="sm"
-      className="products-selector"
-    >
-      {availableProducts.length > 0
-        ? "Select products..."
-        : "No more products available"}
-    </MenuButton>
-    <MenuList overflow={"scroll"} maxH={"80vh"}>
-      {availableProducts.map((product, index) => (
-        <MenuItem
-          className="first-product-selector"
-          key={product.id}
-          onClick={() => onSelect(product)}
+const ProductSelector = memo(
+  ({ availableProducts, onSelect, isDisabled, shopifyProductList }) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    // Filter products based on the search query
+    const filteredProducts = useMemo(() => {
+      return availableProducts.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }, [availableProducts, searchQuery]);
+
+    return (
+      <Menu
+        isOpen={isMenuOpen}
+        closeOnSelect={false}
+        onClose={() => setIsMenuOpen(false)}
+      >
+        <MenuButton
+          as={Button}
+          rightIcon={<FaArrowRight />}
+          w="full"
+          variant="outline"
+          textAlign="left"
+          isDisabled={isDisabled}
+          fontSize="sm"
+          className="products-selector"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {product?.name}
-        </MenuItem>
-      ))}
-    </MenuList>
-  </Menu>
-));
+          {availableProducts.length > 0
+            ? "Select products..."
+            : "No more products available"}
+        </MenuButton>
+
+        <MenuList overflow="scroll" maxH="80vh" p={1}>
+          <HStack
+            position="sticky"
+            top={0}
+            bg="white"
+            borderColor="gray.200"
+            zIndex={1}
+            w={"100%"}
+            mb={2}
+          >
+            <Input
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              size="sm"
+              borderRadius={"full"}
+            />
+          </HStack>
+          {/* <IconButton
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsMenuOpen(false)}
+          icon={<IoClose />}
+          position={"absolute"}
+          right={-1}
+          top={1}
+        /> */}
+
+          {/* Display filtered products */}
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => {
+              const findActiveProduct = shopifyProductList?.products?.find(
+                (pro) =>
+                  pro?.id === `gid://shopify/Product/${product?.source_id}`
+              );
+              const isActive = findActiveProduct?.status === "ACTIVE";
+
+              return (
+                <MenuItem
+                  className="first-product-selector"
+                  key={product.id}
+                  onClick={() => onSelect(product)}
+                  _hover={{ bg: "gray.100" }}
+                  gap={2}
+                >
+                  {shopifyProductList && (
+                    <Tooltip
+                      label={isActive ? "Active" : "Inactive"}
+                      hasArrow
+                      placement="top"
+                    >
+                      <Box
+                        w={3}
+                        h={3}
+                        borderRadius={"full"}
+                        bg={isActive ? "green" : "gray"}
+                      />
+                    </Tooltip>
+                  )}
+                  {product?.name}
+                </MenuItem>
+              );
+            })
+          ) : (
+            <Box p={4} textAlign="center" color="gray.500">
+              No products found
+            </Box>
+          )}
+        </MenuList>
+      </Menu>
+    );
+  }
+);
 
 ProductSelector.displayName = "ProductSelector";
 
@@ -120,7 +262,14 @@ const Card = memo(
     templateData,
     contents,
     sheetData,
+    driverObj,
+    products,
+    shopifyProductList,
   }) => {
+    const { data: storyTemplates } = useStoryTemplate();
+
+    const { mutate: productMetafileds } = useProductMetafields();
+
     const [searchParams, setSearchParams] = useSearchParams();
     const toast = useToast();
     const tagBg = useColorModeValue("blue.50", "blue.900");
@@ -130,7 +279,7 @@ const Card = memo(
     const modalOptions = useDisclosure();
     const { onOpen } = modalOptions;
 
-    const isMobile = useBreakpointValue({ base: true, md: false });
+    const isMobile = useBreakpointValue({ base: true, lg: false });
 
     const [publishedIds, setPublishedIds] = useState(
       template?.products?.map((pro) => pro?.id) || []
@@ -189,12 +338,45 @@ const Card = memo(
         product_ids: selectedTags?.map((product) => product?.id),
       };
 
+      // Added Product List
+      const addProductMetaData = selectedTags
+        ?.filter((pro) => pro && pro.source_id)
+        .map((pro) => ({
+          id: Number(pro.source_id),
+          story: true,
+        }));
+
+      const productList = products?.filter((pro) =>
+        publishedIds?.includes(pro?.id)
+      );
+
+      const removedProductList = productList?.filter(
+        (pro) => !selectedTags?.map((s) => s?.id)?.includes(pro?.id)
+      );
+
+      // Removed Product List
+      const removeProductMetaData = removedProductList
+        ?.filter((pro) => pro && pro.source_id)
+        ?.map((pro) => ({
+          id: Number(pro?.source_id),
+          story: false,
+        }));
+
+      const productMetaData = [
+        ...(addProductMetaData || []),
+        ...(removeProductMetaData || []),
+      ];
+
       updateStoryTemplate(
         { id: template?.id, formData: updatedStoryTemplate },
         {
           onSuccess: () => {
             // Update the publishedIds with the new selection
             setPublishedIds(selectedTags?.map((pro) => pro?.id));
+
+            queryClient.invalidateQueries({
+              queryKey: [STORY_TEMPLATE_QUERY_KEY],
+            });
 
             queryClient.invalidateQueries({
               queryKey: [PRODUCT_LIST_QUERY_KEY],
@@ -219,7 +401,21 @@ const Card = memo(
               isClosable: true,
               position: "top-right",
             });
+
+            productMetafileds(productMetaData, {
+              onSuccess: () => {
+                console.log("Add Meta filed Successfully");
+
+                queryClient.invalidateQueries({
+                  queryKey: ["single-shopify-product"],
+                });
+              },
+              onError: (error) => {
+                console.log("Error while adding meta fields", error);
+              },
+            });
           },
+
           onError: (error) => {
             toast({
               title: "Operation Failed",
@@ -240,6 +436,19 @@ const Card = memo(
         product_ids: [],
       };
 
+      const filterTemplate = storyTemplates
+        ?.find((temp) => temp?.id === template?.id)
+        ?.products?.map((pro) => pro?.id);
+
+      const productList = products?.filter((pro) =>
+        filterTemplate?.includes(pro?.id)
+      );
+
+      const removeProductMetaData = productList?.map((pro) => ({
+        id: Number(pro?.source_id),
+        story: false,
+      }));
+
       updateStoryTemplate(
         { id: template?.id, formData: updatedStoryTemplate },
         {
@@ -250,6 +459,10 @@ const Card = memo(
             // Clear selected tags by calling onRemoveProduct for each tag
             selectedTags.forEach((product) => {
               onRemoveProduct(template?.id, product);
+            });
+
+            queryClient.invalidateQueries({
+              queryKey: [STORY_TEMPLATE_QUERY_KEY],
             });
 
             queryClient.invalidateQueries({
@@ -264,6 +477,15 @@ const Card = memo(
               duration: 5000,
               isClosable: true,
               position: "top-right",
+            });
+
+            productMetafileds(removeProductMetaData, {
+              onSuccess: () => {
+                console.log("Remove Meta filed Successfully");
+              },
+              onError: (error) => {
+                console.log("Error while removing meta fields", error);
+              },
             });
           },
           onError: (error) => {
@@ -360,7 +582,7 @@ const Card = memo(
                   size={"sm"}
                   p={2}
                   px={4}
-                  display={{ base: "flex", md: "none" }}
+                  display={{ base: "flex", lg: "none" }}
                 >
                   Preview
                 </Button>
@@ -399,6 +621,7 @@ const Card = memo(
                   availableProducts={availableProducts}
                   onSelect={(product) => onSelectProduct(template?.id, product)}
                   isDisabled={availableProducts.length === 0}
+                  shopifyProductList={shopifyProductList}
                 />
               </Box>
 
@@ -410,6 +633,9 @@ const Card = memo(
                     onRemove={() => onRemoveProduct(template?.id, product)}
                     tagBg={tagBg}
                     tagColor={tagColor}
+                    product={product}
+                    products={products}
+                    shopifyProductList={shopifyProductList}
                   />
                 ))}
               </Stack>
@@ -434,6 +660,8 @@ const Card = memo(
                         product={product}
                         onRemove={() => onRemoveProduct(template?.id, product)}
                         filterNewAddedProducts={filterNewAddedProducts}
+                        products={products}
+                        shopifyProductList={shopifyProductList}
                       />
                     );
                   })}
@@ -443,12 +671,13 @@ const Card = memo(
           )}
         </Stack>
 
-        <Stack display={{ base: "flex", md: "none" }}>
+        <Stack display={{ base: "flex", lg: "none" }}>
           <DrawerWrapper modalOptions={modalOptions}>
             <StoryPreview
               templateData={templateData}
               contents={contents}
               sheetData={sheetData}
+              driverObj={driverObj}
             />
           </DrawerWrapper>
         </Stack>
@@ -466,11 +695,19 @@ const Stories = () => {
     isLoading: isStoryTemplatesLoading,
     isError: isStoryTemplatesError,
   } = useStoryTemplate();
+
   const {
     data: products,
     isLoading: isProductsLoading,
     isError: isProductsError,
   } = useProducts();
+
+  const {
+    data: shopifyProductList,
+    isLoading: isShopifyProductListLoading,
+    isError: isShopifyProductListError,
+  } = useGetShopifyProducts();
+
   const [cardSelections, setCardSelections] = useState({});
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -577,14 +814,21 @@ const Stories = () => {
     keyboardControl: false,
     doneBtnText: "Finish",
   });
+
   useEffect(() => {
-    if (products?.length > 0) {
+    const hasRunBefore = localStorage.getItem("driverHasRun-storyPage");
+
+    if (products?.length === 1 && !hasRunBefore) {
+      localStorage.setItem("driverHasRun-storyPage", "true");
+
       setTimeout(() => {
         driverObj.drive();
       }, 1000);
     }
   }, [products]);
+
   console.log("cardSelections", cardSelections);
+
   // Get all selected products across all cards
   const getAllSelectedProducts = useCallback(() => {
     return Object.values(cardSelections).flat();
@@ -683,10 +927,12 @@ const Stories = () => {
   return (
     <ProductStoryContext.Provider value={productStoryContextValue}>
       <ProductDriverContext.Provider value={{ driver: driverObj }}>
-        <Stack p={5} direction={{ base: "column", md: "row" }} h={"100dvh"}>
+        <AlertDialogBox products={products} />
+
+        <Stack p={5} direction={{ base: "column", lg: "row" }} h={"100dvh"}>
           <Stack
             spacing={3}
-            w={{ base: "100%", md: "70%" }}
+            w={{ base: "100%", lg: "70%" }}
             overflowY={"scroll"}
           >
             {storyTemplates
@@ -707,18 +953,22 @@ const Stories = () => {
                   templateData={templateData}
                   contents={contents}
                   sheetData={sheetData}
+                  driverObj={driverObj}
+                  products={products}
+                  shopifyProductList={shopifyProductList}
                 />
               ))}
           </Stack>
 
           <Stack
-            display={{ base: "none", md: "flex" }}
-            w={{ base: "100%", md: "30%" }}
+            display={{ base: "none", lg: "flex" }}
+            w={{ base: "100%", lg: "30%" }}
           >
             <StoryPreview
               templateData={templateData}
               contents={contents}
               sheetData={sheetData}
+              driverObj={driverObj}
             />
           </Stack>
         </Stack>
@@ -727,13 +977,76 @@ const Stories = () => {
   );
 };
 
-const ProductCard = ({ product, onRemove, filterNewAddedProducts }) => {
-  const { data: products } = useProducts();
+const ProductCard = ({
+  product,
+  onRemove,
+  filterNewAddedProducts,
+  products,
+  shopifyProductList,
+}) => {
+  const { mutate: productMetafileds } = useProductMetafields();
 
   const isNewProduct = filterNewAddedProducts?.includes(product?.id);
-  console.log("filterNewAddedProducts", filterNewAddedProducts, isNewProduct);
 
   const productData = products?.find((pro) => pro?.id === product?.id);
+
+  const { data: shopifyProductData } = useGetSingleProduct(
+    productData?.source_id
+  );
+
+  const metaData = shopifyProductData?.product?.metafields?.edges?.find(
+    (meta) => meta?.node?.key === "show_product_story"
+  );
+
+  const isMetaData = metaData?.node?.value === "true";
+  console.log("shopifyProductData==>", isMetaData);
+
+  const [isPublished, setIsPublished] = useState(false);
+
+  const toast = useToast();
+
+  const findActiveProduct = shopifyProductList?.products?.find(
+    (pro) => pro?.id === `gid://shopify/Product/${productData?.source_id}`
+  );
+  const isActive = findActiveProduct?.status === "ACTIVE";
+
+  // Update isPublished state when publishedIds changes
+  useEffect(() => {
+    setIsPublished(metaData?.node?.value === "true");
+  }, [shopifyProductData]);
+
+  const handleSwitchChange = (e) => {
+    const newState = e.target.checked;
+    setIsPublished(newState);
+
+    const productMetaData = [
+      {
+        id: Number(productData?.source_id),
+        story: newState,
+      },
+    ];
+
+    productMetafileds(productMetaData, {
+      onSuccess: () => {
+        console.log("Add Meta filed Successfully");
+        setIsPublished(newState);
+
+        toast({
+          title: newState
+            ? "Story Added in Product theme"
+            : "Story Removed in Product theme",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+      },
+      onError: (error) => {
+        console.log("Error while adding meta fields", error);
+        setIsPublished(!newState);
+      },
+    });
+  };
 
   return (
     <HStack
@@ -745,20 +1058,41 @@ const ProductCard = ({ product, onRemove, filterNewAddedProducts }) => {
       bg={"gray.100"}
     >
       <HStack>
-        <Stack
-          bg={isNewProduct ? "orange.400" : "green.400"}
-          w={3}
-          h={3}
-          borderRadius={100}
-        />
-        <Text fontWeight={"semibold"}>{product?.name}</Text>
+        <Tooltip
+          label={isNewProduct ? "UnPublished" : "Published"}
+          hasArrow
+          placement="top"
+        >
+          <Stack
+            bg={isNewProduct ? "orange.400" : "green.400"}
+            w={3}
+            h={3}
+            borderRadius={100}
+          />
+        </Tooltip>
+        <Text fontWeight={"semibold"}>
+          {product?.name}{" "}
+          {shopifyProductList && !isActive && "(Inactive Product)"}
+        </Text>
       </HStack>
 
       <HStack>
-        {!isNewProduct && (
-          <a href={productData?.story_url} target="_blank">
-            <IconButton icon={<FaArrowUpRightFromSquare />} />
-          </a>
+        <Switch
+          isChecked={isPublished}
+          onChange={handleSwitchChange}
+          colorScheme="green"
+        />
+
+        {isActive && (
+          <>
+            <AddSection shopifyProductData={shopifyProductData} />
+
+            {!isNewProduct && (
+              <a href={productData?.story_url} target="_blank">
+                <IconButton icon={<FaArrowUpRightFromSquare />} />
+              </a>
+            )}
+          </>
         )}
         <IconButton
           icon={<MdRemoveCircleOutline fontSize={24} color="red" />}
@@ -800,14 +1134,23 @@ const CardAccordion = ({ label, body, headerStyles }) => {
   );
 };
 
-const StoryPreview = ({ templateData, contents, sheetData }) => {
+const StoryPreview = ({ templateData, contents, sheetData, driverObj }) => {
   return (
-    <Stack alignItems="center" spacing={0}>
-      {templateData && (
+    <Stack alignItems="center" spacing={0.5}>
+      <HStack w={"60%"} alignSelf={"center"} justifyContent={"space-between"}>
         <Text fontSize={"lg"} fontWeight={"semibold"}>
-          {templateData?.name}
+          {templateData && templateData?.name}
         </Text>
-      )}
+
+        <IconButton
+          icon={<MdOutlineTour color="blue" />}
+          onClick={() => {
+            driverObj.drive();
+          }}
+          borderRadius={"full"}
+          bg={"gray.200"}
+        />
+      </HStack>
 
       <Stack
         className="preview-experience-card"
@@ -853,6 +1196,58 @@ const DrawerWrapper = ({ children, modalOptions }) => {
         </DrawerBody>
       </DrawerContent>
     </Drawer>
+  );
+};
+
+const AlertDialogBox = ({ products }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
+
+  useEffect(() => {
+    if (products?.length === 0) {
+      onOpen();
+    }
+  }, [products]);
+
+  const { getShop } = useContext(AuthContext);
+
+  const store = getShop()?.split(".")[0];
+
+  const addProductUrl = `https://admin.shopify.com/store/${store}/products`;
+
+  return (
+    <AlertDialog
+      isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
+      onClose={onClose}
+      closeOnOverlayClick={false}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            Continue with Adding Product
+          </AlertDialogHeader>
+
+          <AlertDialogBody>
+            Please first add atleast one product to assigning story template
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            <a href={addProductUrl} target="_blank">
+              <Button
+                colorScheme="blue"
+                onClick={() => {
+                  onClose();
+                }}
+                ml={3}
+              >
+                Continue
+              </Button>
+            </a>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
   );
 };
 

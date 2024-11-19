@@ -708,8 +708,11 @@ const ContentBuilder = ({
   });
 
   useEffect(() => {
-    //TODO: check if local storage has data, if not, then show driver
-    if (localStorage.getItem(`content`) || localStorage.getItem(`sheet`)) {
+    const hasRunBefore = localStorage.getItem("driverHasRun-storyBuilder");
+
+    if (!hasRunBefore) {
+      localStorage.setItem("driverHasRun-storyBuilder", "true");
+
       setTimeout(() => {
         driverObj?.drive();
       }, 200);
