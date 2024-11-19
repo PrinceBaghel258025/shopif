@@ -1,4 +1,12 @@
-import React, { useState, useCallback, useEffect, memo, useMemo } from "react";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  memo,
+  useMemo,
+  useRef,
+  useContext,
+} from "react";
 import {
   Box,
   Button,
@@ -35,10 +43,20 @@ import {
   Flex,
   Input,
   Tooltip,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
 import { FaArrowRight } from "react-icons/fa";
 import CarouselComponent from "../components/ProductStoryVisualizer/CarouselComponent";
-import { ProductDriverContext, ProductStoryContext } from "../services/context";
+import {
+  AuthContext,
+  ProductDriverContext,
+  ProductStoryContext,
+} from "../services/context";
 import { useProducts } from "../apiHooks/useProducts";
 import {
   STORY_TEMPLATE_QUERY_KEY,
@@ -909,6 +927,8 @@ const Stories = () => {
   return (
     <ProductStoryContext.Provider value={productStoryContextValue}>
       <ProductDriverContext.Provider value={{ driver: driverObj }}>
+        <AlertDialogBox products={products} />
+
         <Stack p={5} direction={{ base: "column", lg: "row" }} h={"100dvh"}>
           <Stack
             spacing={3}
@@ -1176,6 +1196,58 @@ const DrawerWrapper = ({ children, modalOptions }) => {
         </DrawerBody>
       </DrawerContent>
     </Drawer>
+  );
+};
+
+const AlertDialogBox = ({ products }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
+
+  useEffect(() => {
+    if (products?.length === 0) {
+      onOpen();
+    }
+  }, [products]);
+
+  const { getShop } = useContext(AuthContext);
+
+  const store = getShop()?.split(".")[0];
+
+  const addProductUrl = `https://admin.shopify.com/store/${store}/products`;
+
+  return (
+    <AlertDialog
+      isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
+      onClose={onClose}
+      closeOnOverlayClick={false}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            Continue with Adding Product
+          </AlertDialogHeader>
+
+          <AlertDialogBody>
+            Please first add atleast one product to assigning story template
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            <a href={addProductUrl} target="_blank">
+              <Button
+                colorScheme="blue"
+                onClick={() => {
+                  onClose();
+                }}
+                ml={3}
+              >
+                Continue
+              </Button>
+            </a>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
   );
 };
 
