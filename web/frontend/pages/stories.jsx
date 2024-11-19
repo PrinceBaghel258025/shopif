@@ -34,6 +34,7 @@ import {
   Switch,
   Flex,
   Input,
+  Tooltip,
 } from "@chakra-ui/react";
 import { FaArrowRight } from "react-icons/fa";
 import CarouselComponent from "../components/ProductStoryVisualizer/CarouselComponent";
@@ -57,82 +58,119 @@ import { MdRemoveCircleOutline } from "react-icons/md";
 import { PRODUCT_LIST_QUERY_KEY } from "../apiHooks/ApiHooksQueryKeys";
 import { useProductMetafields } from "../apiHooks/useThemes";
 import AddSection from "../components/AddSection";
-import { useGetSingleProduct } from "../apiHooks/useShopifyProduct";
+import {
+  useGetShopifyProducts,
+  useGetSingleProduct,
+} from "../apiHooks/useShopifyProduct";
 import { MdOutlineTour } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 
 // Memoized Tag component
-const ProductTag = memo(({ tag, onRemove, tagBg, tagColor }) => (
-  <Tag
-    size="sm"
-    borderRadius="full"
-    variant="subtle"
-    bg={tagBg}
-    color={tagColor}
-    p={1}
-    px={3}
-  >
-    <TagLabel>{tag}</TagLabel>
+const ProductTag = memo(
+  ({
+    tag,
+    onRemove,
+    tagBg,
+    tagColor,
+    product,
+    products,
+    shopifyProductList,
+  }) => {
+    const productData = products?.find((pro) => pro?.id === product?.id);
+    const findActiveProduct = shopifyProductList?.products?.find(
+      (pro) => pro?.id === `gid://shopify/Product/${productData?.source_id}`
+    );
+    const isActive = findActiveProduct?.status === "ACTIVE";
+    return (
+      <Tag
+        size="sm"
+        borderRadius="full"
+        variant="subtle"
+        bg={tagBg}
+        color={tagColor}
+        p={1}
+        px={3}
+      >
+        <HStack>
+          {shopifyProductList && (
+            <Tooltip
+              label={isActive ? "Active" : "Inactive"}
+              hasArrow
+              placement="top"
+            >
+              <Box
+                w={2.5}
+                h={2.5}
+                borderRadius={"full"}
+                bg={isActive ? "green" : "gray"}
+              />
+            </Tooltip>
+          )}
+          <TagLabel>{tag}</TagLabel>
+        </HStack>
 
-    <TagCloseButton onClick={() => onRemove(tag)} />
-  </Tag>
-));
+        <TagCloseButton onClick={() => onRemove(tag)} />
+      </Tag>
+    );
+  }
+);
 
 ProductTag.displayName = "ProductTag";
 
 // Memoized Product Selector component
-const ProductSelector = memo(({ availableProducts, onSelect, isDisabled }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+const ProductSelector = memo(
+  ({ availableProducts, onSelect, isDisabled, shopifyProductList }) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
-  // Filter products based on the search query
-  const filteredProducts = useMemo(() => {
-    return availableProducts.filter((product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [availableProducts, searchQuery]);
+    // Filter products based on the search query
+    const filteredProducts = useMemo(() => {
+      return availableProducts.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }, [availableProducts, searchQuery]);
 
-  return (
-    <Menu
-      isOpen={isMenuOpen}
-      closeOnSelect={false}
-      onClose={() => setIsMenuOpen(false)}
-    >
-      <MenuButton
-        as={Button}
-        rightIcon={<FaArrowRight />}
-        w="full"
-        variant="outline"
-        textAlign="left"
-        isDisabled={isDisabled}
-        fontSize="sm"
-        className="products-selector"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
+    return (
+      <Menu
+        isOpen={isMenuOpen}
+        closeOnSelect={false}
+        onClose={() => setIsMenuOpen(false)}
       >
-        {availableProducts.length > 0
-          ? "Select products..."
-          : "No more products available"}
-      </MenuButton>
-
-      <MenuList overflow="scroll" maxH="80vh" p={1}>
-        <HStack
-          position="sticky"
-          top={0}
-          bg="white"
-          borderColor="gray.200"
-          zIndex={1}
-          w={"100%"}
-          mb={2}
+        <MenuButton
+          as={Button}
+          rightIcon={<FaArrowRight />}
+          w="full"
+          variant="outline"
+          textAlign="left"
+          isDisabled={isDisabled}
+          fontSize="sm"
+          className="products-selector"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <Input
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            size="sm"
-            borderRadius={"full"}
-          />
-        </HStack>
-        {/* <IconButton
+          {availableProducts.length > 0
+            ? "Select products..."
+            : "No more products available"}
+        </MenuButton>
+
+        <MenuList overflow="scroll" maxH="80vh" p={1}>
+          <HStack
+            position="sticky"
+            top={0}
+            bg="white"
+            borderColor="gray.200"
+            zIndex={1}
+            w={"100%"}
+            mb={2}
+          >
+            <Input
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              size="sm"
+              borderRadius={"full"}
+            />
+          </HStack>
+          {/* <IconButton
           size="sm"
           variant="ghost"
           onClick={() => setIsMenuOpen(false)}
@@ -142,27 +180,51 @@ const ProductSelector = memo(({ availableProducts, onSelect, isDisabled }) => {
           top={1}
         /> */}
 
-        {/* Display filtered products */}
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <MenuItem
-              className="first-product-selector"
-              key={product.id}
-              onClick={() => onSelect(product)}
-              _hover={{ bg: "gray.100" }}
-            >
-              {product?.name}
-            </MenuItem>
-          ))
-        ) : (
-          <Box p={4} textAlign="center" color="gray.500">
-            No products found
-          </Box>
-        )}
-      </MenuList>
-    </Menu>
-  );
-});
+          {/* Display filtered products */}
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => {
+              const findActiveProduct = shopifyProductList?.products?.find(
+                (pro) =>
+                  pro?.id === `gid://shopify/Product/${product?.source_id}`
+              );
+              const isActive = findActiveProduct?.status === "ACTIVE";
+
+              return (
+                <MenuItem
+                  className="first-product-selector"
+                  key={product.id}
+                  onClick={() => onSelect(product)}
+                  _hover={{ bg: "gray.100" }}
+                  gap={2}
+                >
+                  {shopifyProductList && (
+                    <Tooltip
+                      label={isActive ? "Active" : "Inactive"}
+                      hasArrow
+                      placement="top"
+                    >
+                      <Box
+                        w={3}
+                        h={3}
+                        borderRadius={"full"}
+                        bg={isActive ? "green" : "gray"}
+                      />
+                    </Tooltip>
+                  )}
+                  {product?.name}
+                </MenuItem>
+              );
+            })
+          ) : (
+            <Box p={4} textAlign="center" color="gray.500">
+              No products found
+            </Box>
+          )}
+        </MenuList>
+      </Menu>
+    );
+  }
+);
 
 ProductSelector.displayName = "ProductSelector";
 
@@ -184,6 +246,7 @@ const Card = memo(
     sheetData,
     driverObj,
     products,
+    shopifyProductList,
   }) => {
     const { data: storyTemplates } = useStoryTemplate();
 
@@ -540,6 +603,7 @@ const Card = memo(
                   availableProducts={availableProducts}
                   onSelect={(product) => onSelectProduct(template?.id, product)}
                   isDisabled={availableProducts.length === 0}
+                  shopifyProductList={shopifyProductList}
                 />
               </Box>
 
@@ -551,6 +615,9 @@ const Card = memo(
                     onRemove={() => onRemoveProduct(template?.id, product)}
                     tagBg={tagBg}
                     tagColor={tagColor}
+                    product={product}
+                    products={products}
+                    shopifyProductList={shopifyProductList}
                   />
                 ))}
               </Stack>
@@ -576,6 +643,7 @@ const Card = memo(
                         onRemove={() => onRemoveProduct(template?.id, product)}
                         filterNewAddedProducts={filterNewAddedProducts}
                         products={products}
+                        shopifyProductList={shopifyProductList}
                       />
                     );
                   })}
@@ -609,11 +677,19 @@ const Stories = () => {
     isLoading: isStoryTemplatesLoading,
     isError: isStoryTemplatesError,
   } = useStoryTemplate();
+
   const {
     data: products,
     isLoading: isProductsLoading,
     isError: isProductsError,
   } = useProducts();
+
+  const {
+    data: shopifyProductList,
+    isLoading: isShopifyProductListLoading,
+    isError: isShopifyProductListError,
+  } = useGetShopifyProducts();
+
   const [cardSelections, setCardSelections] = useState({});
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -859,6 +935,7 @@ const Stories = () => {
                   sheetData={sheetData}
                   driverObj={driverObj}
                   products={products}
+                  shopifyProductList={shopifyProductList}
                 />
               ))}
           </Stack>
@@ -885,6 +962,7 @@ const ProductCard = ({
   onRemove,
   filterNewAddedProducts,
   products,
+  shopifyProductList,
 }) => {
   const { mutate: productMetafileds } = useProductMetafields();
 
@@ -906,6 +984,11 @@ const ProductCard = ({
   const [isPublished, setIsPublished] = useState(false);
 
   const toast = useToast();
+
+  const findActiveProduct = shopifyProductList?.products?.find(
+    (pro) => pro?.id === `gid://shopify/Product/${productData?.source_id}`
+  );
+  const isActive = findActiveProduct?.status === "ACTIVE";
 
   // Update isPublished state when publishedIds changes
   useEffect(() => {
@@ -955,13 +1038,22 @@ const ProductCard = ({
       bg={"gray.100"}
     >
       <HStack>
-        <Stack
-          bg={isNewProduct ? "orange.400" : "green.400"}
-          w={3}
-          h={3}
-          borderRadius={100}
-        />
-        <Text fontWeight={"semibold"}>{product?.name}</Text>
+        <Tooltip
+          label={isNewProduct ? "UnPublished" : "Published"}
+          hasArrow
+          placement="top"
+        >
+          <Stack
+            bg={isNewProduct ? "orange.400" : "green.400"}
+            w={3}
+            h={3}
+            borderRadius={100}
+          />
+        </Tooltip>
+        <Text fontWeight={"semibold"}>
+          {product?.name}{" "}
+          {shopifyProductList && !isActive && "(Inactive Product)"}
+        </Text>
       </HStack>
 
       <HStack>
@@ -971,12 +1063,16 @@ const ProductCard = ({
           colorScheme="green"
         />
 
-        <AddSection shopifyProductData={shopifyProductData} />
+        {isActive && (
+          <>
+            <AddSection shopifyProductData={shopifyProductData} />
 
-        {!isNewProduct && (
-          <a href={productData?.story_url} target="_blank">
-            <IconButton icon={<FaArrowUpRightFromSquare />} />
-          </a>
+            {!isNewProduct && (
+              <a href={productData?.story_url} target="_blank">
+                <IconButton icon={<FaArrowUpRightFromSquare />} />
+              </a>
+            )}
+          </>
         )}
         <IconButton
           icon={<MdRemoveCircleOutline fontSize={24} color="red" />}

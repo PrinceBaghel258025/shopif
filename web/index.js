@@ -144,13 +144,14 @@ app.get("/api/products", async (_req, res) => {
   try {
     const productsData = await client.request(`
       query {
-        products(first: 100) {
+        products(first: 250) {
           edges {
             node {
               id
               title
               description
               handle
+              status
               metafields(first: 10){
                 edges{
                   node{
