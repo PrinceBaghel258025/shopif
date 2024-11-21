@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "shopify app dev",
     "ext:dev": "run-p -sr vite:dev",
-    "build": "run-s vite:build shopify:build",
+    "build": "run-s vite:build",
     "deploy": "run-s vite:build cleanup shopify:deploy",
     "shopify": "shopify",
-    "shopify:build": "shopify app build",
+    "shopify:build": "shopify app build --client-id=d3d070cea5fca7ab9ded6a39b7b5f856 --verbose",
     "shopify:dev": "shopify app dev",
     "shopify:info": "shopify app info",
     "shopify:generate": "shopify app generate",
