@@ -1,25 +1,25 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "b592f6b30431fac8d607f05d8c76bb1c"
-name = "vite-store-ext"
-handle = "vite-store-ext"
-application_url = "https://logical-bears-so-crime.trycloudflare.com"
+client_id = "d3d070cea5fca7ab9ded6a39b7b5f856"
+name = "Kodex"
+handle = "kodex"
+application_url = "https://cyprus-ext-proposed-antenna.trycloudflare.com"
 embedded = true
 
 [build]
-automatically_update_urls_on_dev = true
-dev_store_url = "hellostorexyz.myshopify.com"
 include_config_on_deploy = true
+dev_store_url = "my-great-shop-1.myshopify.com"
+automatically_update_urls_on_dev = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_online_store_pages,read_products,read_themes,write_products,write_themes"
+scopes = "write_products,read_products,read_online_store_pages,read_themes,write_themes"
 
 [auth]
 redirect_urls = [
-  "https://logical-bears-so-crime.trycloudflare.com/auth/callback",
-  "https://logical-bears-so-crime.trycloudflare.com/auth/shopify/callback",
-  "https://logical-bears-so-crime.trycloudflare.com/api/auth/callback"
+  "https://cyprus-ext-proposed-antenna.trycloudflare.com/auth/callback",
+  "https://cyprus-ext-proposed-antenna.trycloudflare.com/auth/shopify/callback",
+  "https://cyprus-ext-proposed-antenna.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
