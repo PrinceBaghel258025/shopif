@@ -1,7 +1,8 @@
 [[extensions]]
-name = "test-vite-app"
-handle = "test-vite-app"
+name = "Kodex Story"
+handle = "kodex-app"
 type = "theme"
+description = "Kodex app theme extension"
 
 [extensions.settings]
     [[extensions.targeting]]
