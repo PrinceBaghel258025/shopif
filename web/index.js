@@ -5,6 +5,8 @@ import express from "express";
 import serveStatic from "serve-static";
 import crypto from "crypto";
 import axios from "axios";
+import sqlite3 from "sqlite3";
+import { existsSync } from "fs";
 
 import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
@@ -14,13 +16,33 @@ const PORT = parseInt(
   process.env.BACKEND_PORT || process.env.PORT || "3000",
   10
 );
-
+const DB_PATH = `${process.cwd()}/database.sqlite`;
 const STATIC_PATH =
   process.env.NODE_ENV === "production"
     ? `${process.cwd()}/frontend/dist`
     : `${process.cwd()}/frontend/`;
 
 const app = express();
+
+// Initialize SQLite database and create table if it doesn't exist
+const db = new sqlite3.Database(DB_PATH, (err) => {
+  if (err) {
+    console.error('Error opening database:', err);
+    return;
+  }
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS token_shop_mapping (
+      shop_id TEXT PRIMARY KEY,
+      token TEXT NOT NULL
+    )
+  `, (err) => {
+    if (err) {
+      console.error('Error creating table:', err);
+    }
+    db.close();
+  });
+});
 
 // Set up Shopify authentication and webhook handling
 app.get(shopify.config.auth.path, shopify.auth.begin());
@@ -79,24 +101,24 @@ app.get("/api/knox-token", async (_req, res) => {
       },
     }
   );
-  // const response = await fetch(
-  //   "https://g9bvvvyptqo7uxa0.agspert-ai.com/shopify/auth/login/",
-  //   {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(body),
-  //   }
-  // );
-
-  // if (!res.ok) {
-  //   return res
-  //     .status(response.status)
-  //     .send({ error: "Failed to fetch Knox token" });
-  // }
 
   const { token } = await response.data;
+  
+  // Open connection to existing database
+  const db = new sqlite3.Database(DB_PATH);
+  
+  // Store token in SQLite database
+  db.run(
+    "INSERT OR REPLACE INTO token_shop_mapping (shop_id, token) VALUES (?, ?)",
+    [res.locals.shopify.session.shop, token],
+    (err) => {
+      if (err) {
+        console.error("Error storing token:", err);
+      }
+      db.close(); // Close the connection after operation
+    }
+  );
+
   res.status(200).send({ token, shop: res.locals.shopify.session.shop });
 });
 
