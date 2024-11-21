@@ -7,7 +7,7 @@ export default defineConfig(async () => {
   return {
     plugins: [
       shopify({
-        themeRoot: "extensions/test-vite-app",
+        themeRoot: "extensions/kodex-extension",
       }),
       react(),
     ],
