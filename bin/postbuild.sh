@@ -17,4 +17,4 @@ cp -r web/product-creator.js ./.amplify-hosting/compute/default/product-creator.
 
 cp deploy-manifest.json ./.amplify-hosting/deploy-manifest.json
 cd ./.amplify-hosting/compute/default
-yarn install --frozen-lockfile --production --ignore-scripts --non-interactive
+yarn install 
