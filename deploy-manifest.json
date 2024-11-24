@@ -33,7 +33,7 @@
     {
       "name": "default",
       "runtime": "nodejs18.x",
-      "entrypoint": "compute/default/index.js"
+      "entrypoint": "index.js"
     }
   ]
 }
