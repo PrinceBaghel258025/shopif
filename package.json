@@ -16,7 +16,8 @@
     "shopify:deploy": "shopify app deploy",
     "vite:dev": "vite",
     "vite:build": "vite build",
-    "cleanup": "rimraf --glob extensions/*/assets/*.{json,geetkeep}"
+    "cleanup": "rimraf --glob extensions/*/assets/*.{json,geetkeep}",
+    "postbuild": "chmod +x bin/postbuild.sh && ./bin/postbuild.sh"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
