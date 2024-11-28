@@ -1,0 +1,28 @@
+FROM node:18-alpine AS build-stage
+WORKDIR /app
+
+# Set build arguments and environment variables
+ARG SHOPIFY_API_KEY
+ARG BACKEND_URL
+
+
+ENV SHOPIFY_API_KEY=$SHOPIFY_API_KEY
+ENV VITE_SHOPIFY_API_KEY=$SHOPIFY_API_KEY
+ENV BACKEND_URL=$BACKEND_URL
+
+# Copy the rest of the application
+COPY web .
+COPY .env .
+RUN yarn install
+
+# Build frontend with explicit API key
+WORKDIR /app/frontend
+RUN yarn install && BACKEND_URL=$BACKEND_URL  SHOPIFY_API_KEY=$SHOPIFY_API_KEY VITE_SHOPIFY_API_KEY=$SHOPIFY_API_KEY yarn build
+
+FROM busybox:1.35
+RUN adduser -D static
+USER static
+WORKDIR /home/static
+COPY --from=build-stage /app/frontend/dist .
+EXPOSE 5000
+CMD ["busybox", "httpd", "-f", "-v", "-p", "5000"]

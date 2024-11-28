@@ -4,8 +4,8 @@ metadata:
   name: shopify-secrets
 type: Opaque
 stringData:
-  SHOPIFY_API_KEY: 4fe1dd2305b7f2c7c4283ed2ecc499fa
-  SHOPIFY_API_SECRET: bb7beac7a9ea787b6c57c54b4cecbd43
+  SHOPIFY_API_KEY: "d3d070cea5fca7ab9ded6a39b7b5f856"
+  SHOPIFY_API_SECRET: "effc36d148a11c59102715f05c2ef2aa"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -27,7 +27,7 @@ spec:
         - name: regcred2
       containers:
       - name: shopify-app
-        image: registry.myella.app/kodex:2  # Replace with your image name
+        image: registry.myella.app/kodex:8  # Replace with your image name
         ports:
         - containerPort: 8081
         env:
@@ -42,7 +42,7 @@ spec:
               name: shopify-secrets
               key: SHOPIFY_API_SECRET
         - name: SCOPES
-          value: "read_products,write_products"
+          value: "read_online_store_pages,read_products,read_themes,write_products,write_themes"
         - name: HOST
           value: "https://kodex.ruraldevs.dev"  # Replace with your actual domain
         - name: PORT
@@ -52,3 +52,18 @@ spec:
             secretKeyRef:
               name: shopify-secrets
               key: SHOPIFY_API_KEY
+        - name: BACKEND_PORT
+          value: "8081"
+        - name: FRONTEND_PORT
+          value: "8081"
+        - name: NODE_ENV
+          value: "production"
+      #   - name: SQLITE_PATH
+      #     value: "/app/data/database.sqlite"
+      #   volumeMounts:
+      #   - name: shopify-data
+      #     mountPath: /app/data
+      # volumes:
+      # - name: shopify-data
+      #   persistentVolumeClaim:
+      #     claimName: shopify-data-pvc
