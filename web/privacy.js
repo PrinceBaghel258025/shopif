@@ -2,6 +2,8 @@ import { DeliveryMethod } from "@shopify/shopify-api";
 import fs from 'fs';
 import path from 'path';
 import sqlite3 from 'sqlite3';
+const crmUrl = "https://g9bvvvyptqo7uxa0.agspert-ai.com/";
+import { makeRequest } from './utils.js';
 
 const DB_PATH = `${process.cwd()}/database.sqlite`;
 const crmCallback = async (topic, shop, body, webhookId) => {
@@ -26,7 +28,7 @@ const crmCallback = async (topic, shop, body, webhookId) => {
   //   console.log("No token found for shop", shop, shopData);
   //   return;
   // }
-  const url = "https://g9bvvvyptqo7uxa0.agspert-ai.com//kvk/product/event_management/";
+  const url = `${crmUrl}kvk/product/event_management/`;
 
 
   const crmCallResponse = await fetch(url, {
@@ -52,8 +54,23 @@ export default {
     deliveryMethod: DeliveryMethod.Http,
     callbackUrl: "/api/webhooks",
     callback: async (topic, shop, body, webhookId) => {
-
-      const payload = JSON.parse(body);
+      try {
+        const user_detailUrl = `${crmUrl}shopify/user_detail?shop=${shop}`;
+        const token = await new Promise((resolve, reject) => {
+          db.get("SELECT token FROM token_shop_mapping WHERE shop_id = ?", [shop], (err, row) => {
+            if (err) reject(err);
+            resolve(row?.token);
+          });
+        });
+        const data = await makeRequest(user_detailUrl, "GET", `Token ${token}`);
+        console.log("crm response", data);
+        return data;
+      } catch (e) {
+        return {
+          status: "ok",
+          message: e.message
+        }
+      }
 
     },
   },
@@ -62,6 +79,11 @@ export default {
     callbackUrl: "/api/webhooks",
     callback: async (topic, shop, body, webhookId) => {
       const payload = JSON.parse(body);
+      console.log("CUSTOMERS_REDACT", payload);
+      return {
+        status: "ok",
+        message: "success"
+      }
     },
   },
   SHOP_REDACT: {
@@ -69,6 +91,11 @@ export default {
     callbackUrl: "/api/webhooks",
     callback: async (topic, shop, body, webhookId) => {
       const payload = JSON.parse(body);
+      console.log("SHOP_REDACT", payload);
+      return {
+        status: "ok",
+        message: "success"
+      }
     },
   },
   PRODUCTS_CREATE: {
