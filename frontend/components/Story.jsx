@@ -5,7 +5,7 @@ import { ProductStoryContext } from "./context";
 import { ChakraProvider } from "@chakra-ui/react";
 import { useGetStory } from "./apiHooks/useStory";
 
-const Story = () => {
+const Story = ({ storyData, isStoryDataError }) => {
   // Create a context value object
   const productStoryContextValue = {
     addInfoPoint: () => {},
@@ -16,15 +16,6 @@ const Story = () => {
     styles: {},
     handleStyleChange: () => {},
   };
-
-  const shopifyProductData = window.product;
-  const productMetafields = window.productMetafields;
-
-  console.log("productMetafields==>", productMetafields);
-
-  const { data: storyData, isError: isStoryDataError } = useGetStory({
-    productId: shopifyProductData?.id,
-  });
 
   const [contents, setContents] = useState([]);
 
@@ -78,6 +69,7 @@ const Story = () => {
           overflow="hidden"
           boxShadow="lg"
           position="relative"
+          bg={"white"}
         >
           <CarouselComponent
             productData={contents || {}}

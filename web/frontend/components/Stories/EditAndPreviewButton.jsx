@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Button, HStack } from "@chakra-ui/react";
-import { useGetThemes } from "../apiHooks/useThemes";
-import { AuthContext } from "../services/context";
+import { useGetThemes } from "../../apiHooks/useThemes";
+import { AuthContext } from "../../services/context";
 
 //https://admin.shopify.com/store/hellostorexyz/themes/173602373923/editor?template=product&addAppBlockId=483fa771-9c4d-49e4-8c0d-0155f4b872d6/app-stories-block&target=mainSection
 
-const AddSection = ({ shopifyProductData }) => {
+const EditAndPreviewButton = ({ shopifyProductData }) => {
   const app = useAppBridge();
 
   const { getShop } = useContext(AuthContext);
@@ -27,6 +27,8 @@ const AddSection = ({ shopifyProductData }) => {
     shopifyProductData?.product?.handle
   }`;
 
+  if (!productHandle) return;
+
   return (
     <HStack>
       <a href={redirectUrl} target="_blank">
@@ -44,4 +46,4 @@ const AddSection = ({ shopifyProductData }) => {
   );
 };
 
-export default AddSection;
+export default EditAndPreviewButton;

@@ -1,15 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Slider from "react-slick";
 import { Scene } from "./Scene";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { CustomNextArrow, CustomPrevArrow } from "./CustomArrow";
-import { Stack } from "@chakra-ui/react";
+import { HStack, Stack } from "@chakra-ui/react";
 import ImageScreen from "./ImageScreen";
 import VideoScreen from "./VideoScreen";
 import DraggableDrawer from "./generic/DraggableDrawer";
 import { DrawerInfo } from "./DrawerInfo";
 import { motion, useMotionValue, useTransform } from "framer-motion";
+import Slider from "react-slick";
+import GenericCarousel from "./generic/GenericCarousel";
 
 const MIN_HEIGHT = 30;
 const MAX_HEIGHT = 572.85;
@@ -82,7 +81,9 @@ const CarouselComponent = ({ productData, defaultSheetData }) => {
           y: backgroundOffset,
         }}
       >
-        <Slider ref={sliderRef} {...settings}>
+        <GenericCarousel
+          showArrows={drawerHeight.current === MIN_HEIGHT && isVisible}
+        >
           {shouldShowEmptyState && <Stack h={"100dvh"} />}
 
           {filteredProductData?.map((dataset) => (
@@ -133,7 +134,7 @@ const CarouselComponent = ({ productData, defaultSheetData }) => {
               )}
             </Stack>
           ))}
-        </Slider>
+        </GenericCarousel>
       </MotionStack>
 
       <DraggableDrawer
@@ -147,7 +148,7 @@ const CarouselComponent = ({ productData, defaultSheetData }) => {
         <DrawerInfo data={defaultSheetData} />
       </DraggableDrawer>
 
-      {drawerHeight.current === MIN_HEIGHT && (
+      {/* {drawerHeight.current === MIN_HEIGHT && (
         <>
           {currentSlide > 0 && (
             <CustomPrevArrow isVisible={isVisible} onClick={prevSlide} />
@@ -156,7 +157,7 @@ const CarouselComponent = ({ productData, defaultSheetData }) => {
             <CustomNextArrow isVisible={isVisible} onClick={nextSlide} />
           )}
         </>
-      )}
+      )} */}
     </Stack>
   );
 };

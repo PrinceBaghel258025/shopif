@@ -1,0 +1,43 @@
+{% comment %} {% if product.metafields.custom.show_product_story == 'false' %} {% endcomment %}
+  <div id="carousel">
+    {% liquid
+      # Relative to entrypointsDir
+      render 'vite-tag' with 'carousel.css'
+      render 'vite-tag' with 'carousel.jsx'
+    %}
+  </div>
+
+{% comment %} {% endif %} {% endcomment %}
+
+<script>
+  const home = {{ request.path | json }}
+  window.product = {{ product | json }};
+  window.productMetafields = {
+    showProductStory: {{ product.metafields.custom.show_product_story | json | default: 'false' }}
+  };
+</script>
+
+{% schema %}
+{
+  "name": "Story Carousel",
+  "class": "story-carousel-section",
+  "target": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "story_title",
+      "label": "Story Title",
+      "default": "Story Carousel"
+    },
+    {
+      "type": "richtext",
+      "id": "default_story",
+      "label": "Default Story",
+      "default": "<p>Discover the unique story behind this product...</p>"
+    }
+  ]
+}
+{% endschema %}

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useContext,
+} from "react";
 import {
   VStack,
   Box,
@@ -62,6 +68,7 @@ import {
 } from "./storyUtils";
 import { IoIosAdd } from "react-icons/io";
 import {
+  AuthContext,
   ProductDriverContext,
   ProductStoryContext,
 } from "../../services/context";
@@ -84,6 +91,7 @@ import SeoEditor from "./SeoEditor";
 import GlobalStyleEditor from "./GlobalStyleEditor";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import { MdOutlineTour } from "react-icons/md";
 
 const ContentBuilder = ({
   productId,
@@ -143,6 +151,8 @@ const ContentBuilder = ({
   const [sheetData, setSheetData] = useState([]);
 
   const { control, watch, setValue, getValues, setError } = formMethods;
+
+  const { getShop } = useContext(AuthContext);
 
   useEffect(() => {
     if (templateStory) {
@@ -396,6 +406,7 @@ const ContentBuilder = ({
 
     const story = {
       name: storyName,
+      shop_name: getShop(),
       description: {
         data: replacedContentData,
         is_general_sheet: true,
@@ -445,9 +456,9 @@ const ContentBuilder = ({
         {
           onSuccess: (data) => {
             console.log("Edited PRODUCT STORY: ", data);
-            if (action === "publish") {
-              handlePublishProductStory(data?.id);
-            }
+            // if (action === "publish") {
+            //   handlePublishProductStory(data?.id);
+            // }
 
             toast({
               status: "success",
@@ -457,6 +468,8 @@ const ContentBuilder = ({
             removeFromLocalStorage(`sheet`);
             removeFromLocalStorage(`urlMap`);
             removeFromLocalStorage(`storyName`);
+
+            window.location.href = `/stories?templateId=${data?.id}`;
           },
           onError: (error) => {
             toast({
@@ -899,20 +912,38 @@ const ContentBuilder = ({
           </Box>
 
           <Stack width="40%" h="100%" alignItems={"center"} spacing={1}>
-            <Stack
-              w={"277.4px"}
-              h={"572.85px"}
-              borderWidth={5}
-              borderColor={"black"}
-              borderRadius={50}
-              overflow={"hidden"}
-              boxShadow={"lg"}
-              position={"relative"}
-            >
-              <CarouselComponent
-                productData={contents}
-                defaultSheetData={sheetData}
-              />
+            <Stack alignItems="center" spacing={0.5}>
+              <HStack
+                w={"100%"}
+                alignSelf={"center"}
+                justifyContent={"space-between"}
+              >
+                <Text mb={0}></Text>
+
+                <IconButton
+                  icon={<MdOutlineTour color="blue" />}
+                  onClick={() => {
+                    driverObj.drive();
+                  }}
+                  borderRadius={"full"}
+                  bg={"gray.200"}
+                />
+              </HStack>
+              <Stack
+                w={"277.4px"}
+                h={"572.85px"}
+                borderWidth={5}
+                borderColor={"black"}
+                borderRadius={50}
+                overflow={"hidden"}
+                boxShadow={"lg"}
+                position={"relative"}
+              >
+                <CarouselComponent
+                  productData={contents}
+                  defaultSheetData={sheetData}
+                />
+              </Stack>
             </Stack>
 
             <Stack position={"absolute"} right={5} bottom={8}>

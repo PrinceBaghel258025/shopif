@@ -1,16 +1,2 @@
-[[extensions]]
-name = "Kodex Story"
-handle = "kodex-app"
+name = "kodex-extension"
 type = "theme"
-description = "Kodex app theme extension"
-
-[extensions.settings]
-    [[extensions.targeting]]
-    target = "section"
-    module = { import = "./blocks/counter.liquid" }
-    auto_append = true
-
-    [extensions.capabilities]
-    api_access = true
-    block_progress = true
-    network_access = true

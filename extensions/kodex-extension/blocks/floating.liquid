@@ -1,9 +1,9 @@
 {% if product.metafields.custom.show_product_story == 'true' %}
-  <div id="root">
+  <div id="floating">
     {% liquid
       # Relative to entrypointsDir
-      render 'vite-tag' with 'theme.css'
-      render 'vite-tag' with 'theme.jsx'
+      render 'vite-tag' with 'floating.css'
+      render 'vite-tag' with 'floating.jsx'
     %}
   </div>
 {% endif %}
@@ -18,8 +18,8 @@
 
 {% schema %}
 {
-  "name": "Product Story",
-  "class": "product-story-section",
+  "name": "Floating Story",
+  "class": "floating-story-section",
   "target": "section",
   "enabled_on": {
     "templates": ["product"]

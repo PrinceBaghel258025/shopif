@@ -231,7 +231,7 @@ const VideoScreen = ({ header, data, setIsInteracting, slideId }) => {
             ref={videoRef}
             src={videoUrl.image_url}
             style={{
-              height: "39.5rem",
+              height: "572.85px",
               objectFit: "fill",
               pointerEvents: isDisabled ? "none" : "auto",
             }}

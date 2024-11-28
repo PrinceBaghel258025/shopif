@@ -27,19 +27,15 @@ import React, {
 } from "react";
 import * as THREE from "three";
 import { HeroSection } from "./HeroSection";
-// import MediaContentIn360 from './MediaContentIn360';
 import ScreenInfoCard from "./generic/ScreenInfoCard";
 import { InfoIcon } from "@chakra-ui/icons";
-// import { ProductStoryContext } from "../services/context";
 import { nanoid } from "nanoid";
 import { useThrottle } from "@uidotdev/usehooks";
-// import CircularLoader from "../ProductStoryBuilder/CircularLoader";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import { CgCloseO } from "react-icons/cg";
 import { motion } from "framer-motion";
-// import { ProductStoryContext } from "../../services/context";
 import { ProductStoryContext } from "../context";
-import CircularLoader from "../CircularLoader";
+import CircularLoader from "./generic/CircularLoader";
 
 export const LoadingBox = () => (
   <Box

@@ -1,0 +1,37 @@
+{% comment %} {% if product.metafields.custom.show_product_story == 'false' %} {% endcomment %}
+  <div id="tag">
+    {% liquid
+      # Relative to entrypointsDir
+      render 'vite-tag' with 'tag.css'
+      render 'vite-tag' with 'tag.jsx'
+    %}
+  </div>
+
+{% comment %} {% endif %} {% endcomment %}
+
+<script>
+  const home = {{ request.path | json }}
+  window.product = {{ product | json }};
+  window.productMetafields = {
+    showProductStory: {{ product.metafields.custom.show_product_story | json | default: 'false' }}
+  };
+</script>
+
+{% schema %}
+{
+  "name": "Story Tag",
+  "class": "story-tag-section",
+  "target": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "story_title",
+      "label": "Story Tag",
+      "default": "Story Tag"
+    }
+  ]
+}
+{% endschema %}

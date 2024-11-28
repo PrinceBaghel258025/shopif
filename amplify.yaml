@@ -1,0 +1,55 @@
+version: 1
+applications:
+  - frontend:
+      phases:
+        preBuild:
+          commands:
+            - nvm install 20.9.0
+            - nvm use 20.9.0
+            - node -v
+            - npm install -g yarn
+            - yarn install
+        build:
+          commands:
+            # Build web app
+            - cd web && yarn build
+            # Deploy extension if we're on main branch
+            - |
+              if [ "${AWS_BRANCH}" = "main" ]; then
+                node scripts/deploy-extension.js
+              fi
+      artifacts:
+        baseDirectory: web/frontend/dist
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+          - web/node_modules/**/*
+          - web/frontend/node_modules/**/*
+          
+    appRoot: .
+    backend:
+      phases:
+        preBuild:
+          commands:
+            # Setup Node.js environment
+            - nvm install 20.9.0
+            - nvm use 20.9.0
+            - node -v
+            # Install yarn globally
+            - npm install -g yarn
+        build:
+          commands:
+            - cd web
+            - yarn install
+      artifacts:
+        baseDirectory: web
+        files:
+          - '**/*'
+        excludes:
+          - frontend/**/*
+          - node_modules/**/*
+      cache:
+        paths:
+          - web/node_modules/**/* 

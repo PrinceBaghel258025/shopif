@@ -232,7 +232,7 @@ const ImageScreen = ({ header, data, setIsInteracting, slideId }) => {
           <Image
             ref={imageRef}
             src={imageUrl.image_url}
-            height="39.5rem"
+            height="572.85px"
             objectFit="fill"
             alt="img"
             style={{ pointerEvents: isDisabled ? "none" : "auto" }}

@@ -1,8 +1,6 @@
 import { Flex, HStack, Image, Stack } from "@chakra-ui/react";
 import React from "react";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 export const BusinessPartner = ({ partner }) => {
   const settings = {

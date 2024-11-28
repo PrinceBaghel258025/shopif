@@ -1,12 +1,11 @@
-import { Flex, HStack, Text } from '@chakra-ui/react';
-import React from 'react';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { Flex, HStack, Text } from "@chakra-ui/react";
+import React from "react";
+import Slider from "react-slick";
+import GenericCarousel from "./generic/GenericCarousel";
 
 const VideoContent = ({ media }) => {
   const splitMedia = (media) => {
-    const videos = media?.filter((item) => item.endsWith('.mp4'));
+    const videos = media?.filter((item) => item.endsWith(".mp4"));
     return { videos };
   };
 
@@ -25,10 +24,10 @@ const VideoContent = ({ media }) => {
   return (
     <>
       {videos?.length === 1 && videos?.[0]?.image_url ? (
-        <Flex borderRadius={'1rem'}>
+        <Flex borderRadius={"1rem"}>
           <video
             style={{
-              borderRadius: '0.5rem',
+              borderRadius: "0.5rem",
             }}
             src={videos[0]?.image_url}
             controls
@@ -37,15 +36,19 @@ const VideoContent = ({ media }) => {
             muted
             playsInline
           />
-          <Text w={'16rem'} h={'9rem'} display={'none'} />
+          <Text w={"16rem"} h={"9rem"} display={"none"} />
         </Flex>
       ) : videos?.[0]?.image_url ? (
-        <HStack as={Slider} {...settings} width={'100%'} my={3} mb={8}>
+        <GenericCarousel
+          sliderContainerProps={{ w: "100%", my: 3, mb: 8 }}
+          autoPlay
+          infinite
+        >
           {videos?.map((video) => (
-            <Flex key={video} borderRadius={'1rem'}>
+            <Flex key={video} borderRadius={"1rem"}>
               <video
                 style={{
-                  borderRadius: '0.5rem',
+                  borderRadius: "0.5rem",
                 }}
                 src={video?.image_url}
                 controls
@@ -54,10 +57,10 @@ const VideoContent = ({ media }) => {
                 muted
                 playsInline
               />
-              <Text w={'16rem'} h={'9rem'} display={'none'} />
+              <Text w={"16rem"} h={"9rem"} display={"none"} />
             </Flex>
           ))}
-        </HStack>
+        </GenericCarousel>
       ) : null}
     </>
   );

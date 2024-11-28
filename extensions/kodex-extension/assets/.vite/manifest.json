@@ -1,0 +1,46 @@
+{
+  "_carousel-!~{005}~.js": {
+    "file": "floating-BmAVGTu2.css",
+    "src": "frontend/entrypoints/floating.jsx"
+  },
+  "_text-CTqb1-FP.js": {
+    "file": "text-CTqb1-FP.js",
+    "name": "text"
+  },
+  "frontend/entrypoints/carousel.jsx": {
+    "file": "carousel-CmdHmCJO.js",
+    "name": "carousel",
+    "src": "frontend/entrypoints/carousel.jsx",
+    "isEntry": true,
+    "imports": [
+      "_text-CTqb1-FP.js"
+    ],
+    "css": [
+      "floating-BmAVGTu2.css"
+    ]
+  },
+  "frontend/entrypoints/floating.jsx": {
+    "file": "floating-BbQ04xmX.js",
+    "name": "floating",
+    "src": "frontend/entrypoints/floating.jsx",
+    "isEntry": true,
+    "imports": [
+      "_text-CTqb1-FP.js"
+    ],
+    "css": [
+      "floating-BmAVGTu2.css"
+    ]
+  },
+  "frontend/entrypoints/tag.jsx": {
+    "file": "tag-jY5z2Jqx.js",
+    "name": "tag",
+    "src": "frontend/entrypoints/tag.jsx",
+    "isEntry": true,
+    "imports": [
+      "_text-CTqb1-FP.js"
+    ],
+    "css": [
+      "floating-BmAVGTu2.css"
+    ]
+  }
+}
