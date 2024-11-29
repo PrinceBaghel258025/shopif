@@ -12,6 +12,7 @@ import {
   Stack,
   Text,
   useBreakpointValue,
+  useClipboard,
   useColorModeValue,
   useDisclosure,
   useToast,
@@ -25,6 +26,7 @@ import ProductCard from "./ProductCard";
 import StoryPreview from "./StoryPreview";
 import DrawerWrapper from "./DrawerWrapper";
 import { PRODUCT_LIST_QUERY_KEY } from "../../apiHooks/ApiHooksQueryKeys";
+import { FaRegCopy } from "react-icons/fa";
 
 const Card = ({
   index,
@@ -49,8 +51,6 @@ const Card = ({
 
   const [searchParams, setSearchParams] = useSearchParams();
   const toast = useToast();
-  const tagBg = useColorModeValue("blue.50", "blue.900");
-  const tagColor = useColorModeValue("blue.600", "blue.200");
   const queryClient = useQueryClient();
 
   const modalOptions = useDisclosure();
@@ -361,12 +361,28 @@ const Card = ({
       !hasChanges ||
       (publishedIds?.length !== 0 && selectedTags?.length === 0));
 
-  const buttonText = isRepublishMode() ? "Republish" : "Publish";
+  const buttonText = isRepublishMode() ? "Republish Story" : "Publish Story";
+
+  const { onCopy } = useClipboard("N/A");
+
+  // Handle URL copy
+  const handleCopy = () => {
+    onCopy();
+    toast({
+      title: "Copied to Clipboard",
+      // description: `'${url}' is copied to clipboard!`,
+      description: `N/A is copied to clipboard!`,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+      position: "top",
+    });
+  };
 
   return (
     <>
       <Stack
-        bg={templateId === template?.id ? "#f5fffe" : "white"}
+        bg={"white"}
         borderRadius="xl"
         borderLeftWidth={4}
         borderLeftColor={
@@ -386,9 +402,27 @@ const Card = ({
       >
         <Stack p={3}>
           <HStack justifyContent="space-between">
-            <Text size="sm" fontWeight="semibold">
-              {template?.name}
-            </Text>
+            <HStack>
+              <Text size="sm" fontWeight="semibold">
+                {template?.name}
+              </Text>
+
+              <Text
+                size="sm"
+                textColor={"#757575"}
+                bg={"rgb(228,204,255,0.3)"}
+                px={2}
+                py={1}
+                borderRadius={100}
+                display={"flex"}
+                gap={3}
+                alignItems={"center"}
+              >
+                brandname.mykodex.com/storyname+utm
+                <FaRegCopy cursor={"pointer"} onClick={() => handleCopy()} />
+              </Text>
+            </HStack>
+
             <HStack>
               <Button
                 onClick={() => {
@@ -398,8 +432,10 @@ const Card = ({
                 size={"sm"}
                 p={2}
                 px={4}
+                bg={"#67C9FF"}
+                color={"white"}
               >
-                Edit
+                Edit Story
               </Button>
 
               <Button
@@ -412,7 +448,7 @@ const Card = ({
                 px={4}
                 display={{ base: "flex", lg: "none" }}
               >
-                Preview
+                Preview Story
               </Button>
 
               <Button
@@ -424,11 +460,13 @@ const Card = ({
                 onClick={handleUpdateStoryTemplate}
                 isDisabled={isButtonDisabled}
                 size={"sm"}
+                bg={"#00B894"}
+                color={"white"}
               >
                 {buttonText}
               </Button>
 
-              <Button
+              {/* <Button
                 className="remove-all-btn"
                 fontSize="xs"
                 p={2}
@@ -439,11 +477,11 @@ const Card = ({
                 size={"sm"}
               >
                 Remove All
-              </Button>
+              </Button> */}
             </HStack>
           </HStack>
 
-          <Stack spacing={1}>
+          <Stack spacing={3}>
             <Box>
               <ProductSelector
                 availableProducts={availableProducts}
@@ -459,8 +497,6 @@ const Card = ({
                   key={product?.id}
                   tag={product?.name}
                   onRemove={() => onRemoveProduct(template?.id, product)}
-                  tagBg={tagBg}
-                  tagColor={tagColor}
                   product={product}
                   products={products}
                   shopifyProductList={shopifyProductList}

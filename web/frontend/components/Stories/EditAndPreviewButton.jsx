@@ -3,6 +3,8 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { Button, HStack } from "@chakra-ui/react";
 import { useGetThemes } from "../../apiHooks/useThemes";
 import { AuthContext } from "../../services/context";
+import { FaRegEye } from "react-icons/fa";
+import SpreadIcon from "../../assets/Icon/SpreadIcon";
 
 //https://admin.shopify.com/store/hellostorexyz/themes/173602373923/editor?template=product&addAppBlockId=483fa771-9c4d-49e4-8c0d-0155f4b872d6/app-stories-block&target=mainSection
 
@@ -32,16 +34,12 @@ const EditAndPreviewButton = ({ shopifyProductData }) => {
   return (
     <HStack>
       <a href={redirectUrl} target="_blank">
-        <Button size={"xs"} py={2}>
-          Editor
-        </Button>
+        <SpreadIcon />
       </a>
 
-      <a href={previewStoreUrl} target="_blank">
-        <Button size={"xs"} py={2}>
-          Preview
-        </Button>
-      </a>
+      {/* <a href={previewStoreUrl} target="_blank">
+        <FaRegEye fontSize={22} color="#3688FF" />
+      </a> */}
     </HStack>
   );
 };

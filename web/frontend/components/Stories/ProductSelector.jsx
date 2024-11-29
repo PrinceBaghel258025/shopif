@@ -9,7 +9,7 @@ import {
   MenuList,
   Tooltip,
 } from "@chakra-ui/react";
-import { memo, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 
 const ProductSelector = ({
@@ -46,11 +46,11 @@ const ProductSelector = ({
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
         {availableProducts.length > 0
-          ? "Select products..."
+          ? "Search products to link this story..."
           : "No more products available"}
       </MenuButton>
 
-      <MenuList overflow="scroll" maxH="80vh" p={1}>
+      <MenuList overflow="scroll" maxH="50vh" p={1} overflowY={"scroll"}>
         <HStack
           position="sticky"
           top={0}
@@ -65,18 +65,9 @@ const ProductSelector = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             size="sm"
-            borderRadius={"full"}
+            borderRadius={"md"}
           />
         </HStack>
-        {/* <IconButton
-            size="sm"
-            variant="ghost"
-            onClick={() => setIsMenuOpen(false)}
-            icon={<IoClose />}
-            position={"absolute"}
-            right={-1}
-            top={1}
-          /> */}
 
         {/* Display filtered products */}
         {filteredProducts.length > 0 ? (
@@ -101,10 +92,10 @@ const ProductSelector = ({
                     placement="top"
                   >
                     <Box
-                      w={3}
-                      h={3}
+                      w={2}
+                      h={2}
                       borderRadius={"full"}
-                      bg={isActive ? "green" : "gray"}
+                      bg={isActive ? "#2AFF00" : "gray"}
                     />
                   </Tooltip>
                 )}

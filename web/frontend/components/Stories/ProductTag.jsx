@@ -11,8 +11,6 @@ import { memo } from "react";
 const ProductTag = ({
   tag,
   onRemove,
-  tagBg,
-  tagColor,
   product,
   products,
   shopifyProductList,
@@ -27,8 +25,7 @@ const ProductTag = ({
       size="sm"
       borderRadius="full"
       variant="subtle"
-      bg={tagBg}
-      color={tagColor}
+      bg={"#EAF7FF"}
       p={1}
       px={3}
     >
@@ -40,10 +37,10 @@ const ProductTag = ({
             placement="top"
           >
             <Box
-              w={2.5}
-              h={2.5}
+              w={2}
+              h={2}
               borderRadius={"full"}
-              bg={isActive ? "green" : "gray"}
+              bg={isActive ? "#2AFF00" : "gray"}
             />
           </Tooltip>
         )}

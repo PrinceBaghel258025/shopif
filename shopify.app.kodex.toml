@@ -1,9 +1,9 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "8e1f538eaf91bb4e723ad403ee702a6a"
-application_url = "https://arrangement-objective-swiss-romania.trycloudflare.com"
+application_url = "https://laptops-preview-viewpicture-prescribed.trycloudflare.com"
 embedded = true
-name = "kodex"
+name = "Kodex"
 handle = "kodex-1"
 
 [build]
@@ -20,9 +20,9 @@ scopes = "read_online_store_pages,read_products,read_themes,write_products,write
 
 [auth]
 redirect_urls = [
-  "https://arrangement-objective-swiss-romania.trycloudflare.com/auth/callback",
-  "https://arrangement-objective-swiss-romania.trycloudflare.com/auth/shopify/callback",
-  "https://arrangement-objective-swiss-romania.trycloudflare.com/api/auth/callback"
+  "https://laptops-preview-viewpicture-prescribed.trycloudflare.com/auth/callback",
+  "https://laptops-preview-viewpicture-prescribed.trycloudflare.com/auth/shopify/callback",
+  "https://laptops-preview-viewpicture-prescribed.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

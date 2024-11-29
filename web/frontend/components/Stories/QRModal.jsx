@@ -14,7 +14,12 @@ const QRModal = ({ storyUrl }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <IconButton icon={<BsQrCodeScan />} onClick={onOpen} />
+      <BsQrCodeScan
+        onClick={onOpen}
+        cursor={"pointer"}
+        fontSize={20}
+        color="#3688FF"
+      />
 
       <Modal isOpen={isOpen} onClose={onClose} size={"sm"}>
         <ModalOverlay />

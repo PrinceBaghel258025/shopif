@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useGetSingleProduct } from "../../apiHooks/useShopifyProduct";
 import { useProductMetafields } from "../../apiHooks/useThemes";
 import {
@@ -11,8 +11,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import QRModal from "./QRModal";
-import { MdRemoveCircleOutline } from "react-icons/md";
 import EditAndPreviewButton from "./EditAndPreviewButton";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { AuthContext } from "../../services/context";
+import { FaRegEye } from "react-icons/fa";
 
 const ProductCard = ({
   product,
@@ -90,14 +92,22 @@ const ProductCard = ({
     (pro) => pro?.id === product?.id
   );
 
+  // Theme Preview & Redirect
+  const { getShop } = useContext(AuthContext);
+  const productSection = "products";
+
+  const previewStoreUrl = `https://${getShop()}/${productSection}/${
+    shopifyProductData?.product?.handle
+  }`;
+
   return (
     <HStack
       justifyContent={"space-between"}
       boxShadow={"md"}
-      p={1}
-      px={3}
-      borderRadius={10}
-      bg={"gray.100"}
+      p={3}
+      px={4}
+      borderRadius={5}
+      bg={"#F0FFFC"}
     >
       <HStack>
         <Tooltip
@@ -106,9 +116,9 @@ const ProductCard = ({
           placement="top"
         >
           <Stack
-            bg={isNewProduct ? "orange.400" : "green.400"}
-            w={3}
-            h={3}
+            bg={isNewProduct ? "orange.400" : "#2AFF00"}
+            w={2}
+            h={2}
             borderRadius={100}
           />
         </Tooltip>
@@ -118,24 +128,33 @@ const ProductCard = ({
         </Text>
       </HStack>
 
-      <HStack>
+      <HStack spacing={5}>
+        {isActive && (
+          <EditAndPreviewButton shopifyProductData={shopifyProductData} />
+        )}
+
+        {isActive && (
+          <>
+            {!isNewProduct && productStory && (
+              <QRModal storyUrl={productStory?.story_url} />
+            )}
+          </>
+        )}
+
+        <a href={previewStoreUrl} target="_blank">
+          <FaRegEye fontSize={22} color="#3688FF" />
+        </a>
+
         <Switch
           isChecked={isPublished}
           onChange={handleSwitchChange}
           colorScheme="green"
         />
 
-        {isActive && (
-          <>
-            <EditAndPreviewButton shopifyProductData={shopifyProductData} />
-
-            {!isNewProduct && productStory && (
-              <QRModal storyUrl={productStory?.story_url} />
-            )}
-          </>
-        )}
-        <IconButton
-          icon={<MdRemoveCircleOutline fontSize={24} color="red" />}
+        <RiDeleteBin6Line
+          fontSize={22}
+          color="red"
+          cursor={"pointer"}
           onClick={() => onRemove(product?.id)}
         />
       </HStack>
