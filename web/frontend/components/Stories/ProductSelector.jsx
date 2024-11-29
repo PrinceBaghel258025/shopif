@@ -52,15 +52,7 @@ const ProductSelector = ({
       </MenuButton>
 
       <MenuList overflow="scroll" maxH="50vh" p={1} overflowY={"scroll"}>
-        <HStack
-          position="sticky"
-          top={0}
-          bg="white"
-          borderColor="gray.200"
-          zIndex={1}
-          w={"100%"}
-          mb={2}
-        >
+        <HStack bg="white" borderColor="gray.200" zIndex={1} w={"100%"} mb={2}>
           <Input
             placeholder="Search products..."
             value={searchQuery}
@@ -77,6 +69,9 @@ const ProductSelector = ({
               (pro) => pro?.id === `gid://shopify/Product/${product?.source_id}`
             );
             const isActive = findActiveProduct?.status === "ACTIVE";
+
+            // Remove inactive products
+            if (!isActive) return;
 
             return (
               <MenuItem
