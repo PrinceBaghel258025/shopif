@@ -12,23 +12,18 @@ const SlideContainer = styled(animated.div)`
   align-items: center;
   justify-content: center;
   transform-origin: 50% 50%;
+  // background-color: red;
+  width: 268px !important;
+  height: 572px !important;
 
   
 
-  > * {
-    width: 100%;
-    height: 100%;
-    // min-width: 300px;
-    // max-width: 300px;
-    min-height: 572.85px;
-    max-height: 572.85px;
-  }
-
   canvas {
-    width: 100% !important;
-    height: 100% !important;
-    min-width: 320px !important;
-    max-width: 320px !important;
+    // width: 100% !important;
+    // height: 100% !important;
+    width: 292px !important;
+    height: 603px !important;
+    background-color: blue;
   }
 
   img, video {
@@ -36,8 +31,8 @@ const SlideContainer = styled(animated.div)`
     // height: 100% !important;
     // min-width: 300px !important;
     // max-width: 300px !important;
-    object-fit: cover;
-  }
+    object-fit: fill;
+  }
 
 `;
 

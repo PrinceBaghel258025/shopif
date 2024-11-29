@@ -5,8 +5,6 @@ import SliderComponent from "./SliderComponent";
 const CarouselBlock = ({ message }) => {
   return (
     <div className="tw-w-full tw-h-full ">
-      {message}
-      {/* <Scene data={[]} setIsBottomSheetOpen={() => {}} setIsInteracting={() => {}} header={''} fov={0} targetRotation={0} zoom={1} slideId={''} /> */}
       <SliderComponent
         productData={[
           {
@@ -69,6 +67,21 @@ const CarouselBlock = ({ message }) => {
             isActive: true,
             infoPoints: {},
           },
+          {
+            id: "egs3ylR9PwX5U_qBVHXPV",
+            data: [
+              {
+                id: "_b4EiFyuLSoLAc5J2J8dW",
+                type: "carousel_360_image",
+                image_url:
+                  "https://agspert-weatherstation1.s3.amazonaws.com/media/12258/sngurofalvynbxosggaqotokszpqli",
+              },
+            ],
+            type: "carousel_360_image",
+            header: "360 img",
+            isActive: true,
+            infoPoints: {},
+          }
         ]}
         defaultSheetdata={[]}
       />

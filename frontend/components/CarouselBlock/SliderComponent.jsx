@@ -19,8 +19,8 @@ function SliderComponent({ productData, defaultSheetdata }) {
   const slides = useMemo(() => {
     return productData?.map((dataset, index) => {
       const commonStackProps = {
-        w: '292px',
-        h: '603px',
+        w: '268px',
+        h: '572px',
         borderWidth: 5,
         borderColor: 'black',
         borderRadius: 50,
