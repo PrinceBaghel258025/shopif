@@ -1,15 +1,29 @@
 /* eslint-disable react/display-name */
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Stack } from "@chakra-ui/react";
+import { Button, Stack } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import Slide from "./Slide";
+
+const ParentWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+`;
+
+const GrandParentWrapper = styled(ParentWrapper)`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+   border: 2px solid black;
+`;
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: 90%;
-  border: 2px solid black;
-  border-radius: 10px;
+  // border: 2px solid black;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -48,6 +62,8 @@ const Carousel = React.memo(
     const [goToSlide, setGoToSlide] = useState(null);
     const [newSlide, setNewSlide] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
+    const [keepStopped, setKeepStopped] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     const modBySlidesLength = useCallback(
       (idx) => {
@@ -141,6 +157,7 @@ const Carousel = React.memo(
 
     useEffect(() => {
       let timeoutId;
+      if (keepStopped) return;
 
       if (typeof goToSlide === "number") {
         if (newSlide) {
@@ -153,12 +170,12 @@ const Carousel = React.memo(
       return () => {
         if (timeoutId) window.clearTimeout(timeoutId);
       };
-    }, [goToSlide, newSlide, index, handleGoToSlide, goToSlideDelay]);
+    }, [goToSlide, newSlide, index, handleGoToSlide, goToSlideDelay, keepStopped]);
 
     // Auto rotate effect with pause functionality
     useEffect(() => {
       let autoRotateTimer;
-      
+
       if (!isPaused) {
         autoRotateTimer = setInterval(() => {
           const nextSlide = modBySlidesLength(index + 1);
@@ -180,7 +197,7 @@ const Carousel = React.memo(
           setGoToSlide(index);
           setNewSlide(true);
           setIsPaused(true);
-          
+
           // Resume auto-rotation after PAUSE_DURATION
           setTimeout(() => {
             setIsPaused(false);
@@ -192,35 +209,60 @@ const Carousel = React.memo(
 
     return (
       <>
-        <Wrapper>
-          <ConstantFrame>
-            <Stack
-              position={"absolute"}
-              top={8}
-              left={"50%"}
-              transform={"translateX(-50%)"}
-              w={"22%"}
-              h={2.5}
-              bg={"black"}
-              borderRadius={100}
-              zIndex={10}
-            >
-              <p></p>
-            </Stack>
-          </ConstantFrame>
-          {presentableSlides.map((slide, presentableIndex) => (
-            <Slide
-              key={`${slide.key}-${slide.originalIndex}`}
-              content={slide.content}
-              onClick={() => handleSlideClick(slide.originalIndex)}
-              offsetRadius={clampOffsetRadius(offsetRadius)}
-              index={presentableIndex}
-              animationConfig={animationConfig}
-              offsetFn={offsetFn}
-            />
-          ))}
-        </Wrapper>
-        {/* {navigationButtons} */}
+        <GrandParentWrapper>
+          <div style={{ width: "60%", right: !isExpanded ? "-100%" : "0%", position: "absolute", zIndex: 2, height: "100%", backgroundColor: "red", transition: "right 0.3s ease" }}>
+            <Button position={"absolute"} top={8} right={8} onClick={() => {
+              setIsExpanded(prev => !prev);
+              setKeepStopped(false);
+            }}>Close</Button>
+
+          </div>
+          <ParentWrapper style={{ left: isExpanded ? "-30%" : "0%", transition: "left 0.3s ease" }}>
+            <Wrapper>
+              <ConstantFrame>
+                <Stack
+                  position={"absolute"}
+                  top={8}
+                  left={"50%"}
+                  transform={"translateX(-50%)"}
+                  w={"22%"}
+                  h={2.5}
+                  bg={"black"}
+                  borderRadius={100}
+                  zIndex={10}
+                >
+                  <p></p>
+                </Stack>
+                {!isExpanded && <Button onClick={() => {
+                  setIsExpanded(prev => !prev);
+                  setKeepStopped(prev => !prev);
+
+                }} position={"absolute"}
+                  bottom={8}
+                  left={"50%"}
+                  transform={"translateX(-50%)"}
+                  bg={"white"}
+                  // borderRadius={100}
+                  zIndex={10}>
+                  <p>Info</p>
+                </Button>}
+              </ConstantFrame>
+
+              {presentableSlides.map((slide, presentableIndex) => (
+                <Slide
+                  key={`${slide.key}-${slide.originalIndex}`}
+                  content={slide.content}
+                  onClick={() => handleSlideClick(slide.originalIndex)}
+                  offsetRadius={clampOffsetRadius(offsetRadius)}
+                  index={presentableIndex}
+                  animationConfig={animationConfig}
+                  offsetFn={offsetFn}
+                />
+              ))}
+            </Wrapper>
+            {/* {navigationButtons} */}
+          </ParentWrapper>
+        </GrandParentWrapper>
       </>
     );
   }
