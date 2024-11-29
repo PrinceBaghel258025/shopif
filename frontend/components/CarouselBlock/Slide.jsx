@@ -13,27 +13,25 @@ const SlideContainer = styled(animated.div)`
   justify-content: center;
   transform-origin: 50% 50%;
   // background-color: red;
-  width: 268px !important;
-  height: 572px !important;
-
-  
+  width: 16.75em !important;
+  height: 35.75em !important;
 
   canvas {
     // width: 100% !important;
     // height: 100% !important;
-    width: 270px !important;
-    height: 603px !important;
+    width: 16.87em !important;
+    height: 37.68em !important;
     background-color: blue;
   }
 
-  img, video {
+  img,
+  video {
     // width: 100% !important;
     // height: 100% !important;
     // min-width: 300px !important;
     // max-width: 300px !important;
     object-fit: fill;
   }
-
 `;
 
 const getDefaultTranslateX = (offsetFromCenter, offsetRadius, index) => {
