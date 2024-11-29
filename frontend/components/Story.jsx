@@ -71,6 +71,19 @@ const Story = ({ storyData, isStoryDataError }) => {
           position="relative"
           bg={"white"}
         >
+          <Stack
+            position={"absolute"}
+            top={8}
+            left={"50%"}
+            transform={"translateX(-50%)"}
+            w={"22%"}
+            h={2.5}
+            bg={"black"}
+            borderRadius={100}
+            zIndex={10}
+          >
+            <p />
+          </Stack>
           <CarouselComponent
             productData={contents || {}}
             defaultSheetData={sheetData || []}

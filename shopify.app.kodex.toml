@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "8e1f538eaf91bb4e723ad403ee702a6a"
-application_url = "https://judy-techno-priorities-contemporary.trycloudflare.com"
+application_url = "https://maine-istanbul-citation-signing.trycloudflare.com"
 embedded = true
 name = "Kodex"
 handle = "kodex-1"
@@ -20,9 +20,9 @@ scopes = "read_online_store_pages,read_products,read_themes,write_products,write
 
 [auth]
 redirect_urls = [
-  "https://judy-techno-priorities-contemporary.trycloudflare.com/auth/callback",
-  "https://judy-techno-priorities-contemporary.trycloudflare.com/auth/shopify/callback",
-  "https://judy-techno-priorities-contemporary.trycloudflare.com/api/auth/callback"
+  "https://maine-istanbul-citation-signing.trycloudflare.com/auth/callback",
+  "https://maine-istanbul-citation-signing.trycloudflare.com/auth/shopify/callback",
+  "https://maine-istanbul-citation-signing.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
