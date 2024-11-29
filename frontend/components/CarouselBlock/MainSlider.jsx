@@ -3,8 +3,6 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Stack } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import Slide from "./Slide";
-// import leftNavigation from "./LeftNavigation.png";
-// import rightNavigation from "./RightNavigation.png";
 
 const Wrapper = styled.div`
   position: relative;
@@ -27,21 +25,10 @@ const ConstantFrame = styled.div`
   overflow: hidden;
   box-shadow: lg;
 `;
-const NavigationButtons = styled.div`
-  position: relative;
-  display: flex;
-  height: 40px;
-  margin: 0 auto;
-  width: 20%;
-  margin-top: 1rem;
-  justify-content: space-between;
-
-  img {
-    height: 100%;
-  }
-`;
 
 const DEFAULT_GO_TO_SLIDE_DELAY = 200;
+const AUTO_ROTATE_DELAY = 3000; // 3 seconds
+const PAUSE_DURATION = 10000; // 10 seconds
 
 const mod = (a, b) => {
   return ((a % b) + b) % b;
@@ -60,6 +47,7 @@ const Carousel = React.memo(
     const [index, setIndex] = useState(0);
     const [goToSlide, setGoToSlide] = useState(null);
     const [newSlide, setNewSlide] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
 
     const modBySlidesLength = useCallback(
       (idx) => {
@@ -167,32 +155,40 @@ const Carousel = React.memo(
       };
     }, [goToSlide, newSlide, index, handleGoToSlide, goToSlideDelay]);
 
+    // Auto rotate effect with pause functionality
+    useEffect(() => {
+      let autoRotateTimer;
+      
+      if (!isPaused) {
+        autoRotateTimer = setInterval(() => {
+          const nextSlide = modBySlidesLength(index + 1);
+          setGoToSlide(nextSlide);
+          setNewSlide(true);
+        }, AUTO_ROTATE_DELAY);
+      }
+
+      return () => {
+        if (autoRotateTimer) {
+          clearInterval(autoRotateTimer);
+        }
+      };
+    }, [index, modBySlidesLength, isPaused]);
+
     const handleSlideClick = useCallback(
       (index) => {
         if (typeof goToSlide !== "number" || index !== goToSlide) {
           setGoToSlide(index);
           setNewSlide(true);
+          setIsPaused(true);
+          
+          // Resume auto-rotation after PAUSE_DURATION
+          setTimeout(() => {
+            setIsPaused(false);
+          }, PAUSE_DURATION);
         }
       },
       [goToSlide]
     );
-
-    // const navigationButtons = showNavigation ? (
-    //   <NavigationButtons>
-    //     <img
-    //       src={leftNavigation}
-    //       onClick={() => moveSlide(-1)}
-    //       style={{ marginRight: "2rem" }}
-    //       alt="Previous"
-    //     />
-    //     <img
-    //       src={rightNavigation}
-    //       onClick={() => moveSlide(1)}
-    //       style={{ marginLeft: "2rem" }}
-    //       alt="Next"
-    //     />
-    //   </NavigationButtons>
-    // ) : null;
 
     return (
       <>
