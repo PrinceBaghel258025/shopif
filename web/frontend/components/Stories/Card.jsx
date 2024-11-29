@@ -9,8 +9,10 @@ import {
   Box,
   Button,
   HStack,
+  IconButton,
   Stack,
   Text,
+  Tooltip,
   useBreakpointValue,
   useClipboard,
   useColorModeValue,
@@ -27,6 +29,7 @@ import StoryPreview from "./StoryPreview";
 import DrawerWrapper from "./DrawerWrapper";
 import { PRODUCT_LIST_QUERY_KEY } from "../../apiHooks/ApiHooksQueryKeys";
 import { FaRegCopy } from "react-icons/fa";
+import { IoFunnelOutline } from "react-icons/io5";
 
 const Card = ({
   index,
@@ -407,20 +410,22 @@ const Card = ({
                 {template?.name}
               </Text>
 
-              <Text
-                size="sm"
-                textColor={"#757575"}
-                bg={"rgb(228,204,255,0.3)"}
-                px={2}
-                py={1}
-                borderRadius={100}
-                display={"flex"}
-                gap={3}
-                alignItems={"center"}
-              >
-                brandname.mykodex.com/storyname+utm
-                <FaRegCopy cursor={"pointer"} onClick={() => handleCopy()} />
-              </Text>
+              <Tooltip label="brandname.mykodex.com/storyname+utm">
+                <Text
+                  size="sm"
+                  textColor={"#757575"}
+                  bg={"rgb(228,204,255,0.3)"}
+                  px={2}
+                  py={1}
+                  borderRadius={100}
+                  display={"flex"}
+                  gap={3}
+                  alignItems={"center"}
+                >
+                  brandname...
+                  <FaRegCopy cursor={"pointer"} onClick={() => handleCopy()} />
+                </Text>
+              </Tooltip>
             </HStack>
 
             <HStack>
@@ -509,12 +514,13 @@ const Card = ({
         {selectedTags?.length !== 0 && (
           <CardAccordion
             label={
-              <Text fontWeight={"semibold"}>
+              <Text fontSize={"sm"} color={"#757575"}>
                 {hasChanges && filterNewAddedProducts?.length !== 0
-                  ? "Products"
-                  : "Live Products"}
+                  ? "Stories"
+                  : "Live Stories"}
               </Text>
             }
+            rightSide={<IconButton icon={<IoFunnelOutline />} size={"sm"} />}
             body={
               <>
                 {selectedTags?.map((product) => {
@@ -536,7 +542,7 @@ const Card = ({
         )}
       </Stack>
 
-      <Stack display={{ base: "flex", lg: "none" }}>
+      <HStack>
         <DrawerWrapper modalOptions={modalOptions}>
           <StoryPreview
             templateData={templateData}
@@ -545,7 +551,7 @@ const Card = ({
             driverObj={driverObj}
           />
         </DrawerWrapper>
-      </Stack>
+      </HStack>
     </>
   );
 };

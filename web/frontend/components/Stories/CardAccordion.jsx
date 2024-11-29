@@ -4,11 +4,12 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  HStack,
   Stack,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-const CardAccordion = ({ label, body, headerStyles }) => {
+const CardAccordion = ({ label, body, headerStyles, rightSide }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleAccordion = () => {
@@ -18,18 +19,23 @@ const CardAccordion = ({ label, body, headerStyles }) => {
   return (
     <Accordion allowToggle index={isOpen ? 0 : -1}>
       <AccordionItem border={"none"}>
-        <Stack>
-          <AccordionButton
-            onClick={toggleAccordion}
-            borderBottomRadius={isOpen ? 0 : 10}
-            {...headerStyles}
-          >
-            <Stack as="span" flex="1">
-              {label}
-            </Stack>
-            <AccordionIcon />
-          </AccordionButton>
-        </Stack>
+        <HStack m={3} justifyContent={"space-between"}>
+          <HStack>
+            <AccordionButton
+              onClick={toggleAccordion}
+              // borderBottomRadius={isOpen ? 0 : 10}
+              p={2}
+              borderRadius={10}
+              gap={2}
+              {...headerStyles}
+            >
+              <Stack w={"fit-content"}>{label}</Stack>
+              <AccordionIcon color={"#757575"} />
+            </AccordionButton>
+          </HStack>
+
+          <HStack>{rightSide}</HStack>
+        </HStack>
 
         <AccordionPanel pb={3}>
           <Stack>{body}</Stack>
