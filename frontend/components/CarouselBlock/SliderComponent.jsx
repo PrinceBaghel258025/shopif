@@ -19,11 +19,11 @@ function SliderComponent({ productData, defaultSheetdata }) {
   const slides = useMemo(() => {
     return productData?.map((dataset, index) => {
       const commonStackProps = {
-        w: '268px',
-        h: '572px',
-        borderWidth: 5,
-        borderColor: 'black',
-        borderRadius: 50,
+        w: '272px',
+        h: '562px',
+        // borderWidth: 5,
+        // borderColor: 'black',
+        borderRadius: "50px",
         overflow: 'hidden',
         boxShadow: 'lg',
         position: 'relative'
@@ -38,19 +38,6 @@ function SliderComponent({ productData, defaultSheetdata }) {
         if (dataset?.type === "carousel_360_image" || dataset?.type === "carousel_360_video") {
           slideContent = (
             <Stack {...commonStackProps}>
-              <Stack
-                position={"absolute"}
-                top={8}
-                left={"50%"}
-                transform={"translateX(-50%)"}
-                w={"22%"}
-                h={2.5}
-                bg={"black"}
-                borderRadius={100}
-                zIndex={10}
-              >
-                <p />
-              </Stack>
               <Scene
                 key={slideKey}
                 zoom={dataset?.zoom || 1}
@@ -69,19 +56,6 @@ function SliderComponent({ productData, defaultSheetdata }) {
         } else if (dataset?.type === "carousel_2d_image") {
           slideContent = (
             <Stack {...commonStackProps}>
-              <Stack
-                position={"absolute"}
-                top={8}
-                left={"50%"}
-                transform={"translateX(-50%)"}
-                w={"22%"}
-                h={2.5}
-                bg={"black"}
-                borderRadius={100}
-                zIndex={10}
-              >
-                <p />
-              </Stack>
               <ImageScreen
                 key={slideKey}
                 header={dataset?.header}
@@ -95,19 +69,6 @@ function SliderComponent({ productData, defaultSheetdata }) {
         } else if (dataset?.type === "carousel_2d_video") {
           slideContent = (
             <Stack {...commonStackProps}>
-              <Stack
-                position={"absolute"}
-                top={8}
-                left={"50%"}
-                transform={"translateX(-50%)"}
-                w={"22%"}
-                h={2.5}
-                bg={"black"}
-                borderRadius={100}
-                zIndex={10}
-              >
-                <p />
-              </Stack>
               <VideoScreen
                 key={slideKey}
                 header={dataset?.header}

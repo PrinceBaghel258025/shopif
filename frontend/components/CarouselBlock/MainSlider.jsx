@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Stack } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import Slide from "./Slide";
 // import leftNavigation from "./LeftNavigation.png";
@@ -8,9 +9,24 @@ import Slide from "./Slide";
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 90%;
+  border: 2px solid black;
+  border-radius: 10px;
+  overflow: hidden;
 `;
 
+const ConstantFrame = styled.div`
+  border: 5px solid black;
+  width: 278px;
+  height: 570px;
+  position: relative;
+  margin: 0 auto;
+  margin-top: 3.8%;
+  margin-bottom: 5%;
+  border-radius: 55px;
+  overflow: hidden;
+  box-shadow: lg;
+`;
 const NavigationButtons = styled.div`
   position: relative;
   display: flex;
@@ -104,7 +120,7 @@ const Carousel = React.memo(({
     return presentableSlides;
   }, [offsetRadius, slides, index, modBySlidesLength, clampOffsetRadius]);
 
-  const presentableSlides = useMemo(() => getPresentableSlides(), 
+  const presentableSlides = useMemo(() => getPresentableSlides(),
     [getPresentableSlides]);
 
   useEffect(() => {
@@ -157,6 +173,18 @@ const Carousel = React.memo(({
   return (
     <>
       <Wrapper>
+        <ConstantFrame><Stack
+          position={"absolute"}
+          top={8}
+          left={"50%"}
+          transform={"translateX(-50%)"}
+          w={"22%"}
+          h={2.5}
+          bg={"black"}
+          borderRadius={100}
+          zIndex={10}
+        ><p></p>
+        </Stack></ConstantFrame>
         {presentableSlides.map((slide, presentableIndex) => (
           <Slide
             key={`${slide.key}-${slide.originalIndex}`}

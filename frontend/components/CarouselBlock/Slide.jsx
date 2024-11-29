@@ -21,7 +21,7 @@ const SlideContainer = styled(animated.div)`
   canvas {
     // width: 100% !important;
     // height: 100% !important;
-    width: 292px !important;
+    width: 270px !important;
     height: 603px !important;
     background-color: blue;
   }
