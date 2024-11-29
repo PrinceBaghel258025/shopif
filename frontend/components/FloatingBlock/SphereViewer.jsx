@@ -4,6 +4,7 @@ import { TextureLoader } from "three";
 import * as THREE from "three";
 import { OrbitControls } from "@react-three/drei";
 import { Image, Stack } from "@chakra-ui/react";
+import QrLoaderGif from "../assets/qr-scan.gif";
 
 // Sphere component that renders an image texture with rotation
 const AnimatedImageSphere = ({ imageUrl }) => {
@@ -116,22 +117,28 @@ const VideoScreen = ({ videoUrl }) => {
 const SphereViewer = ({ type, sourceUrl }) => {
   return (
     <>
-      {type === "carousel_2d_image" ? (
-        <ImageScreen imageUrl={sourceUrl} />
-      ) : type === "carousel_2d_video" ? (
-        <VideoScreen videoUrl={sourceUrl} />
+      {sourceUrl ? (
+        <>
+          {type === "carousel_2d_image" ? (
+            <ImageScreen imageUrl={sourceUrl} />
+          ) : type === "carousel_2d_video" ? (
+            <VideoScreen videoUrl={sourceUrl} />
+          ) : (
+            <Canvas camera={{ position: [0, 0, 0.001] }}>
+              <ambientLight intensity={3} />
+              <React.Suspense fallback={null}>
+                {type === "carousel_360_image" ? (
+                  <AnimatedImageSphere imageUrl={sourceUrl} />
+                ) : type === "carousel_360_video" ? (
+                  <AnimatedVideoSphere videoUrl={sourceUrl} />
+                ) : null}
+              </React.Suspense>
+              <OrbitControls />
+            </Canvas>
+          )}
+        </>
       ) : (
-        <Canvas camera={{ position: [0, 0, 0.001] }}>
-          <ambientLight intensity={3} />
-          <React.Suspense fallback={null}>
-            {type === "carousel_360_image" ? (
-              <AnimatedImageSphere imageUrl={sourceUrl} />
-            ) : type === "carousel_360_video" ? (
-              <AnimatedVideoSphere videoUrl={sourceUrl} />
-            ) : null}
-          </React.Suspense>
-          <OrbitControls />
-        </Canvas>
+        <Image src={QrLoaderGif} alt="loading" mt={"50%"} />
       )}
     </>
   );

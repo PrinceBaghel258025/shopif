@@ -431,11 +431,11 @@ const Card = ({
               </Tooltip>
             </HStack>
 
-            <HStack
+            {/* <HStack
               w={{ base: "80%", lg: "50%" }}
               justifyContent={"space-between"}
-            >
-              <HStack>
+            > */}
+            {/* <HStack>
                 <Stack cursor={"pointer"}>
                   <MetaIcon />
                 </Stack>
@@ -445,52 +445,52 @@ const Card = ({
                 </Stack>
 
                 <MdMoreVert fontSize={24} cursor={"pointer"} color="#757575" />
-              </HStack>
+              </HStack> */}
 
-              <HStack>
-                <Button
-                  onClick={() => {
-                    onEdit(template);
-                  }}
-                  fontSize="xs"
-                  size={"sm"}
-                  p={2}
-                  px={4}
-                  bg={"#67C9FF"}
-                  color={"white"}
-                >
-                  Edit Story
-                </Button>
+            <HStack>
+              <Button
+                onClick={() => {
+                  onEdit(template);
+                }}
+                fontSize="xs"
+                size={"sm"}
+                p={2}
+                px={4}
+                bg={"#67C9FF"}
+                color={"white"}
+              >
+                Edit Story
+              </Button>
 
-                <Button
-                  onClick={() => {
-                    isMobile && onOpen();
-                  }}
-                  fontSize="xs"
-                  size={"sm"}
-                  p={2}
-                  px={4}
-                  display={{ base: "flex", lg: "none" }}
-                >
-                  Preview Story
-                </Button>
+              <Button
+                onClick={() => {
+                  isMobile && onOpen();
+                }}
+                fontSize="xs"
+                size={"sm"}
+                p={2}
+                px={4}
+                display={{ base: "flex", lg: "none" }}
+              >
+                Preview Story
+              </Button>
 
-                <Button
-                  className="publish-story-btn"
-                  fontSize="xs"
-                  p={2}
-                  px={4}
-                  isLoading={isUpdatingStoryTemplate}
-                  onClick={handleUpdateStoryTemplate}
-                  isDisabled={isButtonDisabled}
-                  size={"sm"}
-                  bg={"#00B894"}
-                  color={"white"}
-                >
-                  {buttonText}
-                </Button>
+              <Button
+                className="publish-story-btn"
+                fontSize="xs"
+                p={2}
+                px={4}
+                isLoading={isUpdatingStoryTemplate}
+                onClick={handleUpdateStoryTemplate}
+                isDisabled={isButtonDisabled}
+                size={"sm"}
+                bg={"#00B894"}
+                color={"white"}
+              >
+                {buttonText}
+              </Button>
 
-                {/* <Button
+              {/* <Button
                 className="remove-all-btn"
                 fontSize="xs"
                 p={2}
@@ -502,8 +502,8 @@ const Card = ({
               >
                 Remove All
               </Button> */}
-              </HStack>
             </HStack>
+            {/* </HStack> */}
           </HStack>
 
           <Stack spacing={3}>
