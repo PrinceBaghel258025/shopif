@@ -43,6 +43,7 @@ const ProductSelector = ({
         isDisabled={isDisabled}
         fontSize="sm"
         className="products-selector"
+        color={"#949494"}
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
         {availableProducts.length > 0

@@ -30,6 +30,9 @@ import DrawerWrapper from "./DrawerWrapper";
 import { PRODUCT_LIST_QUERY_KEY } from "../../apiHooks/ApiHooksQueryKeys";
 import { FaRegCopy } from "react-icons/fa";
 import { IoFunnelOutline } from "react-icons/io5";
+import MetaIcon from "../../assets/Icon/MetaIcon";
+import GoogleIcon from "../../assets/Icon/GoogleIcon";
+import { MdMoreVert } from "react-icons/md";
 
 const Card = ({
   index,
@@ -428,50 +431,66 @@ const Card = ({
               </Tooltip>
             </HStack>
 
-            <HStack>
-              <Button
-                onClick={() => {
-                  onEdit(template);
-                }}
-                fontSize="xs"
-                size={"sm"}
-                p={2}
-                px={4}
-                bg={"#67C9FF"}
-                color={"white"}
-              >
-                Edit Story
-              </Button>
+            <HStack
+              w={{ base: "80%", lg: "50%" }}
+              justifyContent={"space-between"}
+            >
+              <HStack>
+                <Stack cursor={"pointer"}>
+                  <MetaIcon />
+                </Stack>
 
-              <Button
-                onClick={() => {
-                  isMobile && onOpen();
-                }}
-                fontSize="xs"
-                size={"sm"}
-                p={2}
-                px={4}
-                display={{ base: "flex", lg: "none" }}
-              >
-                Preview Story
-              </Button>
+                <Stack cursor={"pointer"}>
+                  <GoogleIcon />
+                </Stack>
 
-              <Button
-                className="publish-story-btn"
-                fontSize="xs"
-                p={2}
-                px={4}
-                isLoading={isUpdatingStoryTemplate}
-                onClick={handleUpdateStoryTemplate}
-                isDisabled={isButtonDisabled}
-                size={"sm"}
-                bg={"#00B894"}
-                color={"white"}
-              >
-                {buttonText}
-              </Button>
+                <MdMoreVert fontSize={24} cursor={"pointer"} color="#757575" />
+              </HStack>
 
-              {/* <Button
+              <HStack>
+                <Button
+                  onClick={() => {
+                    onEdit(template);
+                  }}
+                  fontSize="xs"
+                  size={"sm"}
+                  p={2}
+                  px={4}
+                  bg={"#67C9FF"}
+                  color={"white"}
+                >
+                  Edit Story
+                </Button>
+
+                <Button
+                  onClick={() => {
+                    isMobile && onOpen();
+                  }}
+                  fontSize="xs"
+                  size={"sm"}
+                  p={2}
+                  px={4}
+                  display={{ base: "flex", lg: "none" }}
+                >
+                  Preview Story
+                </Button>
+
+                <Button
+                  className="publish-story-btn"
+                  fontSize="xs"
+                  p={2}
+                  px={4}
+                  isLoading={isUpdatingStoryTemplate}
+                  onClick={handleUpdateStoryTemplate}
+                  isDisabled={isButtonDisabled}
+                  size={"sm"}
+                  bg={"#00B894"}
+                  color={"white"}
+                >
+                  {buttonText}
+                </Button>
+
+                {/* <Button
                 className="remove-all-btn"
                 fontSize="xs"
                 p={2}
@@ -483,6 +502,7 @@ const Card = ({
               >
                 Remove All
               </Button> */}
+              </HStack>
             </HStack>
           </HStack>
 
