@@ -86,13 +86,19 @@ export default function App() {
       setIsLoading(true);
 
       try {
-        await initializeShopName();
+        const { localShopName, isSameShop } = await initializeShopName();
         if (auth.getToken()) {
-          const validationStatus = await validateToken();
-          if (validationStatus === 200) {
-            setIsAuthenticated(true);
-            setIsLoading(false);
-            return;
+          // check shop
+          if (!isSameShop) {
+            auth.removeToken();
+            // auth.removeShop();
+          } else {
+            const validationStatus = await validateToken();
+            if (validationStatus === 200) {
+              setIsAuthenticated(true);
+              setIsLoading(false);
+              return;
+            }
           }
         }
 
@@ -121,16 +127,17 @@ export default function App() {
 
     const initializeShopName = async () => {
       let localShopName = localStorage.getItem("shop");
+      let isSameShop = false;
       if (!localShopName) {
         localShopName = await getShopName();
       } else {
         const currentUrl = window.location.href
-        const isSameShop = currentUrl.includes(localShopName?.split(".")[0]);
+        isSameShop = currentUrl.includes(localShopName?.split(".")[0]);
         if (!isSameShop) {
           localShopName = await getShopName();
         }
       }
-      return localShopName;
+      return { localShopName, isSameShop };
     };
     initializeAuth();
   }, []);
@@ -139,6 +146,7 @@ export default function App() {
   const retryAuthentication = async () => {
     try {
       setIsLoading(true);
+      await initializeShopName();
       const newTokenData = await fetchNewToken();
       if (newTokenData?.token) {
         auth.setToken("Token " + newTokenData.token);
