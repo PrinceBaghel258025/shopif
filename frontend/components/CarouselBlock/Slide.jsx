@@ -14,13 +14,13 @@ const SlideContainer = styled(animated.div)`
   transform-origin: 50% 50%;
   // background-color: red;
   width: 16.75em !important;
-  height: 35.75em !important;
+  height: 35.25em !important;
 
   canvas {
     // width: 100% !important;
     // height: 100% !important;
     width: 16.87em !important;
-    height: 37.68em !important;
+    height: 35.25em !important;
     background-color: blue;
   }
 

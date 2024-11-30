@@ -8,6 +8,7 @@ import { useState, useMemo, useEffect } from "react";
 import { PolarisProvider } from "./components";
 import { AuthContext } from "./services/context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BASE_URL } from "./services/baseURL";
 
 export default function App() {
   const breakpoints = {
@@ -66,7 +67,7 @@ export default function App() {
     if (!token) throw new Error("No token found");
 
     const response = await fetch(
-      "https://g9bvvvyptqo7uxa0.agspert-ai.com/api/token_test/",
+      `${BASE_URL}/api/token_test/`,
       {
         headers: {
           Authorization: token,
@@ -85,6 +86,7 @@ export default function App() {
       setIsLoading(true);
 
       try {
+        await initializeShopName();
         if (auth.getToken()) {
           const validationStatus = await validateToken();
           if (validationStatus === 200) {
@@ -109,7 +111,27 @@ export default function App() {
         setIsLoading(false);
       }
     };
+    const getShopName = async () => {
+      const shopName = await fetch(`/api/shop_name/`);
+      const data = await shopName.json();
+      console.log("shopName", data);
+      localStorage.setItem("shop", data);
+      return data?.shop;
+    }
 
+    const initializeShopName = async () => {
+      let localShopName = localStorage.getItem("shop");
+      if (!localShopName) {
+        localShopName = await getShopName();
+      } else {
+        const currentUrl = window.location.href
+        const isSameShop = currentUrl.includes(localShopName?.split(".")[0]);
+        if (!isSameShop) {
+          localShopName = await getShopName();
+        }
+      }
+      return localShopName;
+    };
     initializeAuth();
   }, []);
 

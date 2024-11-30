@@ -20,7 +20,7 @@ function SliderComponent({ productData, defaultSheetdata }) {
     return productData?.map((dataset, index) => {
       const commonStackProps = {
         w: '272px',
-        h: '562px',
+        h: '500px',
         // borderWidth: 5,
         // borderColor: 'black',
         borderRadius: "50px",

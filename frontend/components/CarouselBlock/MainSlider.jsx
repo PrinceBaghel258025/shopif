@@ -12,7 +12,7 @@ const ParentWrapper = styled.div`
 
 const GrandParentWrapper = styled(ParentWrapper)`
   width: 100%;
-  height: 100%;
+  height: 80%;
   position: relative;
   overflow: hidden;
   border-radius: 10px;
@@ -22,7 +22,7 @@ const GrandParentWrapper = styled(ParentWrapper)`
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  height: 90%;
+  height: 100%;
   // border: 2px solid black;
   overflow: hidden;
   display: flex;
@@ -33,7 +33,7 @@ const Wrapper = styled.div`
 const ConstantFrame = styled.div`
   border: 5px solid black;
   width: 17.375em;
-  height: 35.6em;
+  height: 31.75em;
   position: relative;
   border-radius: 55px;
   overflow: hidden;

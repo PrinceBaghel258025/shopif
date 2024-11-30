@@ -63,6 +63,30 @@ app.use("/api/*", shopify.validateAuthenticatedSession());
 
 app.use(express.json());
 
+app.get("/api/shop_name", async (_req, res) => {
+  const client = new shopify.api.clients.Graphql({
+    session: res.locals.shopify.session,
+  });
+  const shopData = await client.query({
+    data: `{
+      shop {
+        name
+        email
+        myshopifyDomain
+        plan {
+          displayName
+        }
+        primaryDomain {
+          url
+          host
+        }
+      }
+    }`,
+  });
+  console.log("shopData", shopData.body?.data?.shop?.myshopifyDomain);
+  res.status(200).send({ shop: shopData.body?.data?.shop?.myshopifyDomain });
+});
+
 app.get("/api/knox-token", async (_req, res) => {
   const client = new shopify.api.clients.Graphql({
     session: res.locals.shopify.session,
