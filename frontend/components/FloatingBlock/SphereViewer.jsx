@@ -4,7 +4,6 @@ import { TextureLoader } from "three";
 import * as THREE from "three";
 import { OrbitControls } from "@react-three/drei";
 import { Image, Stack } from "@chakra-ui/react";
-import QrLoaderGif from "../assets/qr-scan.gif";
 
 // Sphere component that renders an image texture with rotation
 const AnimatedImageSphere = ({ imageUrl }) => {
@@ -138,7 +137,11 @@ const SphereViewer = ({ type, sourceUrl }) => {
           )}
         </>
       ) : (
-        <Image src={QrLoaderGif} alt="loading" mt={"50%"} />
+        <Image
+          src={"https://360-images-v1.s3.ap-south-1.amazonaws.com/qr-scan.gif"}
+          alt="loading"
+          mt={"50%"}
+        />
       )}
     </>
   );

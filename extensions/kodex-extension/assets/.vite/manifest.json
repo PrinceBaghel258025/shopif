@@ -1,46 +1,51 @@
 {
-  "_carousel-!~{005}~.js": {
-    "file": "floating-BmAVGTu2.css",
-    "src": "frontend/entrypoints/floating.jsx"
+  "_VideoScreen-DzFlj8Nz.js": {
+    "file": "VideoScreen-DzFlj8Nz.js",
+    "name": "VideoScreen",
+    "imports": [
+      "_text-4-H45xif.js"
+    ]
   },
-  "_text-CTqb1-FP.js": {
-    "file": "text-CTqb1-FP.js",
+  "_text-4-H45xif.js": {
+    "file": "text-4-H45xif.js",
     "name": "text"
   },
   "frontend/entrypoints/carousel.jsx": {
-    "file": "carousel-CmdHmCJO.js",
+    "file": "carousel-of9Ytc41.js",
     "name": "carousel",
     "src": "frontend/entrypoints/carousel.jsx",
     "isEntry": true,
     "imports": [
-      "_text-CTqb1-FP.js"
+      "_text-4-H45xif.js",
+      "_VideoScreen-DzFlj8Nz.js"
     ],
     "css": [
-      "floating-BmAVGTu2.css"
+      "floating-ohNTOX-Z.css"
     ]
   },
   "frontend/entrypoints/floating.jsx": {
-    "file": "floating-BbQ04xmX.js",
+    "file": "floating-DZsp9L22.js",
     "name": "floating",
     "src": "frontend/entrypoints/floating.jsx",
     "isEntry": true,
     "imports": [
-      "_text-CTqb1-FP.js"
+      "_text-4-H45xif.js",
+      "_VideoScreen-DzFlj8Nz.js"
     ],
     "css": [
-      "floating-BmAVGTu2.css"
+      "floating-ohNTOX-Z.css"
     ]
   },
   "frontend/entrypoints/tag.jsx": {
-    "file": "tag-jY5z2Jqx.js",
+    "file": "tag-0H38IFAE.js",
     "name": "tag",
     "src": "frontend/entrypoints/tag.jsx",
     "isEntry": true,
     "imports": [
-      "_text-CTqb1-FP.js"
+      "_text-4-H45xif.js"
     ],
     "css": [
-      "floating-BmAVGTu2.css"
+      "floating-ohNTOX-Z.css"
     ]
   }
 }
