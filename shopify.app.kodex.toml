@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "8e1f538eaf91bb4e723ad403ee702a6a"
-application_url = "https://checklist-inform-adapted-purchasing.trycloudflare.com"
+application_url = "https://anything-grand-mobility-consultants.trycloudflare.com"
 embedded = true
 name = "Kodex"
 handle = "kodex-1"
@@ -20,9 +20,9 @@ scopes = "read_online_store_pages,read_products,read_themes,write_products,write
 
 [auth]
 redirect_urls = [
-  "https://checklist-inform-adapted-purchasing.trycloudflare.com/auth/callback",
-  "https://checklist-inform-adapted-purchasing.trycloudflare.com/auth/shopify/callback",
-  "https://checklist-inform-adapted-purchasing.trycloudflare.com/api/auth/callback"
+  "https://anything-grand-mobility-consultants.trycloudflare.com/auth/callback",
+  "https://anything-grand-mobility-consultants.trycloudflare.com/auth/shopify/callback",
+  "https://anything-grand-mobility-consultants.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

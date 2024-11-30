@@ -151,6 +151,7 @@ export default function App() {
                 <a href="/" rel="home" />
                 <a href="/stories">{t("NavigationMenu.stories")}</a>
                 <a href="/storyBuilder">{t("NavigationMenu.storyBuilder")}</a>
+                <a href="/storyManager">{t("NavigationMenu.storyManager")}</a>
               </NavMenu>
               <Routes pages={pages} />
             </BrowserRouter>
