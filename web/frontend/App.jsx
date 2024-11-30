@@ -115,7 +115,7 @@ export default function App() {
       const shopName = await fetch(`/api/shop_name/`);
       const data = await shopName.json();
       console.log("shopName", data);
-      localStorage.setItem("shop", data);
+      localStorage.setItem("shop", data?.shop);
       return data?.shop;
     }
 
