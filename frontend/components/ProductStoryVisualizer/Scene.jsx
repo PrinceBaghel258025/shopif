@@ -670,6 +670,7 @@ export const Scene = ({
         {isInsideSphere && (
           <>
             <HeroSection
+              is360Slide
               header={header}
               data={data}
               setIsBottomSheetOpen={(val) => {

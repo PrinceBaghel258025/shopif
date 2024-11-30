@@ -1,8 +1,10 @@
 import {
   Box,
+  Fade,
   Flex,
   Icon,
   IconButton,
+  Image,
   Stack,
   Text,
   VStack,
@@ -31,6 +33,7 @@ export const HeroSection = ({
   data,
   isImage = false,
   isVideo = false,
+  is360Slide = false,
   setIsBottomSheetOpen,
   header,
 }) => {
@@ -40,6 +43,17 @@ export const HeroSection = ({
   const videoScreen = data?.find((info) => info?.type === "2d_video");
 
   const redirect_url = data?.find((info) => info?.type === "redirect_url");
+
+  const [show360Gif, setShow360Gif] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShow360Gif(false);
+    }, 3000);
+
+    // Cleanup timer on component unmount
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
@@ -70,6 +84,30 @@ export const HeroSection = ({
           />
         </a>
       </VStack>
+
+      {is360Slide && (
+        <Fade
+          in={show360Gif}
+          transition={{ enter: { duration: 0.5 }, exit: { duration: 0.5 } }}
+        >
+          <Stack
+            position={"absolute"}
+            top={"200px"}
+            left={"85px"}
+            translateX={"-50%"}
+            translateY={"-50%"}
+            w={100}
+            h={100}
+            borderRadius={100}
+          >
+            <Image
+              src="https://360-images-v1.s3.ap-south-1.amazonaws.com/360-gif.gif"
+              alt="360 gif"
+              borderRadius={100}
+            />
+          </Stack>
+        </Fade>
+      )}
 
       {/* {showIcon && (
         <IconWithAnimation
