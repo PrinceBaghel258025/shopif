@@ -16,6 +16,7 @@ import {
   ModalFooter,
   useDisclosure,
   ModalCloseButton,
+  Tooltip,
 } from "@chakra-ui/react";
 import React, { useMemo, useState, useEffect } from "react";
 import { CgArrowLeft, CgArrowRight, CgClose } from "react-icons/cg";
@@ -468,34 +469,34 @@ const AnalyticsCard = ({
           <Stack h={"100%"} spacing={1} alignItems={"end"}>
             {browsersStats?.map((stat, index) => {
               return (
-                <Stack
-                  key={index}
-                  bg={browserColors[index % browserColors.length]}
-                  w={stat?.percentage}
-                  h={"25%"}
-                  px={2}
-                  borderRadius={5}
-                >
-                  <Text fontSize={10} fontWeight={"semibold"}>
-                    {stat?.state} ({stat?.percentage})
-                  </Text>
-                </Stack>
+                <Tooltip label={`${stat?.state} (${stat?.percentage})`}>
+                  <Stack
+                    key={index}
+                    bg={browserColors[index % browserColors.length]}
+                    w={stat?.percentage}
+                    h={"10px"}
+                    px={2}
+                    borderRadius={3}
+                  >
+                    <p></p>
+                  </Stack>
+                </Tooltip>
               );
             })}
             {OSStats?.map((stat, index) => {
               return (
-                <Stack
-                  key={index}
-                  bg={osColors[index % osColors.length]}
-                  w={stat?.percentage}
-                  h={"25%"}
-                  px={2}
-                  borderRadius={5}
-                >
-                  <Text fontSize={10} fontWeight={"semibold"}>
-                    {stat?.state} ({stat?.percentage})
-                  </Text>
-                </Stack>
+                <Tooltip label={`${stat?.state} (${stat?.percentage})`}>
+                  <Stack
+                    key={index}
+                    bg={osColors[index % osColors.length]}
+                    w={stat?.percentage}
+                    h={"10px"}
+                    px={2}
+                    borderRadius={3}
+                  >
+                    <p></p>
+                  </Stack>
+                </Tooltip>
               );
             })}
             <Text fontSize={12} fontWeight={"medium"} alignSelf={"start"}>
