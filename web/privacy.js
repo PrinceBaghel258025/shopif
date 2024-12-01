@@ -2,8 +2,7 @@ import { DeliveryMethod } from "@shopify/shopify-api";
 import fs from 'fs';
 import path from 'path';
 import sqlite3 from 'sqlite3';
-import BASE_URL from './config.js';
-const crmUrl = `${BASE_URL}/`;
+const crmUrl = "https://g9bvvvyptqo7uxa0.agspert-ai.com/";
 import { makeRequest } from './utils.js';
 
 const DB_PATH = `${process.cwd()}/database.sqlite`;
