@@ -56,9 +56,14 @@ export default function App() {
 
   // Fetch new token
   const fetchNewToken = async () => {
-    const response = await fetch("/api/knox-token");
-    const data = await response.json();
-    return data;
+    try {
+      const response = await fetch("/api/knox-token");
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Fetch new token error:", error);
+      return null;
+    }
   };
 
   // Validate existing token
@@ -104,8 +109,18 @@ export default function App() {
 
         const newTokenData = await fetchNewToken();
         if (newTokenData?.token) {
-          auth.setToken("Token " + newTokenData.token);
+          auth.setToken("Token " + newTokenData?.token);
           auth.setShop(newTokenData?.shop);
+          await fetch(`${BASE_URL}/kvk/product/import_from_shopify/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Token ${newTokenData?.token}`
+            },
+            body: JSON.stringify({
+              shop: newTokenData?.shop,
+            }),
+          });
         } else {
           auth.removeToken();
           auth.removeShop();
