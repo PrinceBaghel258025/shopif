@@ -8,7 +8,7 @@ import { makeRequest } from './utils.js';
 const DB_PATH = `${process.cwd()}/database.sqlite`;
 const crmCallback = async (topic, shop, body, webhookId) => {
   const db = new sqlite3.Database(DB_PATH);
-  const token = await new Promise((resolve, reject) => {
+  let token = await new Promise((resolve, reject) => {
     db.get("SELECT token FROM token_shop_mapping WHERE shop_id = ?", [shop], (err, row) => {
       if (err) reject(err);
       console.log("row", row, shop);
@@ -33,7 +33,7 @@ const crmCallback = async (topic, shop, body, webhookId) => {
     data: {
       topic,
       shop,
-      body,
+      body: JSON.parse(body),
       webhookId
     }
   }
