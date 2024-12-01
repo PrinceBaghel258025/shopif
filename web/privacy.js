@@ -2,7 +2,8 @@ import { DeliveryMethod } from "@shopify/shopify-api";
 import fs from 'fs';
 import path from 'path';
 import sqlite3 from 'sqlite3';
-const crmUrl = "https://g9bvvvyptqo7uxa0.agspert-ai.com/";
+import BASE_URL from './config.js';
+const crmUrl = `${BASE_URL}/`;
 import { makeRequest } from './utils.js';
 
 const DB_PATH = `${process.cwd()}/database.sqlite`;
@@ -29,22 +30,18 @@ const crmCallback = async (topic, shop, body, webhookId) => {
   //   return;
   // }
   const url = `${crmUrl}kvk/product/event_management/`;
-
-
-  const crmCallResponse = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Token ${token}`
-    },
-    method: "POST",
-    body: JSON.stringify({
+  const payload = {
+    data: {
       topic,
       shop,
       body,
       webhookId
-    }),
-  });
-  console.log("crmCallResponse", await crmCallResponse.json());
+    }
+  }
+
+  const data = await makeRequest(url, "POST", `Token ${token}`, payload);
+  console.log("crmCallResponse", token, data);
+  return data;
 };
 /**
  * @type {{[key: string]: import("@shopify/shopify-api").WebhookHandler}}
