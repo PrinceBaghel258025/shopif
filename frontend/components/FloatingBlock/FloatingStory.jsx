@@ -48,6 +48,7 @@ const FloatingStory = () => {
             <SphereViewer
               type={firstStoryData?.type}
               sourceUrl={firstStoryData?.image_url}
+              videoRes="320p"
             />
             <p />
           </Stack>

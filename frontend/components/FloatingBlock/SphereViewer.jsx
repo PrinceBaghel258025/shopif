@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useLoader, useFrame } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import * as THREE from "three";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, useVideoTexture } from "@react-three/drei";
 import { Image, Stack } from "@chakra-ui/react";
 
 // Sphere component that renders an image texture with rotation
@@ -29,36 +29,9 @@ const AnimatedImageSphere = ({ imageUrl }) => {
 
 // Sphere component that renders a video texture with rotation
 const AnimatedVideoSphere = ({ videoUrl }) => {
-  const videoRef = useRef();
   const meshRef = useRef();
-  const videoTextureRef = useRef();
+  const videoTexture = useVideoTexture(videoUrl);
 
-  useEffect(() => {
-    // Create a video element and set the source to the provided video URL
-    const video = document.createElement("video");
-    video.src = videoUrl;
-    video.crossOrigin = "anonymous"; // Ensure smooth handling of CORS if the video is hosted elsewhere
-    video.loop = true;
-    video.muted = true;
-    video.play();
-    videoRef.current = video;
-
-    // Create a video texture from the video element
-    const texture = new THREE.VideoTexture(video);
-    texture.minFilter = THREE.LinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-    texture.format = THREE.RGBFormat;
-    videoTextureRef.current = texture;
-
-    return () => {
-      // Clean up the video texture and stop playback when the component is unmounted
-      video.pause();
-      video.src = "";
-      videoTextureRef.current.dispose();
-    };
-  }, [videoUrl]);
-
-  // Animation hook to rotate the sphere
   useFrame((state, delta) => {
     if (meshRef.current) {
       // Rotate around Y-axis
@@ -69,13 +42,7 @@ const AnimatedVideoSphere = ({ videoUrl }) => {
   return (
     <mesh ref={meshRef}>
       <sphereGeometry args={[1, 100, 100]} />
-      {/* Use the video texture as the material map */}
-      {videoTextureRef.current && (
-        <meshStandardMaterial
-          map={videoTextureRef.current}
-          side={THREE.DoubleSide}
-        />
-      )}
+      <meshStandardMaterial map={videoTexture} side={THREE.DoubleSide} />
     </mesh>
   );
 };
@@ -113,7 +80,27 @@ const VideoScreen = ({ videoUrl }) => {
   );
 };
 
-const SphereViewer = ({ type, sourceUrl }) => {
+const SphereViewer = ({ type, sourceUrl, videoRes = "" }) => {
+  const [videoResolution, setVideoResolution] = useState("");
+
+  useEffect(() => {
+    if (videoRes === "320p") {
+      setVideoResolution("_320p.mp4");
+    }
+  }, [videoRes]);
+
+  function loading() {
+    return (
+      <Html>
+        <Image
+          src={"https://360-images-v1.s3.ap-south-1.amazonaws.com/qr-scan.gif"}
+          alt="loading"
+          mt={"50%"}
+        />
+      </Html>
+    );
+  }
+
   return (
     <>
       {sourceUrl ? (
@@ -121,17 +108,17 @@ const SphereViewer = ({ type, sourceUrl }) => {
           {type === "carousel_2d_image" ? (
             <ImageScreen imageUrl={sourceUrl} />
           ) : type === "carousel_2d_video" ? (
-            <VideoScreen videoUrl={sourceUrl + "_320p.mp4"} />
+            <VideoScreen videoUrl={sourceUrl + videoResolution} />
           ) : (
             <Canvas camera={{ position: [0, 0, 0.001] }}>
               <ambientLight intensity={3} />
-              <React.Suspense fallback={null}>
+              <Suspense fallback={loading}>
                 {type === "carousel_360_image" ? (
                   <AnimatedImageSphere imageUrl={sourceUrl} />
                 ) : type === "carousel_360_video" ? (
-                  <AnimatedVideoSphere videoUrl={sourceUrl + "_320p.mp4"} />
+                  <AnimatedVideoSphere videoUrl={sourceUrl + videoResolution} />
                 ) : null}
-              </React.Suspense>
+              </Suspense>
               <OrbitControls />
             </Canvas>
           )}
