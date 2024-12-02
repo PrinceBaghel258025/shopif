@@ -5,9 +5,10 @@ import { FiPlusCircle } from "react-icons/fi";
 
 const AddAppBlock = ({ icon = false }) => {
   const { getShop } = useContext(AuthContext);
+  console.log("env var", import.meta.env.MODE , import.meta.env.SHOPIFY_KODEX_EXTENSION, import.meta.env?.VITE_SHOPIFY_KODEX_EXTENSION_ID)
 
-  const appBlockId = "dbeabe3c-71db-4d6d-b50f-843a50180683";
-  // const appBlockId = process.env.SHOPIFY_KODEX_EXTENSION_ID;
+  // const appBlockId = "0828473a-1a91-4fa8-a806-7f65c8871ca2";
+  const appBlockId = import.meta.env?.VITE_SHOPIFY_KODEX_EXTENSION_ID;
   const extensionHandle = "floating";
 
   const addExtUrl = `https://${getShop()}/admin/themes/current/editor?template=product&addAppBlockId=${appBlockId}/${extensionHandle}&target=newAppsSection`;

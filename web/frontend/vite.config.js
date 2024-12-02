@@ -6,7 +6,8 @@ import react from "@vitejs/plugin-react";
 if (
   process.env.npm_lifecycle_event === "build" &&
   !process.env.CI &&
-  !process.env.SHOPIFY_API_KEY
+  !process.env.SHOPIFY_API_KEY &&
+  !process.env.SHOPIFY_KODEX_EXTENSION_ID
 ) {
   throw new Error(
     `${process.env.CI} \n\n ${process.env.SHOPIFY_API_KEY} \n\nThe frontend build will not work without an API key. Set the SHOPIFY_API_KEY environment variable when running the build command, for example:` +
@@ -15,6 +16,7 @@ if (
 }
 
 process.env.VITE_SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY;
+process.env.VITE_SHOPIFY_KODEX_EXTENSION_ID = process.env.SHOPIFY_KODEX_EXTENSION_ID;
 
 const proxyOptions = {
   target: `http://127.0.0.1:${process.env.BACKEND_PORT}`,
