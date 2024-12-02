@@ -164,14 +164,14 @@ const Card = ({
               selectedTags.length === 0
                 ? "Products Removed"
                 : isRepublish
-                ? "Story Republished"
-                : "Story Published",
+                  ? "Story Republished"
+                  : "Story Published",
             description:
               selectedTags.length === 0
                 ? "All products have been successfully removed from the story."
                 : isRepublish
-                ? "Your story has been successfully republished with the updated products."
-                : "Your story has been successfully published.",
+                  ? "Your story has been successfully republished with the updated products."
+                  : "Your story has been successfully published.",
             status: "success",
             duration: 5000,
             isClosable: true,
@@ -369,15 +369,14 @@ const Card = ({
 
   const buttonText = isRepublishMode() ? "Republish Story" : "Publish Story";
 
-  const { onCopy } = useClipboard("N/A");
+  const { onCopy } = useClipboard();
 
   // Handle URL copy
-  const handleCopy = () => {
-    onCopy();
+  const handleCopy = ({ url }) => {
+    onCopy(url);
     toast({
       title: "Copied to Clipboard",
-      // description: `'${url}' is copied to clipboard!`,
-      description: `N/A is copied to clipboard!`,
+      description: `${url} is copied to clipboard!`,
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -395,8 +394,8 @@ const Card = ({
           !isButtonDisabled
             ? "orange"
             : templateId === template?.id
-            ? "green"
-            : "white"
+              ? "green"
+              : "white"
         }
         className={className}
         onClick={() => {
@@ -413,7 +412,7 @@ const Card = ({
                 {template?.name}
               </Text>
 
-              <Tooltip label="brandname.mykodex.com/storyname+utm">
+              {template?.products?.length !== 0 && <Tooltip label={template?.products[0]?.story_url}>
                 <Text
                   size="sm"
                   textColor={"#757575"}
@@ -425,10 +424,10 @@ const Card = ({
                   gap={3}
                   alignItems={"center"}
                 >
-                  brandname...
-                  <FaRegCopy cursor={"pointer"} onClick={() => handleCopy()} />
+                  {template?.products[0]?.story_url?.substring(0, 10)}...
+                  <FaRegCopy cursor={"pointer"} onClick={() => handleCopy({ url: template?.products[0]?.story_url })} />
                 </Text>
-              </Tooltip>
+              </Tooltip>}
             </HStack>
 
             {/* <HStack
