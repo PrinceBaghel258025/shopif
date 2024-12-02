@@ -28,6 +28,7 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import TabbedContent from "../Generic/TabbedContent";
 import { useProducts } from "../../apiHooks/useProducts";
+import { useStoryTemplate } from "../../apiHooks/useStoryTemplate";
 
 const HomePage2 = () => {
   const [selectedGeofence, setSelectedGeofence] = useState(null);
@@ -35,6 +36,7 @@ const HomePage2 = () => {
   const [qrStats, setQrStats] = useState({ qrstats: {}, heatMapData: [] });
 
   const { data: products } = useProducts();
+  const { data: storyTemplates } = useStoryTemplate();
 
   const contents = [];
   const sheetData = [];
@@ -149,18 +151,6 @@ const HomePage2 = () => {
         w={{ base: "100%", lg: "70%" }}
         h={"96dvh"}
       >
-        <Stack className="step-1" spacing={0}>
-          <Text>Click on link to get a demo experience</Text>
-          <Link
-            href="#"
-            target="_blank"
-            color={"blue.300"}
-            fontWeight={"semibold"}
-          >
-            brandname.agspeak.in
-          </Link>
-        </Stack>
-
         <Grid templateColumns="repeat(3, 1fr)" gap={3}>
           {topCardsData?.map((card, index) => {
             return (
@@ -225,23 +215,26 @@ const HomePage2 = () => {
             </ModalFooter>
           </ModalContent>
         </Modal>
-        <Button
-          className="add-story-btn"
-          px={10}
-          py={6}
-          bg={"green.300"}
-          boxShadow={"md"}
-          w={"fit-content"}
-          alignSelf={"center"}
-          color={"white"}
-          borderRadius={100}
-          onClick={() => {
-            driverObj?.moveNext();
-            window.location.href = "/storyBuilder";
-          }} // Redirect to story builder
-        >
-          Create your first experience
-        </Button>
+
+        {storyTemplates?.length === 0 && (
+          <Button
+            className="add-story-btn"
+            px={10}
+            py={6}
+            bg={"green.300"}
+            boxShadow={"md"}
+            w={"fit-content"}
+            alignSelf={"center"}
+            color={"white"}
+            borderRadius={100}
+            onClick={() => {
+              driverObj?.moveNext();
+              window.location.href = "/storyBuilder";
+            }} // Redirect to story builder
+          >
+            Create your first experience
+          </Button>
+        )}
 
         <Stack bg={"white"} p={3} borderRadius={5}>
           <Stack>

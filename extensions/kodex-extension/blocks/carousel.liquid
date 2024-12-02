@@ -1,4 +1,4 @@
-{% comment %} {% if product.metafields.custom.show_product_story == 'false' %} {% endcomment %}
+{% if product.metafields.custom.show_product_story == 'true' %}
   <div id="carousel">
     {% liquid
       # Relative to entrypointsDir
@@ -7,7 +7,7 @@
     %}
   </div>
 
-{% comment %} {% endif %} {% endcomment %}
+{% endif %}
 
 <script>
   const home = {{ request.path | json }}
