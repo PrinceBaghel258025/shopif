@@ -7,6 +7,7 @@ const AddAppBlock = ({ icon = false }) => {
   const { getShop } = useContext(AuthContext);
 
   const appBlockId = "dbeabe3c-71db-4d6d-b50f-843a50180683";
+  // const appBlockId = process.env.SHOPIFY_KODEX_EXTENSION_ID;
   const extensionHandle = "floating";
 
   const addExtUrl = `https://${getShop()}/admin/themes/current/editor?template=product&addAppBlockId=${appBlockId}/${extensionHandle}&target=newAppsSection`;

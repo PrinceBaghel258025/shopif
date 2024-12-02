@@ -121,7 +121,7 @@ const SphereViewer = ({ type, sourceUrl }) => {
           {type === "carousel_2d_image" ? (
             <ImageScreen imageUrl={sourceUrl} />
           ) : type === "carousel_2d_video" ? (
-            <VideoScreen videoUrl={sourceUrl} />
+            <VideoScreen videoUrl={sourceUrl + "_320p.mp4"} />
           ) : (
             <Canvas camera={{ position: [0, 0, 0.001] }}>
               <ambientLight intensity={3} />
@@ -129,7 +129,7 @@ const SphereViewer = ({ type, sourceUrl }) => {
                 {type === "carousel_360_image" ? (
                   <AnimatedImageSphere imageUrl={sourceUrl} />
                 ) : type === "carousel_360_video" ? (
-                  <AnimatedVideoSphere videoUrl={sourceUrl} />
+                  <AnimatedVideoSphere videoUrl={sourceUrl + "_320p.mp4"} />
                 ) : null}
               </React.Suspense>
               <OrbitControls />

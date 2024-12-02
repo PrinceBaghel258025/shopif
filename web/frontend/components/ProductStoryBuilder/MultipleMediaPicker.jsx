@@ -87,11 +87,15 @@ const MultipleMediaPicker = ({
         const tempUrl = URL.createObjectURL(file);
         allFiles.push({ url: tempUrl, id, type });
         // onImagesChange([tempUrl], type, id);
+
+        const file_type = file.type.startsWith("video/") ? "V" : "I";
+
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("file_type", file_type);
 
         axios
-          .post(BASE_URL + "kvk/upload_story/", formData, {
+          .post(BASE_URL + "upload/media/", formData, {
             headers: {
               Authorization: getToken(),
             },
@@ -106,7 +110,7 @@ const MultipleMediaPicker = ({
             },
           })
           .then((response) => {
-            const newImageUrl = response.data.url; // Assuming the response contains the URL
+            const newImageUrl = response.data.s3_url; // Assuming the response contains the URL
             addUrlMapping(id, newImageUrl);
             setUploadProgress((prev) => {
               const { [id]: _, ...rest } = prev;

@@ -57,11 +57,14 @@ const MediaPicker = ({
           const tempUrl = URL.createObjectURL(file);
           onImagesChange([tempUrl]);
 
+          const file_type = file.type.startsWith("video/") ? "V" : "I";
+
           const formData = new FormData();
           formData.append("file", file);
+          formData.append("file_type", file_type);
 
           axios
-            .post(BASE_URL + "kvk/upload_story/", formData, {
+            .post(BASE_URL + "upload/media/", formData, {
               headers: {
                 Authorization: getToken(),
               },
@@ -76,7 +79,7 @@ const MediaPicker = ({
               },
             })
             .then((response) => {
-              const fileUrl = response.data.url;
+              const fileUrl = response.data.s3_url;
               addUrlMapping(id, fileUrl);
               setUploadProgress((prevProgress) => {
                 const { [tempUrl]: _, ...rest } = prevProgress;
