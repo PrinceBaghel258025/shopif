@@ -15,6 +15,7 @@ import EditAndPreviewButton from "./EditAndPreviewButton";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AuthContext } from "../../services/context";
 import { FaRegEye } from "react-icons/fa";
+import InfoTooltip from "../Generic/Tooltip";
 
 const ProductCard = ({
   product,
@@ -130,33 +131,43 @@ const ProductCard = ({
 
       <HStack spacing={5}>
         {isActive && (
-          <EditAndPreviewButton shopifyProductData={shopifyProductData} />
+          <InfoTooltip text={"Edit Theme"}>
+            <EditAndPreviewButton shopifyProductData={shopifyProductData} />
+          </InfoTooltip>
         )}
 
         {isActive && (
           <>
             {!isNewProduct && productStory && (
-              <QRModal storyUrl={productStory?.story_url} />
+              <InfoTooltip text={"QR Code"}>
+                <QRModal storyUrl={productStory?.story_url} />
+              </InfoTooltip>
             )}
           </>
         )}
 
-        <a href={previewStoreUrl} target="_blank">
-          <FaRegEye fontSize={22} color="#3688FF" />
-        </a>
+        <InfoTooltip text={"Preview"}>
+          <a href={previewStoreUrl} target="_blank">
+            <FaRegEye fontSize={22} color="#3688FF" />
+          </a>
+        </InfoTooltip>
 
-        <Switch
-          isChecked={isPublished}
-          onChange={handleSwitchChange}
-          colorScheme="green"
-        />
+        <InfoTooltip text={"ON/OFF Story"}>
+          <Switch
+            isChecked={isPublished}
+            onChange={handleSwitchChange}
+            colorScheme="green"
+          />
+        </InfoTooltip>
 
-        <RiDeleteBin6Line
-          fontSize={22}
-          color="red"
-          cursor={"pointer"}
-          onClick={() => onRemove(product?.id)}
-        />
+        <InfoTooltip text={"Remove"}>
+          <RiDeleteBin6Line
+            fontSize={22}
+            color="red"
+            cursor={"pointer"}
+            onClick={() => onRemove(product?.id)}
+          />
+        </InfoTooltip>
       </HStack>
     </HStack>
   );
