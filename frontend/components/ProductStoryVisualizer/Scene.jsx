@@ -233,6 +233,7 @@ const ImageSphere = ({
   isBottomSheetOpen,
   onSphereClick,
   slideId,
+  autoRotate = false,
 }) => {
   const { gl, camera, scene } = useThree();
   const [textureLoadingError, setTextureLoadingError] = useState("");
@@ -270,6 +271,12 @@ const ImageSphere = ({
       setTextureLoadingError(err?.message || "Error loading image");
     }
   );
+  useFrame((state, delta) => {
+    if (sphereRef.current && autoRotate) {
+      // Rotate around Y-axis
+      sphereRef.current.rotation.y += 0.3 * delta;
+    }
+  });
 
   useEffect(() => {
     if (!isDisabled) {
@@ -436,6 +443,7 @@ const VideoSphere = ({
   isBottomSheetOpen,
   onSphereClick,
   slideId,
+  autoRotate = false,
 }) => {
   const { gl, camera, scene } = useThree();
   let videoTexture = useVideoTexture(image_url);
@@ -459,6 +467,12 @@ const VideoSphere = ({
       meshRef.current.rotation.y = targetRotation;
     }
   }, []);
+  useFrame((state, delta) => {
+    if (meshRef.current && autoRotate) {
+      // Rotate around Y-axis
+      meshRef.current.rotation.y += 0.3 * delta;
+    }
+  });
 
   useEffect(() => {
     if (!isDisabled) {
@@ -581,6 +595,7 @@ const Sphere = ({
   isBottomSheetOpen,
   targetRotation,
   slideId,
+  autoRotate,
 }) => {
   const image_360 = data?.find((info) => info?.type === "carousel_360_image");
   const video_360 = data?.find((info) => info?.type === "carousel_360_video");
@@ -594,6 +609,7 @@ const Sphere = ({
           setIsInteracting={setIsInteracting}
           image_url={image_360?.image_url}
           isBottomSheetOpen={isBottomSheetOpen}
+          autoRotate={autoRotate}
         />
       )
     );
@@ -606,6 +622,7 @@ const Sphere = ({
         setIsInteracting={setIsInteracting}
         image_url={video_360?.image_url}
         isBottomSheetOpen={isBottomSheetOpen}
+        autoRotate={autoRotate}
       />
     );
   }
@@ -629,6 +646,7 @@ export const Scene = ({
   targetRotation,
   zoom = 1,
   slideId,
+  autoRotate,
 }) => {
   const [isInsideSphere, setIsInsideSphere] = useState(true);
 
@@ -656,6 +674,7 @@ export const Scene = ({
           <Suspense fallback={Loading}>
             {data && (
               <Sphere
+                autoRotate={autoRotate}
                 targetRotation={targetRotation}
                 setIsInteracting={setIsInteracting}
                 data={data}

@@ -25,7 +25,7 @@ export default function App() {
   });
   const { t } = useTranslation();
   const theme = extendTheme({ breakpoints });
-  const queryClient = new QueryClient();
+  const queryClient = useMemo(() => new QueryClient(), []);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);

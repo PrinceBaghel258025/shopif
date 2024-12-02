@@ -50,6 +50,7 @@ function SliderComponent({ productData, defaultSheetdata }) {
                 setIsBottomSheetOpen={setIsBottomSheetOpen}
                 slideId={dataset?.id}
                 updateLoadingStatus={index === 0 ? updateLoadingStatus : undefined}
+                autoRotate={true}
               />
             </Stack>
           );
