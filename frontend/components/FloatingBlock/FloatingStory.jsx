@@ -28,10 +28,9 @@ const FloatingStory = () => {
             borderRadius={10}
             onClick={() => setIsOpen(!isOpen)}
             cursor={"pointer"}
-            borderWidth={3}
-            borderColor={"black"}
             position={"relative"}
             overflow={"hidden"}
+            border={"3px solid black"}
           >
             <Stack
               h={2}
@@ -50,17 +49,6 @@ const FloatingStory = () => {
               type={firstStoryData?.type}
               sourceUrl={firstStoryData?.image_url}
             />
-
-            <Stack
-              h={7}
-              w={60}
-              position={"absolute"}
-              bottom={0}
-              bg={"lightgray"}
-              borderRadius={10}
-            >
-              <p />
-            </Stack>
             <p />
           </Stack>
         )}
