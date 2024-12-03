@@ -84,7 +84,11 @@ const SphereViewer = ({ type, sourceUrl, videoRes = "" }) => {
   const [videoResolution, setVideoResolution] = useState("");
 
   useEffect(() => {
-    if (videoRes === "320p") {
+    if (videoRes === "144p") {
+      setVideoResolution("_144p.mp4");
+    } else if (videoRes === "280p") {
+      setVideoResolution("_280p.mp4");
+    } else if (videoRes === "320p") {
       setVideoResolution("_320p.mp4");
     }
   }, [videoRes]);

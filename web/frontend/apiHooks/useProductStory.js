@@ -19,7 +19,7 @@ export const useGetProductStoryDraft = (storyId) => {
     queryKey: [PRODUCT_STORY_DRAFT_QUERY_KEY, storyId],
     queryFn: async () => {
       return await makeRequest(
-        BASE_URL + `/kvk/draft_product_description/${storyId}/`,
+        BASE_URL + `kvk/draft_product_description/${storyId}/`,
         "GET",
         getToken()
       );

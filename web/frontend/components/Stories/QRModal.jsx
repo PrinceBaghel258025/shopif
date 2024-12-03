@@ -15,6 +15,7 @@ const QRModal = ({ storyUrl }) => {
   return (
     <>
       <BsQrCodeScan
+        className="qr-code"
         onClick={onOpen}
         cursor={"pointer"}
         fontSize={20}

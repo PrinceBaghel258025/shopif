@@ -135,6 +135,91 @@ const Stories = () => {
           },
         },
       },
+
+      {
+        element: ".live-products-accordion-btn",
+        popover: {
+          title: "Publish Story",
+          description: "Click to publish the story",
+          onNextClick: () => {
+            // Redirect to story builder
+            const button = document.querySelector(
+              ".live-products-accordion-btn"
+            );
+            button?.click();
+            driverObj?.moveNext();
+            // window.location.href = '/story-builder'; // Change this to the actual path of your story builder
+            return false;
+          },
+        },
+      },
+
+      {
+        element: ".live-product-story",
+        popover: {
+          title: "Live Product Story",
+          description: "Published Product Story in theme",
+          onNextClick: () => {
+            driverObj?.moveNext();
+            return false;
+          },
+        },
+      },
+      {
+        element: ".edit-theme-icon",
+        popover: {
+          title: "Edit Theme",
+          description: "Edit Product Story Theme",
+          onNextClick: () => {
+            driverObj?.moveNext();
+            return false;
+          },
+        },
+      },
+      {
+        element: ".qr-code",
+        popover: {
+          title: "QR Code",
+          description: "QR code with copy & download link",
+          onNextClick: () => {
+            driverObj?.moveNext();
+            return false;
+          },
+        },
+      },
+      {
+        element: ".preview-story",
+        popover: {
+          title: "Preview",
+          description: "Preview Story in store",
+          onNextClick: () => {
+            driverObj?.moveNext();
+            return false;
+          },
+        },
+      },
+      {
+        element: ".on-off-story-switch",
+        popover: {
+          title: "ON/OFF Story",
+          description: "ON/OFF Switch for product",
+          onNextClick: () => {
+            driverObj?.moveNext();
+            return false;
+          },
+        },
+      },
+      {
+        element: ".remove-product",
+        popover: {
+          title: "Remove Product",
+          description: "Remove Product from Story template",
+          onNextClick: () => {
+            driverObj?.moveNext();
+            return false;
+          },
+        },
+      },
     ],
     allowClose: true,
     overlayClickNext: false,

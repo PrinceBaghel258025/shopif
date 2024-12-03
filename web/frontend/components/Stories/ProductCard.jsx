@@ -103,6 +103,7 @@ const ProductCard = ({
 
   return (
     <HStack
+      className="live-product-story"
       justifyContent={"space-between"}
       boxShadow={"md"}
       p={3}
@@ -147,13 +148,14 @@ const ProductCard = ({
         )}
 
         <InfoTooltip text={"Preview"}>
-          <a href={previewStoreUrl} target="_blank">
+          <a href={previewStoreUrl} target="_blank" className="preview-story">
             <FaRegEye fontSize={22} color="#3688FF" />
           </a>
         </InfoTooltip>
 
         <InfoTooltip text={"ON/OFF Story"}>
           <Switch
+            className="on-off-story-switch"
             isChecked={isPublished}
             onChange={handleSwitchChange}
             colorScheme="green"
@@ -162,6 +164,7 @@ const ProductCard = ({
 
         <InfoTooltip text={"Remove"}>
           <RiDeleteBin6Line
+            className="remove-product"
             fontSize={22}
             color="red"
             cursor={"pointer"}

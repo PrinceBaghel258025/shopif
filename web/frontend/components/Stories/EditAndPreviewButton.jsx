@@ -33,7 +33,7 @@ const EditAndPreviewButton = ({ shopifyProductData }) => {
 
   return (
     <HStack>
-      <a href={redirectUrl} target="_blank">
+      <a href={redirectUrl} target="_blank" className="edit-theme-icon">
         <SpreadIcon />
       </a>
 

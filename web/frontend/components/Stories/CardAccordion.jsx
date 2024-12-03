@@ -22,6 +22,7 @@ const CardAccordion = ({ label, body, headerStyles, rightSide }) => {
         <HStack m={3} justifyContent={"space-between"}>
           <HStack>
             <AccordionButton
+              className="live-products-accordion-btn"
               onClick={toggleAccordion}
               // borderBottomRadius={isOpen ? 0 : 10}
               p={2}
