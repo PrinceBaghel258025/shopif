@@ -7,7 +7,7 @@ import {
   filterCarouselTypes,
   handleSavedOrPublishData,
 } from "../components/ProductStoryBuilder/storyUtils";
-import { useSearchParams } from "react-router-dom";
+import { Navigate, useSearchParams, redirect } from "react-router-dom";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useGetShopifyProducts } from "../apiHooks/useShopifyProduct";
@@ -332,8 +332,10 @@ const Stories = () => {
   };
 
   const handleEdit = (template) => {
-    window.location.href = `/storyBuilder?edit=published&templateId=${template?.id}`;
-    console.log("template", template);
+    const url = `/storyBuilder?edit=published&templateId=${template?.id}`;
+    
+    redirect(url, { replace: true });
+    console.log("template",url, template);
   };
 
   return (
