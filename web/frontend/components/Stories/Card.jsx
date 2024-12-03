@@ -4,6 +4,7 @@ import {
   useStoryTemplate,
   useUpdateStoryTemplate,
 } from "../../apiHooks/useStoryTemplate";
+import {Link} from '@shopify/polaris';
 import { useProductMetafields } from "../../apiHooks/useThemes";
 import {
   Box,
@@ -447,8 +448,8 @@ const Card = ({
               </HStack> */}
 
             <HStack>
-              <a
-                href={`storyBuilder?edit=published&templateId=${template?.id}`}
+              <Link
+                url={`/storyBuilder?edit=published&templateId=${template?.id}`}
                 // onClick={() => {
                 //   onEdit(template);
                 // }}
@@ -460,7 +461,7 @@ const Card = ({
                 color={"white"}
               >
                 Edit Story
-              </a>
+              </Link>
 
               <Button
                 onClick={() => {
