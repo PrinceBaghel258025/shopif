@@ -74,13 +74,6 @@ const HomePage2 = () => {
   const driverObj = driver({
     steps: [
       {
-        element: ".step-1",
-        popover: {
-          title: "Select the product",
-          description: "Click here for more details",
-        },
-      },
-      {
         element: ".preview-experience-btn",
         popover: {
           title: "Preview Experience",
@@ -104,14 +97,14 @@ const HomePage2 = () => {
           },
         },
       },
-      {
-        element: ".add-story-btn",
+      storyTemplates?.length <= 1 && {
+        element: ".create-first-story-btn",
         popover: {
           title: "Add Story",
           description: "Click to create a product story",
           onNextClick: () => {
             // Redirect to story builder
-            const button = document.querySelector(".add-story-btn");
+            const button = document.querySelector(".create-first-story-btn");
             button?.click();
             // window.location.href = '/story-builder'; // Change this to the actual path of your story builder
             return false;
@@ -227,9 +220,9 @@ const HomePage2 = () => {
           </ModalContent>
         </Modal>
 
-        {storyTemplates?.length === 0 && (
+        {storyTemplates?.length <= 1 && (
           <Button
-            className="add-story-btn"
+            className="create-first-story-btn"
             px={10}
             py={6}
             bg={"green.300"}
