@@ -17,6 +17,7 @@ import {
   useDisclosure,
   ModalCloseButton,
   Tooltip,
+  Spinner,
 } from "@chakra-ui/react";
 import React, { useMemo, useState, useEffect } from "react";
 import { CgArrowLeft, CgArrowRight, CgClose } from "react-icons/cg";
@@ -29,6 +30,8 @@ import "driver.js/dist/driver.css";
 import TabbedContent from "../Generic/TabbedContent";
 import { useProducts } from "../../apiHooks/useProducts";
 import { useStoryTemplate } from "../../apiHooks/useStoryTemplate";
+import { useShopifyHomePageStats } from "../../apiHooks/useShopifyStats";
+import { TbReload } from "react-icons/tb";
 
 const HomePage2 = () => {
   const [selectedGeofence, setSelectedGeofence] = useState(null);
@@ -37,6 +40,12 @@ const HomePage2 = () => {
 
   const { data: products } = useProducts();
   const { data: storyTemplates } = useStoryTemplate();
+  const {
+    data: productHomeStats,
+    isLoading: isProductHomeStatsLoading,
+    isError: isProductHomeStatsError,
+    refetch: refetchProductHomeStats,
+  } = useShopifyHomePageStats();
 
   const contents = [];
   const sheetData = [];
@@ -131,15 +140,15 @@ const HomePage2 = () => {
   const topCardsData = [
     {
       label: "Unique experiences",
-      value: "N/A Experiences",
+      value: `${productHomeStats?.total_products || 0} Experiences`,
     },
     {
       label: "Unique links",
-      value: "N/A Links",
+      value: `${productHomeStats?.total_stories || 0} Links`,
     },
     {
       label: "Live on",
-      value: "N/A Products",
+      value: `${productHomeStats?.live_products || 0} Products`,
     },
   ];
 
@@ -158,7 +167,9 @@ const HomePage2 = () => {
                 key={index}
                 label={card?.label}
                 value={card?.value}
-                selectedTabIndex={index}
+                isLoading={isProductHomeStatsLoading}
+                isError={isProductHomeStatsError}
+                onRefetch={() => refetchProductHomeStats()}
               />
             );
           })}
@@ -367,7 +378,7 @@ const HomePage2 = () => {
   );
 };
 
-const TopStatCard = ({ label, value, selectedTabIndex }) => {
+const TopStatCard = ({ label, value, isLoading, isError, onRefetch }) => {
   const modalOptions = useDisclosure();
   const { onOpen } = modalOptions;
   return (
@@ -377,18 +388,33 @@ const TopStatCard = ({ label, value, selectedTabIndex }) => {
         borderRadius={5}
         p={3.5}
         py={5}
-        spacing={0}
         onClick={onOpen}
+        display={"flex"}
+        justifyContent={(isLoading || isError) && "center"}
       >
-        <HStack justifyContent={"space-between"}>
-          <Text fontSize={14} fontWeight={"medium"}>
-            {label}
-          </Text>
-          <CgArrowRight fontSize={20} />
-        </HStack>
-        <Text fontSize={20} fontWeight={"bold"}>
-          {value}
-        </Text>
+        {isLoading ? (
+          <Spinner size={"md"} color="green" />
+        ) : isError ? (
+          <IconButton
+            icon={<TbReload fontSize={30} />}
+            onClick={onRefetch}
+            color={"red"}
+            bg={"transparent"}
+            _hover={{ bg: "transparent" }}
+          />
+        ) : (
+          <Stack spacing={0}>
+            <HStack justifyContent={"space-between"}>
+              <Text fontSize={14} fontWeight={"medium"}>
+                {label}
+              </Text>
+              <CgArrowRight fontSize={20} />
+            </HStack>
+            <Text fontSize={20} fontWeight={"bold"}>
+              {value}
+            </Text>
+          </Stack>
+        )}
       </GridItem>
 
       {/* <TopCardsPopover

@@ -1,5 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { useGetSingleProduct } from "../../apiHooks/useShopifyProduct";
+import {
+  useGetSingleProduct,
+  useUpdatePublishProductMetaData,
+} from "../../apiHooks/useShopifyProduct";
 import { useProductMetafields } from "../../apiHooks/useThemes";
 import {
   HStack,
@@ -26,6 +29,7 @@ const ProductCard = ({
   template,
 }) => {
   const { mutate: productMetafileds } = useProductMetafields();
+  const { mutate: updateProductMetaData } = useUpdatePublishProductMetaData();
 
   const isNewProduct = filterNewAddedProducts?.includes(product?.id);
 
@@ -81,6 +85,26 @@ const ProductCard = ({
           isClosable: true,
           position: "top-right",
         });
+
+        const updateData = { live_status: newState };
+        updateProductMetaData(
+          { productId: product?.id, formData: updateData },
+          {
+            onSuccess: async (data) => {
+              await queryClient.invalidateQueries({
+                queryKey: [SHOPIFY_HOME_STATS_QUERY_KEY],
+              });
+
+              console.log("Successfully updated metadata in crm", data);
+            },
+            onError: (error) => {
+              console.log(
+                "Error While updateing meta data in crm backend: ",
+                error
+              );
+            },
+          }
+        );
       },
       onError: (error) => {
         console.log("Error while adding meta fields", error);
