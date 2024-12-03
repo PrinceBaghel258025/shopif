@@ -2,39 +2,16 @@ import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useLoader, useFrame } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import * as THREE from "three";
-import { OrbitControls, useVideoTexture } from "@react-three/drei";
+import { Html, OrbitControls, useVideoTexture } from "@react-three/drei";
 import { Image, Stack } from "@chakra-ui/react";
 
-// Sphere component that renders an image texture with rotation
-const AnimatedImageSphere = ({ imageUrl }) => {
-  // Load the texture
-  const texture = useLoader(TextureLoader, imageUrl);
-  const meshRef = useRef();
-
-  // Animation hook to rotate the sphere
-  useFrame((state, delta) => {
-    if (meshRef.current) {
-      // Rotate around Y-axis
-      meshRef.current.rotation.y += 0.3 * delta;
-    }
-  });
-
-  return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[1, 100, 100]} />
-      <meshStandardMaterial map={texture} side={THREE.DoubleSide} />
-    </mesh>
-  );
-};
-
-// Sphere component that renders a video texture with rotation
-const AnimatedVideoSphere = ({ videoUrl }) => {
+// Separate the sphere mesh into its own component
+const VideoSphereMesh = ({ videoUrl }) => {
   const meshRef = useRef();
   const videoTexture = useVideoTexture(videoUrl);
 
   useFrame((state, delta) => {
     if (meshRef.current) {
-      // Rotate around Y-axis
       meshRef.current.rotation.y += 0.3 * delta;
     }
   });
@@ -47,36 +24,129 @@ const AnimatedVideoSphere = ({ videoUrl }) => {
   );
 };
 
+// Separate the image sphere mesh into its own component
+const ImageSphereMesh = ({ imageUrl }) => {
+  const texture = useLoader(TextureLoader, imageUrl);
+  const meshRef = useRef();
+
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += 0.3 * delta;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[1, 100, 100]} />
+      <meshStandardMaterial map={texture} side={THREE.DoubleSide} />
+    </mesh>
+  );
+};
+
+const AnimatedImageSphere = ({ imageUrl }) => {
+  return (
+    <Canvas camera={{ position: [0, 0, 0.001] }}>
+      <ambientLight intensity={3} />
+      <Suspense
+        fallback={
+          <Html center>
+            <Stack w={65} h={120} position={"relative"}>
+              <Image
+                src={
+                  "https://360-images-v1.s3.ap-south-1.amazonaws.com/qr-scan.gif"
+                }
+                alt="loading"
+                position={"absolute"}
+                top={30}
+              />
+            </Stack>
+          </Html>
+        }
+      >
+        <ImageSphereMesh imageUrl={imageUrl} />
+      </Suspense>
+      <OrbitControls />
+    </Canvas>
+  );
+};
+
+const AnimatedVideoSphere = ({ videoUrl }) => {
+  return (
+    <Canvas camera={{ position: [0, 0, 0.001] }}>
+      <ambientLight intensity={3} />
+      <Suspense
+        fallback={
+          <Html center>
+            <Stack w={65} h={120} position={"relative"}>
+              <Image
+                src={
+                  "https://360-images-v1.s3.ap-south-1.amazonaws.com/qr-scan.gif"
+                }
+                alt="loading"
+                position={"absolute"}
+                top={30}
+              />
+            </Stack>
+          </Html>
+        }
+      >
+        <VideoSphereMesh videoUrl={videoUrl} />
+      </Suspense>
+      <OrbitControls />
+    </Canvas>
+  );
+};
+
 const ImageScreen = ({ imageUrl }) => {
   return (
-    <Stack w={65} h={120}>
-      <Image
-        w={65}
-        h={120}
-        src={imageUrl}
-        alt="story"
-        style={{ pointerEvents: "none" }}
-      />
-    </Stack>
+    <>
+      {imageUrl ? (
+        <Stack w={65} h={120}>
+          <Image
+            w={65}
+            h={120}
+            src={imageUrl}
+            alt="story"
+            style={{ pointerEvents: "none" }}
+          />
+        </Stack>
+      ) : (
+        <Image
+          src={"https://360-images-v1.s3.ap-south-1.amazonaws.com/qr-scan.gif"}
+          alt="loading"
+          mt={"50%"}
+        />
+      )}
+    </>
   );
 };
 
 const VideoScreen = ({ videoUrl }) => {
   return (
-    <Stack w={65} h={120}>
-      <video
-        src={videoUrl}
-        style={{
-          height: "120px",
-          objectFit: "fill",
-          pointerEvents: "none",
-        }}
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
-    </Stack>
+    <>
+      {videoUrl ? (
+        <Stack w={65} h={120}>
+          <video
+            src={videoUrl}
+            style={{
+              height: "120px",
+              objectFit: "fill",
+              pointerEvents: "none",
+            }}
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        </Stack>
+      ) : (
+        <Image
+          src={"https://360-images-v1.s3.ap-south-1.amazonaws.com/qr-scan.gif"}
+          alt="loading"
+          mt={"50%"}
+        />
+      )}
+    </>
   );
 };
 
@@ -93,18 +163,6 @@ const SphereViewer = ({ type, sourceUrl, videoRes = "" }) => {
     }
   }, [videoRes]);
 
-  function loading() {
-    return (
-      <Html>
-        <Image
-          src={"https://360-images-v1.s3.ap-south-1.amazonaws.com/qr-scan.gif"}
-          alt="loading"
-          mt={"50%"}
-        />
-      </Html>
-    );
-  }
-
   return (
     <>
       {sourceUrl ? (
@@ -113,19 +171,11 @@ const SphereViewer = ({ type, sourceUrl, videoRes = "" }) => {
             <ImageScreen imageUrl={sourceUrl} />
           ) : type === "carousel_2d_video" ? (
             <VideoScreen videoUrl={sourceUrl + videoResolution} />
-          ) : (
-            <Canvas camera={{ position: [0, 0, 0.001] }}>
-              <ambientLight intensity={3} />
-              <Suspense fallback={loading}>
-                {type === "carousel_360_image" ? (
-                  <AnimatedImageSphere imageUrl={sourceUrl} />
-                ) : type === "carousel_360_video" ? (
-                  <AnimatedVideoSphere videoUrl={sourceUrl + videoResolution} />
-                ) : null}
-              </Suspense>
-              <OrbitControls />
-            </Canvas>
-          )}
+          ) : type === "carousel_360_image" ? (
+            <AnimatedImageSphere imageUrl={sourceUrl} />
+          ) : type === "carousel_360_video" ? (
+            <AnimatedVideoSphere videoUrl={sourceUrl + videoResolution} />
+          ) : null}
         </>
       ) : (
         <Image

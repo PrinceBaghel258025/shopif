@@ -76,23 +76,24 @@ const ProductCard = ({
         console.log("Add Meta filed Successfully");
         setIsPublished(newState);
 
-        toast({
-          title: newState
-            ? "Story Added in Product theme"
-            : "Story Removed in Product theme",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          position: "top-right",
-        });
-
         const updateData = { live_status: newState };
+
         updateProductMetaData(
           { productId: product?.id, formData: updateData },
           {
             onSuccess: async (data) => {
               await queryClient.invalidateQueries({
                 queryKey: [SHOPIFY_HOME_STATS_QUERY_KEY],
+              });
+
+              toast({
+                title: newState
+                  ? "Story Added in Product theme"
+                  : "Story Removed in Product theme",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+                position: "top-right",
               });
 
               console.log("Successfully updated metadata in crm", data);
