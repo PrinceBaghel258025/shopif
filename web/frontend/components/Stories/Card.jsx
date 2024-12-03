@@ -448,11 +448,11 @@ const Card = ({
               </HStack> */}
 
             <HStack>
-              <Link
-                url={`/storyBuilder?edit=published&templateId=${template?.id}`}
-                // onClick={() => {
-                //   onEdit(template);
-                // }}
+              <Button
+                // url={`/storyBuilder?edit=published&templateId=${template?.id}`}
+                onClick={() => {
+                  onEdit(template);
+                }}
                 fontSize="xs"
                 size={"sm"}
                 p={2}
@@ -461,7 +461,7 @@ const Card = ({
                 color={"white"}
               >
                 Edit Story
-              </Link>
+              </Button>
 
               <Button
                 onClick={() => {

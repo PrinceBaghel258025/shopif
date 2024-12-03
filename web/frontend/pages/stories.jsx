@@ -7,16 +7,19 @@ import {
   filterCarouselTypes,
   handleSavedOrPublishData,
 } from "../components/ProductStoryBuilder/storyUtils";
-import { Navigate, useSearchParams, redirect } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useGetShopifyProducts } from "../apiHooks/useShopifyProduct";
 import AlertDialogBox from "../components/Stories/AlertDialogBox";
 import StoryPreview from "../components/Stories/StoryPreview";
 import Card from "../components/Stories/Card";
-
+import { Redirect } from "@shopify/app-bridge/actions";
+import { createApp } from "@shopify/app-bridge";
 // Main Stories component
 const Stories = () => {
+  const app = createApp({apiKey: import.meta.env.VITE_SHOPIFY_API_KEY, host: new URLSearchParams(location.search).get("host"),});
+  const redirect = Redirect.create(app);
   const {
     data: storyTemplates,
     isLoading: isStoryTemplatesLoading,
@@ -333,9 +336,7 @@ const Stories = () => {
 
   const handleEdit = (template) => {
     const url = `/storyBuilder?edit=published&templateId=${template?.id}`;
-    
-    redirect(url, { replace: true });
-    console.log("template",url, template);
+    redirect.dispatch(Redirect.Action.APP, `/storyBuilder?edit=published&templateId=${template?.id}`);
   };
 
   return (

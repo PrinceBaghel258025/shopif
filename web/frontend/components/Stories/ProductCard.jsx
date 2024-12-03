@@ -44,7 +44,6 @@ const ProductCard = ({
   );
 
   const isMetaData = metaData?.node?.value === "true";
-  console.log("templatetemplatetemplatetemplate==>", template);
 
   const [isPublished, setIsPublished] = useState(false);
 
