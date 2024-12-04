@@ -32,6 +32,7 @@ import { useProducts } from "../../apiHooks/useProducts";
 import { useStoryTemplate } from "../../apiHooks/useStoryTemplate";
 import { useShopifyHomePageStats } from "../../apiHooks/useShopifyStats";
 import { TbReload } from "react-icons/tb";
+import { filterCarouselTypes } from "../ProductStoryBuilder/storyUtils";
 
 const HomePage2 = () => {
   const [selectedGeofence, setSelectedGeofence] = useState(null);
@@ -46,9 +47,40 @@ const HomePage2 = () => {
     isError: isProductHomeStatsError,
     refetch: refetchProductHomeStats,
   } = useShopifyHomePageStats();
+  const { data: storyTemplate, isError: isStoryTemplateError } =
+    useStoryTemplate();
 
-  const contents = [];
-  const sheetData = [];
+  const [contents, setContents] = useState([]);
+  const [sheetData, setSheetData] = useState([]);
+
+  useEffect(() => {
+    if (isStoryTemplateError && storyTemplate?.length === 0) return;
+
+    const data = storyTemplate?.[0]?.description?.data;
+    const general_sheet = storyTemplate?.[0]?.description?.general_sheet;
+    const is_general_sheet = storyTemplate?.[0]?.description?.is_general_sheet;
+
+    if (is_general_sheet) {
+      setContents(data || []);
+      setSheetData(general_sheet || []);
+    } else {
+      const filterCarouselData = data?.filter((c) =>
+        filterCarouselTypes.includes(c?.type)
+      );
+
+      const filterSheetData = data?.filter(
+        (c) => !filterCarouselTypes.includes(c?.type)
+      );
+
+      console.log("Filtered Data:", {
+        carousel: filterCarouselData,
+        sheet: filterSheetData,
+      });
+
+      setContents(filterCarouselData || []);
+      setSheetData(filterSheetData || []);
+    }
+  }, [storyTemplate]);
 
   // Create a context value object
   const productStoryContextValue = {
