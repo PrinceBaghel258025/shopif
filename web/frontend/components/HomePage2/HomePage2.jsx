@@ -33,8 +33,16 @@ import { useStoryTemplate } from "../../apiHooks/useStoryTemplate";
 import { useShopifyHomePageStats } from "../../apiHooks/useShopifyStats";
 import { TbReload } from "react-icons/tb";
 import { filterCarouselTypes } from "../ProductStoryBuilder/storyUtils";
+import { Redirect } from "@shopify/app-bridge/actions";
+import { createApp } from "@shopify/app-bridge";
 
 const HomePage2 = () => {
+  const app = createApp({
+    apiKey: import.meta.env.VITE_SHOPIFY_API_KEY,
+    host: new URLSearchParams(location.search).get("host"),
+  });
+  const redirect = Redirect.create(app);
+
   const [selectedGeofence, setSelectedGeofence] = useState(null);
   const [isViewDemo, setIsViewDemo] = useState(false);
   const [qrStats, setQrStats] = useState({ qrstats: {}, heatMapData: [] });
@@ -314,7 +322,17 @@ const HomePage2 = () => {
                   Preview
                 </Button>
 
-                <Button colorScheme="green" borderRadius={100} size={"sm"}>
+                <Button
+                  colorScheme="green"
+                  borderRadius={100}
+                  size={"sm"}
+                  onClick={() => {
+                    redirect.dispatch(
+                      Redirect.Action.APP,
+                      `/storyBuilder?edit=published&templateId=1`
+                    );
+                  }}
+                >
                   Use this Template
                 </Button>
               </Stack>
