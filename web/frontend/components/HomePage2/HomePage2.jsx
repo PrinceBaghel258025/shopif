@@ -8,16 +8,16 @@ import {
   Link,
   Stack,
   Text,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   useDisclosure,
-  ModalCloseButton,
   Tooltip,
   Spinner,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
 } from "@chakra-ui/react";
 import React, { useMemo, useState, useEffect } from "react";
 import { CgArrowLeft, CgArrowRight, CgClose } from "react-icons/cg";
@@ -35,6 +35,7 @@ import { TbReload } from "react-icons/tb";
 import { filterCarouselTypes } from "../ProductStoryBuilder/storyUtils";
 import { Redirect } from "@shopify/app-bridge/actions";
 import { createApp } from "@shopify/app-bridge";
+import { GoInfo } from "react-icons/go";
 
 const HomePage2 = () => {
   const app = createApp({
@@ -151,14 +152,17 @@ const HomePage2 = () => {
     {
       label: "Unique experiences",
       value: `${productHomeStats?.total_products || 0} Experiences`,
+      messageBody: "N/A",
     },
     {
       label: "Unique links",
       value: `${productHomeStats?.total_stories || 0} Links`,
+      messageBody: "N/A",
     },
     {
       label: "Live on",
       value: `${productHomeStats?.live_products || 0} Products`,
+      messageBody: "N/A",
     },
   ];
 
@@ -180,6 +184,7 @@ const HomePage2 = () => {
                 isLoading={isProductHomeStatsLoading}
                 isError={isProductHomeStatsError}
                 onRefetch={() => refetchProductHomeStats()}
+                messageBody={card?.messageBody}
               />
             );
           })}
@@ -210,16 +215,48 @@ const HomePage2 = () => {
             <Text>Analytics</Text>
 
             <Grid templateColumns="repeat(4, 2fr)" gap={3}>
-              <AnalyticsCard label={"All Scans"} value={totalScans || 0} />
-              <AnalyticsCard label={"Unique Scans"} value={uniqueScans || 0} />
+              <AnalyticsCard
+                label={"All Scans"}
+                value={totalScans || 0}
+                messageTitle={"All Scans"}
+                messageBody={"N/A"}
+              />
+              <AnalyticsCard
+                label={"Unique Scans"}
+                value={uniqueScans || 0}
+                messageTitle={"Unique Scans"}
+                messageBody={"N/A"}
+              />
               <AnalyticsCard
                 label={"All Locations"}
                 value={allLocations || 0}
+                messageTitle={"All Locations"}
+                messageBody={"N/A"}
               />
-              <AnalyticsCard label={"All Pins/Zips"} value={allPins || 0} />
-              <AnalyticsCard label={"Unique IPs"} value={"N/A"} />
-              <AnalyticsCard label={"Referral Conversions"} value={"N/A"} />
-              <AnalyticsCard isOSBrowserStats qrStatsData={qrStats?.qrstats} />
+              <AnalyticsCard
+                label={"All Pins/Zips"}
+                value={allPins || 0}
+                messageTitle={"All Pins/Zips"}
+                messageBody={"N/A"}
+              />
+              <AnalyticsCard
+                label={"Unique IPs"}
+                value={"N/A"}
+                messageTitle={"Unique IPs"}
+                messageBody={"N/A"}
+              />
+              <AnalyticsCard
+                label={"Referral Conversions"}
+                value={"N/A"}
+                messageTitle={"Referral Conversions"}
+                messageBody={"N/A"}
+              />
+              <AnalyticsCard
+                isOSBrowserStats
+                qrStatsData={qrStats?.qrstats}
+                messageTitle={"QR Scans on devices"}
+                messageBody={"N/A"}
+              />
             </Grid>
           </Stack>
 
@@ -346,7 +383,14 @@ const HomePage2 = () => {
   );
 };
 
-const TopStatCard = ({ label, value, isLoading, isError, onRefetch }) => {
+const TopStatCard = ({
+  label,
+  value,
+  isLoading,
+  isError,
+  onRefetch,
+  messageBody,
+}) => {
   const modalOptions = useDisclosure();
   const { onOpen } = modalOptions;
   return (
@@ -359,6 +403,7 @@ const TopStatCard = ({ label, value, isLoading, isError, onRefetch }) => {
         onClick={onOpen}
         display={"flex"}
         justifyContent={(isLoading || isError) && "center"}
+        position={"relative"}
       >
         {isLoading ? (
           <Spinner size={"md"} color="green" />
@@ -381,6 +426,9 @@ const TopStatCard = ({ label, value, isLoading, isError, onRefetch }) => {
             <Text fontSize={20} fontWeight={"bold"}>
               {value}
             </Text>
+            {(!isLoading || !isError) && (
+              <InfoPopover header={label} body={messageBody} />
+            )}
           </Stack>
         )}
       </GridItem>
@@ -396,6 +444,8 @@ const TopStatCard = ({ label, value, isLoading, isError, onRefetch }) => {
 const AnalyticsCard = ({
   label,
   value,
+  messageTitle,
+  messageBody,
   isOSBrowserStats = false,
   qrStatsData = null,
 }) => {
@@ -490,6 +540,8 @@ const AnalyticsCard = ({
               OS/Browser Stats
             </Text>
           </Stack>
+
+          <InfoPopover header={messageTitle} body={messageBody} />
         </GridItem>
       ) : (
         <GridItem
@@ -498,6 +550,7 @@ const AnalyticsCard = ({
           borderRadius={5}
           spacing={0}
           colSpan={1}
+          position={"relative"}
         >
           <Text fontSize={12} fontWeight={"medium"}>
             {label}
@@ -505,9 +558,37 @@ const AnalyticsCard = ({
           <Text fontSize={20} fontWeight={"bold"}>
             {value}
           </Text>
+
+          <InfoPopover header={messageTitle} body={messageBody} />
         </GridItem>
       )}
     </>
+  );
+};
+
+const InfoPopover = ({ header, body }) => {
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <Stack
+          position={"absolute"}
+          top={1.5}
+          right={1.5}
+          borderRadius={100}
+          cursor={"pointer"}
+          bg={"white"}
+          p={0.5}
+        >
+          <GoInfo />
+        </Stack>
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverHeader>{header}</PopoverHeader>
+        <PopoverBody>{body}</PopoverBody>
+      </PopoverContent>
+    </Popover>
   );
 };
 
