@@ -64,9 +64,11 @@ const HomePage2 = () => {
   useEffect(() => {
     if (isStoryTemplateError && storyTemplate?.length === 0) return;
 
-    const data = storyTemplate?.[0]?.description?.data;
-    const general_sheet = storyTemplate?.[0]?.description?.general_sheet;
-    const is_general_sheet = storyTemplate?.[0]?.description?.is_general_sheet;
+    const findStoryTemp = storyTemplate?.find((temp) => temp?.id === 1);
+
+    const data = findStoryTemp?.description?.data;
+    const general_sheet = findStoryTemp?.description?.general_sheet;
+    const is_general_sheet = findStoryTemp?.description?.is_general_sheet;
 
     if (is_general_sheet) {
       setContents(data || []);
