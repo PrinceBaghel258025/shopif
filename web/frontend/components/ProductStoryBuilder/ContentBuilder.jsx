@@ -92,6 +92,8 @@ import GlobalStyleEditor from "./GlobalStyleEditor";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import { MdOutlineTour } from "react-icons/md";
+import { createApp } from "@shopify/app-bridge";
+import { Redirect } from "@shopify/app-bridge/actions";
 
 const ContentBuilder = ({
   productId,
@@ -102,6 +104,12 @@ const ContentBuilder = ({
   formMethods,
   handleCloseModal,
 }) => {
+  const app = createApp({
+    apiKey: import.meta.env.VITE_SHOPIFY_API_KEY,
+    host: new URLSearchParams(location.search).get("host"),
+  });
+  const redirect = Redirect.create(app);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { mutate: saveProductStory, isPending: isSaveProductStoryPending } =
@@ -436,7 +444,12 @@ const ContentBuilder = ({
           removeFromLocalStorage(`urlMap`);
           removeFromLocalStorage(`storyName`);
 
-          window.location.href = `/stories?templateId=${data?.id}`;
+          // window.location.href = `/stories?templateId=${data?.id}`;
+
+          redirect.dispatch(
+            Redirect.Action.APP,
+            `/stories?templateId=${data?.id}`
+          );
         },
         onError: (error) => {
           toast({
@@ -469,7 +482,12 @@ const ContentBuilder = ({
             removeFromLocalStorage(`urlMap`);
             removeFromLocalStorage(`storyName`);
 
-            window.location.href = `/stories?templateId=${data?.id}`;
+            // window.location.href = `/stories?templateId=${data?.id}`;
+
+            redirect.dispatch(
+              Redirect.Action.APP,
+              `/stories?templateId=${data?.id}`
+            );
           },
           onError: (error) => {
             toast({
@@ -708,7 +726,9 @@ const ContentBuilder = ({
             setTimeout(() => {
               //TODO: must be attached to save onSuccess callback
               driverObj?.moveNext();
-              window.location.href = "/stories";
+              // window.location.href = "/stories";
+
+              redirect.dispatch(Redirect.Action.APP, `/stories`);
             }, 500);
           },
         },
@@ -975,7 +995,10 @@ const ContentBuilder = ({
                       onConfirm={() => {
                         handleSaveAndEditProductStory();
                         if (driverObj?.hasNextStep()) {
-                          window.location.href = "/stories";
+                          // window.location.href = "/stories";
+
+                          redirect.dispatch(Redirect.Action.APP, `/stories`);
+
                           driverObj?.moveNext();
                         }
                       }}
