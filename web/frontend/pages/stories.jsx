@@ -18,7 +18,10 @@ import { Redirect } from "@shopify/app-bridge/actions";
 import { createApp } from "@shopify/app-bridge";
 // Main Stories component
 const Stories = () => {
-  const app = createApp({apiKey: import.meta.env.VITE_SHOPIFY_API_KEY, host: new URLSearchParams(location.search).get("host"),});
+  const app = createApp({
+    apiKey: import.meta.env.VITE_SHOPIFY_API_KEY,
+    host: new URLSearchParams(location.search).get("host"),
+  });
   const redirect = Redirect.create(app);
   const {
     data: storyTemplates,
@@ -233,7 +236,7 @@ const Stories = () => {
   useEffect(() => {
     const hasRunBefore = localStorage.getItem("driverHasRun-storyPage");
 
-    if (products?.length === 1 && !hasRunBefore) {
+    if (!hasRunBefore) {
       localStorage.setItem("driverHasRun-storyPage", "true");
 
       setTimeout(() => {
@@ -336,7 +339,10 @@ const Stories = () => {
 
   const handleEdit = (template) => {
     const url = `/storyBuilder?edit=published&templateId=${template?.id}`;
-    redirect.dispatch(Redirect.Action.APP, `/storyBuilder?edit=published&templateId=${template?.id}`);
+    redirect.dispatch(
+      Redirect.Action.APP,
+      `/storyBuilder?edit=published&templateId=${template?.id}`
+    );
   };
 
   return (

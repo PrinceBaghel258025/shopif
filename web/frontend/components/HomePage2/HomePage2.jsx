@@ -139,7 +139,7 @@ const HomePage2 = () => {
   useEffect(() => {
     const hasRunBefore = localStorage.getItem("driverHasRun-homePage");
 
-    if (products?.length === 0 && !hasRunBefore) {
+    if (!hasRunBefore) {
       localStorage.setItem("driverHasRun-homePage", "true");
 
       setTimeout(() => {
