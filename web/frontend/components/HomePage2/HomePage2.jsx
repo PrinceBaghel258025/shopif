@@ -70,33 +70,8 @@ const HomePage2 = () => {
     qrStats?.qrstats?.locations?.pincodes || {}
   )?.length;
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const driverObj = driver({
     steps: [
-      {
-        element: ".preview-experience-btn",
-        popover: {
-          title: "Preview Experience",
-          description: "Click to preview the experience",
-          onNextClick: () => {
-            const button = document.querySelector(".preview-experience-btn");
-            button?.click();
-            return false;
-          },
-        },
-      },
-      {
-        element: ".preview-qr-code",
-        popover: {
-          title: "Preview QR Code",
-          description: "scan this QR code to see the experience",
-          onNextClick: () => {
-            onClose();
-            driverObj?.moveNext();
-            return false;
-          },
-        },
-      },
       storyTemplates?.length <= 1 && {
         element: ".create-first-story-btn",
         popover: {
@@ -167,58 +142,6 @@ const HomePage2 = () => {
             );
           })}
         </Grid>
-
-        <Button
-          className="preview-experience-btn"
-          px={10}
-          py={6}
-          bg={"green.300"}
-          boxShadow={"md"}
-          w={"fit-content"}
-          alignSelf={"center"}
-          color={"white"}
-          borderRadius={100}
-          onClick={() => {
-            onOpen();
-            setTimeout(() => {
-              driverObj?.moveNext();
-            }, 500);
-          }}
-        >
-          Preview
-        </Button>
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Preview Experience</ModalHeader>
-            <ModalBody>
-              <Stack
-                className="preview-qr-code"
-                bg={"blackAlpha.900"}
-                borderRadius={8}
-                color={"white"}
-                w={"85%"}
-                textAlign={"center"}
-                p={3}
-              >
-                <Text>Sample QR Code</Text>
-
-                <Stack bg={"white"} p={2} borderRadius={5}>
-                  <Image src={QRCode} alt="QR-code" />
-                </Stack>
-
-                <Text>
-                  Scan using your phone camera to get experience in your phone
-                </Text>
-              </Stack>
-            </ModalBody>
-            <ModalFooter>
-              <Button colorScheme="blue" onClick={onClose}>
-                Close
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
 
         {storyTemplates?.length <= 1 && (
           <Button
