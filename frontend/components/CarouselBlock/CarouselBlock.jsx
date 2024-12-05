@@ -1,12 +1,22 @@
 import React from "react";
 import { Scene } from "../ProductStoryVisualizer/Scene";
 import SliderComponent from "./SliderComponent";
+import { useGetStory } from "../apiHooks/useStory";
 
 const CarouselBlock = ({ message }) => {
+  const shopifyProductData = window.product;
+  const productMetafields = window.productMetafields;
+
+  const { data: storyData, isError: isStoryDataError, isLoading: isStoryDataLoading } = useGetStory({
+    productId: shopifyProductData?.id,
+  });
+  const slides = storyData?.story_data?.data
+  console.log("Slides", slides);
+
   return (
     <div className="tw-w-full tw-h-full ">
-      <SliderComponent
-        productData={[
+      {isStoryDataLoading ? <div>Loading...</div> : <SliderComponent
+        productData={slides || [
           {
             id: "egs3ylR9PwX5U_qBVHXPV",
             data: [
@@ -84,7 +94,7 @@ const CarouselBlock = ({ message }) => {
           }
         ]}
         defaultSheetdata={[]}
-      />
+      />}
     </div>
   );
 };
