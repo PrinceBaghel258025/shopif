@@ -1,11 +1,41 @@
 import React from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Spinner } from '@chakra-ui/react';
 
 const CircularLoader = ({ progress, color }) => {
   const size = 80;
   const strokeWidth = 5;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
+
+  if (progress === 100) {
+    return (
+      <Box
+        position="absolute"
+        top="50%"
+        left="50%"
+        transform="translate(-50%, -50%)"
+      >
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+        <Text
+          position="absolute" 
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          fontWeight="semibold"
+          fontSize="sm"
+          color={color ? color : 'white'}
+        >
+          Processing
+        </Text>
+      </Box>
+    );
+  }
 
   return (
     <Box
