@@ -203,7 +203,10 @@ const HomePage2 = () => {
             borderRadius={100}
             onClick={() => {
               driverObj?.moveNext();
-              window.location.href = "/storyBuilder";
+              redirect.dispatch(
+                Redirect.Action.APP,
+                `/storyBuilder?edit=published&templateId=1`
+              );
             }} // Redirect to story builder
           >
             Create your first experience

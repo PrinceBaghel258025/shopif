@@ -541,7 +541,7 @@ const Card = ({
                   : "Live Stories"}
               </Text>
             }
-            rightSide={<IconButton icon={<IoFunnelOutline />} size={"sm"} />}
+            // rightSide={<IconButton icon={<IoFunnelOutline />} size={"sm"} />}
             body={
               <>
                 {selectedTags?.map((product) => {
