@@ -550,6 +550,7 @@ const Card = ({
 
         {selectedTags?.length !== 0 && (
           <CardAccordion
+            openAccordion={hasChanges && filterNewAddedProducts?.length !== 0}
             label={
               <Text fontSize={"sm"} color={"#757575"}>
                 {hasChanges && filterNewAddedProducts?.length !== 0

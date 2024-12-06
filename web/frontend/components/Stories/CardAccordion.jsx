@@ -7,14 +7,24 @@ import {
   HStack,
   Stack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const CardAccordion = ({ label, body, headerStyles, rightSide }) => {
+const CardAccordion = ({
+  label,
+  body,
+  headerStyles,
+  rightSide,
+  openAccordion = false,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    setIsOpen(true);
+  }, [openAccordion]);
 
   return (
     <Accordion allowToggle index={isOpen ? 0 : -1}>
