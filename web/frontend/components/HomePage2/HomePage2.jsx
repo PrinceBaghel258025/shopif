@@ -303,22 +303,24 @@ const HomePage2 = () => {
             </Stack>
           ) : (
             <Stack spacing={1}>
-              <Link
-                display={"flex"}
-                gap={3}
-                alignItems={"center"}
-                alignSelf={"flex-end"}
-                onClick={() => driverObj.drive()}
-              >
-                <Text
-                  textTransform={"uppercase"}
-                  fontWeight={"bold"}
-                  fontSize={16}
+              {storyTemplate?.length <= 1 && (
+                <Link
+                  display={"flex"}
+                  gap={3}
+                  alignItems={"center"}
+                  alignSelf={"flex-end"}
+                  onClick={() => driverObj.drive()}
                 >
-                  Guide Tour
-                </Text>
-                <CgArrowRight fontSize={20} />
-              </Link>
+                  <Text
+                    textTransform={"uppercase"}
+                    fontWeight={"bold"}
+                    fontSize={16}
+                  >
+                    Guide Tour
+                  </Text>
+                  <CgArrowRight fontSize={20} />
+                </Link>
+              )}
 
               <Stack
                 w="277.4px"
