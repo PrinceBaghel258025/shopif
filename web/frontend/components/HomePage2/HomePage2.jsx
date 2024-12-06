@@ -49,7 +49,7 @@ const HomePage2 = () => {
   const [qrStats, setQrStats] = useState({ qrstats: {}, heatMapData: [] });
 
   const { data: products } = useProducts();
-  const { data: storyTemplates } = useStoryTemplate();
+
   const {
     data: productHomeStats,
     isLoading: isProductHomeStatsLoading,
@@ -65,11 +65,11 @@ const HomePage2 = () => {
   useEffect(() => {
     if (isStoryTemplateError && storyTemplate?.length === 0) return;
 
-    const findStoryTemp = storyTemplate?.find((temp) => temp?.id === 1);
+    const firstStoryTemp = storyTemplate?.[0];
 
-    const data = findStoryTemp?.description?.data;
-    const general_sheet = findStoryTemp?.description?.general_sheet;
-    const is_general_sheet = findStoryTemp?.description?.is_general_sheet;
+    const data = firstStoryTemp?.description?.data;
+    const general_sheet = firstStoryTemp?.description?.general_sheet;
+    const is_general_sheet = firstStoryTemp?.description?.is_general_sheet;
 
     if (is_general_sheet) {
       setContents(data || []);
@@ -115,7 +115,7 @@ const HomePage2 = () => {
 
   const driverObj = driver({
     steps: [
-      storyTemplates?.length <= 1 && {
+      storyTemplate?.length <= 1 && {
         element: ".create-first-story-btn",
         popover: {
           title: "Add Story",
@@ -190,7 +190,7 @@ const HomePage2 = () => {
           })}
         </Grid>
 
-        {storyTemplates?.length <= 1 && (
+        {storyTemplate?.length <= 1 && (
           <Button
             className="create-first-story-btn"
             px={10}
@@ -203,11 +203,8 @@ const HomePage2 = () => {
             borderRadius={100}
             onClick={() => {
               driverObj?.moveNext();
-              redirect.dispatch(
-                Redirect.Action.APP,
-                `/storyBuilder?edit=published&templateId=1`
-              );
-            }} // Redirect to story builder
+              redirect.dispatch(Redirect.Action.APP, `/storyBuilder`);
+            }}
           >
             Create your first experience
           </Button>
@@ -371,7 +368,7 @@ const HomePage2 = () => {
                   onClick={() => {
                     redirect.dispatch(
                       Redirect.Action.APP,
-                      `/storyBuilder?edit=published&templateId=1`
+                      `/storyBuilder?edit=published&templateId=${storyTemplate?.[0]?.id}`
                     );
                   }}
                 >
