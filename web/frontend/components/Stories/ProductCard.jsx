@@ -5,12 +5,19 @@ import {
 } from "../../apiHooks/useShopifyProduct";
 import { useProductMetafields } from "../../apiHooks/useThemes";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
   HStack,
-  IconButton,
   Stack,
   Switch,
   Text,
   Tooltip,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import QRModal from "./QRModal";
@@ -187,12 +194,9 @@ const ProductCard = ({
         </InfoTooltip>
 
         <InfoTooltip text={"Remove"}>
-          <RiDeleteBin6Line
-            className="remove-product"
-            fontSize={22}
-            color="red"
-            cursor={"pointer"}
-            onClick={() => onRemove(product?.id)}
+          <DeleteAlertDialog
+            onConfirm={() => onRemove(product?.id)}
+            productName={product?.name}
           />
         </InfoTooltip>
       </HStack>
@@ -201,3 +205,49 @@ const ProductCard = ({
 };
 
 export default ProductCard;
+
+const DeleteAlertDialog = ({ onConfirm, productName }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <>
+      <RiDeleteBin6Line
+        className="remove-product"
+        fontSize={22}
+        color="red"
+        cursor={"pointer"}
+        onClick={() => {
+          onOpen();
+        }}
+      />
+
+      <AlertDialog isOpen={isOpen} onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete {productName}?
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={onClose}>Cancel</Button>
+              <Button
+                colorScheme="red"
+                onClick={async () => {
+                  await onConfirm();
+                  onClose();
+                }}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
+  );
+};
