@@ -161,15 +161,15 @@ const ProductCard = ({
           </InfoTooltip>
         )}
 
-        {isActive && (
+        {/* {isActive && (
           <>
-            {!isNewProduct && productStory && (
-              <InfoTooltip text={"QR Code"}>
-                <QRModal storyUrl={productStory?.story_url} />
-              </InfoTooltip>
-            )}
+            {!isNewProduct && productStory && ( */}
+        <InfoTooltip text={"QR Code"}>
+          <QRModal storyUrl={productStory?.story_url} />
+        </InfoTooltip>
+        {/* )}
           </>
-        )}
+        )} */}
 
         <InfoTooltip text={"Preview"}>
           <a href={previewStoreUrl} target="_blank" className="preview-story">

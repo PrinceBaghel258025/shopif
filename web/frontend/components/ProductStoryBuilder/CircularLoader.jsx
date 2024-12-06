@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Text, Spinner } from '@chakra-ui/react';
+import React from "react";
+import { Box, Text, Spinner } from "@chakra-ui/react";
 
 const CircularLoader = ({ progress, color }) => {
   const size = 80;
@@ -23,13 +23,13 @@ const CircularLoader = ({ progress, color }) => {
           size="xl"
         />
         <Text
-          position="absolute" 
-          top="50%"
+          position="absolute"
+          bottom="-50%"
           left="50%"
           transform="translate(-50%, -50%)"
           fontWeight="semibold"
           fontSize="sm"
-          color={color ? color : 'white'}
+          color={color ? color : "white"}
         >
           Processing
         </Text>
@@ -75,7 +75,7 @@ const CircularLoader = ({ progress, color }) => {
         transform="translate(-50%, -50%)"
         fontWeight="semibold"
         fontSize="lg"
-        color={color ? color : 'white'}
+        color={color ? color : "white"}
         mb={0}
       >
         {Math.round(progress)}%

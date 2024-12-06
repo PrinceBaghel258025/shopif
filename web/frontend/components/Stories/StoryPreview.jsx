@@ -38,10 +38,10 @@ const StoryPreview = ({ templateData, contents, sheetData, driverObj }) => {
         {!templateData ? (
           <Stack alignSelf={"center"} mt={250} textAlign={"center"} spacing={0}>
             <Text fontWeight={"semibold"} fontSize={"lg"}>
-              Select Story Template
+              Select one of the stories 
             </Text>
             <Text fontWeight={"semibold"} fontSize={"lg"}>
-              for Preview
+              for a preview
             </Text>
           </Stack>
         ) : (

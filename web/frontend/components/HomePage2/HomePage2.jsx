@@ -254,12 +254,12 @@ const HomePage2 = () => {
                 messageTitle={"Referral Conversions"}
                 messageBody={"N/A"}
               />
-              <AnalyticsCard
+              {/* <AnalyticsCard
                 isOSBrowserStats
                 qrStatsData={qrStats?.qrstats}
                 messageTitle={"QR Scans on devices"}
                 messageBody={"N/A"}
-              />
+              /> */}
             </Grid>
           </Stack>
 

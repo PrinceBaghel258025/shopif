@@ -815,14 +815,14 @@ const ContentBuilder = ({
                   <HStack>
                     <GlobalStyleEditor />
 
+                    <SeoEditor />
+
                     <AddContentButton
                       onAdd={addContent}
                       sheetData={sheetData}
                       isDisabled={isDisabled}
                     />
                   </HStack>
-
-                  <SeoEditor />
                 </Stack>
               )}
             </HStack>

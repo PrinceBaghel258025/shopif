@@ -4,7 +4,7 @@ import {
   useStoryTemplate,
   useUpdateStoryTemplate,
 } from "../../apiHooks/useStoryTemplate";
-import {Link} from '@shopify/polaris';
+import { Link } from "@shopify/polaris";
 import { useProductMetafields } from "../../apiHooks/useThemes";
 import {
   Box,
@@ -165,14 +165,14 @@ const Card = ({
               selectedTags.length === 0
                 ? "Products Removed"
                 : isRepublish
-                  ? "Story Republished"
-                  : "Story Published",
+                ? "Story Republished"
+                : "Story Published",
             description:
               selectedTags.length === 0
                 ? "All products have been successfully removed from the story."
                 : isRepublish
-                  ? "Your story has been successfully republished with the updated products."
-                  : "Your story has been successfully published.",
+                ? "Your story has been successfully republished with the updated products."
+                : "Your story has been successfully published.",
             status: "success",
             duration: 5000,
             isClosable: true,
@@ -395,9 +395,16 @@ const Card = ({
           !isButtonDisabled
             ? "orange"
             : templateId === template?.id
-              ? "green"
-              : "white"
+            ? "green"
+            : "white"
         }
+        _hover={{
+          borderLeftColor: !isButtonDisabled
+            ? "orange"
+            : templateId === template?.id
+            ? "green"
+            : "gray",
+        }}
         className={className}
         onClick={() => {
           searchParams.set("templateId", template?.id);
@@ -413,22 +420,29 @@ const Card = ({
                 {template?.name}
               </Text>
 
-              {template?.products?.length !== 0 && <Tooltip label={template?.products[0]?.story_url}>
-                <Text
-                  size="sm"
-                  textColor={"#757575"}
-                  bg={"rgb(228,204,255,0.3)"}
-                  px={2}
-                  py={1}
-                  borderRadius={100}
-                  display={"flex"}
-                  gap={3}
-                  alignItems={"center"}
-                >
-                  {template?.products[0]?.story_url?.substring(0, 10)}...
-                  <FaRegCopy cursor={"pointer"} onClick={() => handleCopy({ url: template?.products[0]?.story_url })} />
-                </Text>
-              </Tooltip>}
+              {template?.products?.length !== 0 && (
+                <Tooltip label={template?.products[0]?.story_url}>
+                  <Text
+                    size="sm"
+                    textColor={"#757575"}
+                    bg={"rgb(228,204,255,0.3)"}
+                    px={2}
+                    py={1}
+                    borderRadius={100}
+                    display={"flex"}
+                    gap={3}
+                    alignItems={"center"}
+                  >
+                    {template?.products[0]?.story_url?.substring(0, 10)}...
+                    <FaRegCopy
+                      cursor={"pointer"}
+                      onClick={() =>
+                        handleCopy({ url: template?.products[0]?.story_url })
+                      }
+                    />
+                  </Text>
+                </Tooltip>
+              )}
             </HStack>
 
             {/* <HStack
@@ -476,20 +490,22 @@ const Card = ({
                 Preview Story
               </Button>
 
-              <Button
-                className="publish-story-btn"
-                fontSize="xs"
-                p={2}
-                px={4}
-                isLoading={isUpdatingStoryTemplate}
-                onClick={handleUpdateStoryTemplate}
-                isDisabled={isButtonDisabled}
-                size={"sm"}
-                bg={"#00B894"}
-                color={"white"}
-              >
-                {buttonText}
-              </Button>
+              <Tooltip label={isButtonDisabled && "No changes to publish"}>
+                <Button
+                  className="publish-story-btn"
+                  fontSize="xs"
+                  p={2}
+                  px={4}
+                  isLoading={isUpdatingStoryTemplate}
+                  onClick={handleUpdateStoryTemplate}
+                  isDisabled={isButtonDisabled}
+                  size={"sm"}
+                  bg={"#00B894"}
+                  color={"white"}
+                >
+                  {buttonText}
+                </Button>
+              </Tooltip>
 
               {/* <Button
                 className="remove-all-btn"
