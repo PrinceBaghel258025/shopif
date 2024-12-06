@@ -169,7 +169,8 @@ const ContentBuilder = ({
         setContents,
         setSheetData,
         filterCarouselTypes,
-        templateStory?.name
+        templateStory?.name,
+        isStoryBuilderPage
       );
 
       localStorage.setItem("storyName", templateStory?.name);
@@ -848,7 +849,8 @@ const ContentBuilder = ({
                         setContents,
                         setSheetData,
                         filterCarouselTypes,
-                        productId
+                        productId,
+                        isStoryBuilderPage
                       );
                   }}
                   onImportSaveClick={() =>
@@ -857,7 +859,8 @@ const ContentBuilder = ({
                       setContents,
                       setSheetData,
                       filterCarouselTypes,
-                      productId
+                      productId,
+                      isStoryBuilderPage
                     )
                   }
                   onImportPublishClick={() =>
@@ -866,7 +869,8 @@ const ContentBuilder = ({
                       setContents,
                       setSheetData,
                       filterCarouselTypes,
-                      productId
+                      productId,
+                      isStoryBuilderPage
                     )
                   }
                 />

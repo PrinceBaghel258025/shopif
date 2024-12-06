@@ -239,7 +239,8 @@ export const handleSavedOrPublishData = (
   setContents,
   setSheetData,
   filterCarouselTypes,
-  productId
+  productId,
+  isStoryBuilderPage = false
 ) => {
   if (!storyData) return;
 
@@ -249,8 +250,10 @@ export const handleSavedOrPublishData = (
     setContents(data || []);
     setSheetData(general_sheet || []);
 
-    storeInLocalStorage(`content`, data);
-    storeInLocalStorage(`sheet`, general_sheet);
+    if (isStoryBuilderPage) {
+      storeInLocalStorage(`content`, data);
+      storeInLocalStorage(`sheet`, general_sheet);
+    }
   } else {
     const filterCarouselData = data.filter((c) =>
       filterCarouselTypes.includes(c?.type)
@@ -267,7 +270,9 @@ export const handleSavedOrPublishData = (
     setContents(filterCarouselData || []);
     setSheetData(filterSheetData || []);
 
-    storeInLocalStorage(`content`, filterCarouselData);
-    storeInLocalStorage(`sheet`, filterSheetData);
+    if (isStoryBuilderPage) {
+      storeInLocalStorage(`content`, filterCarouselData);
+      storeInLocalStorage(`sheet`, filterSheetData);
+    }
   }
 };
