@@ -94,6 +94,7 @@ import "driver.js/dist/driver.css";
 import { MdOutlineTour } from "react-icons/md";
 import { createApp } from "@shopify/app-bridge";
 import { Redirect } from "@shopify/app-bridge/actions";
+import _ from "lodash";
 
 const ContentBuilder = ({
   productId,
@@ -157,6 +158,8 @@ const ContentBuilder = ({
   const [contents, setContents] = useState([]);
 
   const [sheetData, setSheetData] = useState([]);
+
+  const [isDataEdited, setIsDataEdited] = useState(false);
 
   const { control, watch, setValue, getValues, setError } = formMethods;
 
@@ -378,6 +381,32 @@ const ContentBuilder = ({
       return newSheetData;
     });
   };
+
+  const deepCompare = (oldData, currentData) => {
+    // Using Lodash's isEqual for comprehensive for deep comparison
+    return _.isEqual(oldData, currentData);
+  };
+
+  useEffect(() => {
+    if (!templateId) return;
+
+    const defaultData = {
+      name: templateStory?.name,
+      contents: templateStory?.description?.data,
+      sheetData: templateStory?.description?.general_sheet,
+      is_general_sheet: true,
+    };
+
+    const currentData = {
+      name: watch("storyName"),
+      contents: contents,
+      sheetData: sheetData,
+      is_general_sheet: true,
+    };
+    const dataEdited = deepCompare(defaultData, currentData);
+
+    return setIsDataEdited(dataEdited);
+  }, [contents, sheetData, templateStory, watch("storyName")]);
 
   const handleSaveAndEditProductStory = async (action = "save") => {
     const storyName = getValues("storyName");
@@ -994,7 +1023,9 @@ const ContentBuilder = ({
                         flex: 1,
                         label: "Save",
                         isDisabled:
-                          (contents || sheetData).length === 0 || isDisabled,
+                          (contents || sheetData).length === 0 ||
+                          isDisabled ||
+                          isDataEdited,
                       }}
                       onConfirm={() => {
                         handleSaveAndEditProductStory();
@@ -1019,16 +1050,16 @@ const ContentBuilder = ({
                   </Box>
                 </PopoverTrigger>
 
-                {((contents || sheetData).length === 0 || isDisabled) && (
+                {((contents || sheetData).length === 0 ||
+                  isDisabled ||
+                  isDataEdited) && (
                   <PopoverContent>
                     <PopoverBody>
                       <Stack>
-                        {currentStory === "draft" ? (
-                          <Text mb={0}>
-                            Save is disabled. Ensure you have added atleast one
-                            slide.
-                          </Text>
-                        ) : null}
+                        <Text mb={0}>
+                          Save is disabled. Ensure you have added atleast one
+                          slide or edit existing data
+                        </Text>
                       </Stack>
                     </PopoverBody>
                   </PopoverContent>
