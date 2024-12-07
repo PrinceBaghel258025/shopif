@@ -33,7 +33,6 @@ export const HeroSection = ({
   data,
   isImage = false,
   isVideo = false,
-  is360Slide = false,
   setIsBottomSheetOpen,
   header,
 }) => {
@@ -84,30 +83,6 @@ export const HeroSection = ({
           />
         </a>
       </VStack>
-
-      {is360Slide && (
-        <Fade
-          in={show360Gif}
-          transition={{ enter: { duration: 0.5 }, exit: { duration: 0.5 } }}
-        >
-          <Stack
-            position={"absolute"}
-            top={"200px"}
-            left={"85px"}
-            translateX={"-50%"}
-            translateY={"-50%"}
-            w={100}
-            h={100}
-            borderRadius={100}
-          >
-            <Image
-              src="https://360-images-v1.s3.ap-south-1.amazonaws.com/360-gif.gif"
-              alt="360 gif"
-              borderRadius={100}
-            />
-          </Stack>
-        </Fade>
-      )}
 
       {/* {showIcon && (
         <IconWithAnimation

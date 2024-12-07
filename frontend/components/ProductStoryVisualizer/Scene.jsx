@@ -15,6 +15,7 @@ import {
   PopoverHeader,
   Textarea,
   Button,
+  Image,
 } from "@chakra-ui/react";
 import { Html, OrbitControls, useVideoTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
@@ -352,14 +353,23 @@ const ImageSphere = ({
       );
     }
     return (
-      <Html>
-        <Stack w={"100dvw"} position={"relative"}>
-          <Stack position={"absolute"}>
-            <CircularLoader
-              progress={Math.round(loadingPercentage)}
-              color={"black"}
-            />
-          </Stack>
+      <Html
+        center
+        style={{ width: "227.4px", height: "572.85px", position: "relative" }}
+      >
+        <Stack
+          position={"absolute"}
+          top={"40%"}
+          left={"28%"}
+          w={100}
+          h={100}
+          borderRadius={100}
+        >
+          <Image
+            src="https://360-images-v1.s3.ap-south-1.amazonaws.com/360-gif.gif"
+            alt="360 gif"
+            borderRadius={100}
+          />
         </Stack>
       </Html>
     );
@@ -423,11 +433,23 @@ const ImageSphere = ({
           )}
         </>
       ) : (
-        <Html>
-          <Stack w={"50vw"} left={50} position={"relative"}>
-            <Text position={"absolute"} left={-120}>
-              Texture is Loading...
-            </Text>
+        <Html
+          center
+          style={{ width: "227.4px", height: "572.85px", position: "relative" }}
+        >
+          <Stack
+            position={"absolute"}
+            top={"40%"}
+            left={"28%"}
+            w={100}
+            h={100}
+            borderRadius={100}
+          >
+            <Image
+              src="https://360-images-v1.s3.ap-south-1.amazonaws.com/360-gif.gif"
+              alt="360 gif"
+              borderRadius={100}
+            />
           </Stack>
         </Html>
       )}
@@ -577,11 +599,23 @@ const VideoSphere = ({
           )}
         </>
       ) : (
-        <Html>
-          <Stack w={"50vw"} left={50} position={"relative"}>
-            <Text position={"absolute"} left={-120}>
-              Texture is Loading...
-            </Text>
+        <Html
+          center
+          style={{ width: "227.4px", height: "572.85px", position: "relative" }}
+        >
+          <Stack
+            position={"absolute"}
+            top={"40%"}
+            left={"28%"}
+            w={100}
+            h={100}
+            borderRadius={100}
+          >
+            <Image
+              src="https://360-images-v1.s3.ap-south-1.amazonaws.com/360-gif.gif"
+              alt="360 gif"
+              borderRadius={100}
+            />
           </Stack>
         </Html>
       )}
@@ -663,7 +697,7 @@ export const Scene = ({
     <Box
       className="scene-container"
       w={"268px"}
-      h={"100dvh"}
+      h={"572.85px"}
       position={"relative"}
     >
       {/* {inView ? */}
@@ -671,7 +705,33 @@ export const Scene = ({
         <Canvas camera={{ position: [0, 0, 0.001], fov: 70, zoom: [zoom] }}>
           <ambientLight intensity={1} />
           <axesHelper args={[5]} />
-          <Suspense fallback={Loading}>
+          <Suspense
+            fallback={
+              <Html
+                center
+                style={{
+                  width: "227.4px",
+                  height: "572.85px",
+                  position: "relative",
+                }}
+              >
+                <Stack
+                  position={"absolute"}
+                  top={"40%"}
+                  left={"28%"}
+                  w={100}
+                  h={100}
+                  borderRadius={100}
+                >
+                  <Image
+                    src="https://360-images-v1.s3.ap-south-1.amazonaws.com/360-gif.gif"
+                    alt="360 gif"
+                    borderRadius={100}
+                  />
+                </Stack>
+              </Html>
+            }
+          >
             {data && (
               <Sphere
                 autoRotate={autoRotate}
@@ -689,7 +749,6 @@ export const Scene = ({
         {isInsideSphere && (
           <>
             <HeroSection
-              is360Slide
               header={header}
               data={data}
               setIsBottomSheetOpen={(val) => {
