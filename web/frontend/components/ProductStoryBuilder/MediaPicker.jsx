@@ -120,15 +120,15 @@ const MediaPicker = ({
     onDrop,
     accept: image_types?.some((t) => t === type)
       ? {
-          "image/jpeg": [],
-          "image/png": [],
-          "image/jpg": [],
-          "image/webp": [],
-        }
+        "image/jpeg": [],
+        "image/png": [],
+        "image/jpg": [],
+        "image/webp": [],
+      }
       : {
-          "video/mp4": [],
-          "video/mov": [],
-        },
+        "video/mp4": [],
+        "video/mov": [],
+      },
     noClick: true,
     noKeyboard: true,
     maxFiles: 1,
@@ -144,7 +144,11 @@ const MediaPicker = ({
       {selectedImages.length > 0 ? (
         <SimpleGrid columns={[1, 2, 3]} spacing={4}>
           {selectedImages.map((image, index) => (
-            <Box key={index} position="relative">
+            <Box
+              minHeight="5rem"
+              key={index}
+              position="relative"
+            >
               {image_types?.some((t) => t === type) ? (
                 <Image
                   src={image}

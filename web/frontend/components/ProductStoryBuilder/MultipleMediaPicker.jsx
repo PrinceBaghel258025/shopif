@@ -255,6 +255,7 @@ const MediaCard = ({ item, removeImage, type, uploadProgress, isDisabled }) => {
         justifyContent={"center"}
         alignItems={"center"}
         bg={"transparent"}
+        minHeight="5rem"
       >
         {uploadProgress !== undefined && (
           <CircularLoader progress={uploadProgress} />
