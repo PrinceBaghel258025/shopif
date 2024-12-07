@@ -77,7 +77,10 @@ const ProductSelector = ({
               <MenuItem
                 className="first-product-selector"
                 key={product.id}
-                onClick={() => onSelect(product)}
+                onClick={() => {
+                  onSelect(product);
+                  setIsMenuOpen(false);
+                }}
                 _hover={{ bg: "gray.100" }}
                 gap={2}
               >

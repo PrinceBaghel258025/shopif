@@ -105,7 +105,7 @@ const Stories = () => {
             // Redirect to story builder
             const button = document.querySelector(".products-selector");
             button?.click();
-            driverObj?.moveNext();
+            // driverObj?.moveNext();
             // window.location.href = '/story-builder'; // Change this to the actual path of your story builder
             return false;
           },
@@ -120,7 +120,7 @@ const Stories = () => {
             // Redirect to story builder
             const button = document.querySelector(".first-product-selector");
             button?.click();
-            driverObj?.moveNext();
+            // driverObj?.moveNext();
             // window.location.href = '/story-builder'; // Change this to the actual path of your story builder
             return false;
           },
