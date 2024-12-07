@@ -152,17 +152,17 @@ const HomePage2 = () => {
     {
       label: "Unique experiences",
       value: `${productHomeStats?.total_products || 0} Experiences`,
-      messageBody: "N/A",
+      messageBody: "Number of unique products that have been linked.",
     },
     {
       label: "Unique links",
       value: `${productHomeStats?.total_stories || 0} Links`,
-      messageBody: "N/A",
+      messageBody: "Number of unique story links that have been saved.",
     },
     {
       label: "Live on",
       value: `${productHomeStats?.live_products || 0} Products`,
-      messageBody: "N/A",
+      messageBody: "Number of products that are currently live with attached story.",
     },
   ];
 
@@ -219,37 +219,39 @@ const HomePage2 = () => {
                 label={"All Scans"}
                 value={totalScans || 0}
                 messageTitle={"All Scans"}
-                messageBody={"N/A"}
+                messageBody={"Number of scans from all products."}
               />
               <AnalyticsCard
                 label={"Unique Scans"}
                 value={uniqueScans || 0}
                 messageTitle={"Unique Scans"}
-                messageBody={"N/A"}
+                messageBody={"Number of unique scans from all products."}
               />
               <AnalyticsCard
                 label={"All Locations"}
                 value={allLocations || 0}
                 messageTitle={"All Locations"}
-                messageBody={"N/A"}
+                messageBody={"Number of unique locations from where product have been scanned."}
               />
               <AnalyticsCard
                 label={"All Pins/Zips"}
                 value={allPins || 0}
                 messageTitle={"All Pins/Zips"}
-                messageBody={"N/A"}
+                messageBody={"Number of uniques pincode where product qr have been scanned."}
               />
               <AnalyticsCard
                 label={"Unique IPs"}
                 value={"N/A"}
                 messageTitle={"Unique IPs"}
-                messageBody={"N/A"}
+                messageBody={"Number of unique consumers who scanned product qr."}
               />
               <AnalyticsCard
                 label={"Referral Conversions"}
                 value={"N/A"}
                 messageTitle={"Referral Conversions"}
-                messageBody={"N/A"}
+                messageBody={
+                  "Number of unique consumers who were referred to the product."
+                }
               />
               {/* <AnalyticsCard
                 isOSBrowserStats
