@@ -171,7 +171,13 @@ const ProductCard = ({
         {/* {isActive && (
           <>
             {!isNewProduct && productStory && ( */}
-        <InfoTooltip text={"QR Code"}>
+        <InfoTooltip
+          text={
+            productData?.story_url
+              ? "QR Code"
+              : "Publish or Republish to get QR code"
+          }
+        >
           <QRModal storyUrl={productData?.story_url} />
         </InfoTooltip>
         {/* )}
@@ -184,12 +190,19 @@ const ProductCard = ({
           </a>
         </InfoTooltip>
 
-        <InfoTooltip text={"ON/OFF Story"}>
+        <InfoTooltip
+          text={
+            productData?.story_url
+              ? "ON/OFF Story"
+              : "Publish or Republish to Activate Switch"
+          }
+        >
           <Switch
             className="on-off-story-switch"
             isChecked={isPublished}
             onChange={handleSwitchChange}
             colorScheme="green"
+            isDisabled={!productData?.story_url}
           />
         </InfoTooltip>
 
