@@ -21,7 +21,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import ProductSelector from "./ProductSelector";
 import ProductTag from "./ProductTag";
 import CardAccordion from "./CardAccordion";
@@ -377,6 +377,11 @@ const Card = ({
     });
   };
 
+  // const productStoryUrl = useMemo(
+  //   () => products?.find((pro) => pro?.id === template?.products?.[0]?.id),
+  //   [products, template?.products?.[0]?.id]
+  // );
+
   return (
     <>
       <Stack
@@ -412,8 +417,8 @@ const Card = ({
                 {template?.name}
               </Text>
 
-              {template?.products?.length !== 0 && (
-                <Tooltip label={template?.products[0]?.story_url}>
+              {/* {productStoryUrl && (
+                <Tooltip label={productStoryUrl?.story_url}>
                   <Text
                     size="sm"
                     textColor={"#757575"}
@@ -425,16 +430,16 @@ const Card = ({
                     gap={3}
                     alignItems={"center"}
                   >
-                    {template?.products[0]?.story_url?.substring(0, 10)}...
+                    {productStoryUrl?.story_url?.substring(0, 10)}...
                     <FaRegCopy
                       cursor={"pointer"}
                       onClick={() =>
-                        handleCopy({ url: template?.products[0]?.story_url })
+                        handleCopy({ url: productStoryUrl?.story_url })
                       }
                     />
                   </Text>
                 </Tooltip>
-              )}
+              )} */}
             </HStack>
 
             {/* <HStack
