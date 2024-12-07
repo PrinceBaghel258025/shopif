@@ -172,7 +172,7 @@ const ProductCard = ({
           <>
             {!isNewProduct && productStory && ( */}
         <InfoTooltip text={"QR Code"}>
-          <QRModal storyUrl={productStory?.story_url} />
+          <QRModal storyUrl={productData?.story_url} />
         </InfoTooltip>
         {/* )}
           </>

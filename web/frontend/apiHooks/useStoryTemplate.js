@@ -38,11 +38,6 @@ export const useUpdateStoryTemplate = () => {
 
   const mutation = useMutation({
     mutationFn: updateStoryTemplate,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [STORY_TEMPLATE_QUERY_KEY],
-      });
-    },
   });
 
   return mutation;

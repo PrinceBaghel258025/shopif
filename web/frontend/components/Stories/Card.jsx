@@ -152,10 +152,6 @@ const Card = ({
           setPublishedIds(selectedTags?.map((pro) => pro?.id));
 
           queryClient.invalidateQueries({
-            queryKey: [STORY_TEMPLATE_QUERY_KEY],
-          });
-
-          queryClient.invalidateQueries({
             queryKey: [PRODUCT_LIST_QUERY_KEY],
           });
 
@@ -256,10 +252,6 @@ const Card = ({
           // Clear selected tags by calling onRemoveProduct for each tag
           selectedTags.forEach((product) => {
             onRemoveProduct(template?.id, product);
-          });
-
-          queryClient.invalidateQueries({
-            queryKey: [STORY_TEMPLATE_QUERY_KEY],
           });
 
           queryClient.invalidateQueries({
