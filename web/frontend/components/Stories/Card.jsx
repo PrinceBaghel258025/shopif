@@ -487,7 +487,13 @@ const Card = ({
                 Preview Story
               </Button>
 
-              <Tooltip label={isButtonDisabled && "No changes to publish"}>
+              <Tooltip
+                label={
+                  isButtonDisabled
+                    ? "No changes to publish"
+                    : `${buttonText} to add product story to theme & get QR code`
+                }
+              >
                 <Button
                   className="publish-story-btn"
                   fontSize="xs"
@@ -568,6 +574,7 @@ const Card = ({
                       products={products}
                       shopifyProductList={shopifyProductList}
                       template={template}
+                      publishBtnText={buttonText}
                     />
                   );
                 })}

@@ -34,6 +34,7 @@ const ProductCard = ({
   products,
   shopifyProductList,
   template,
+  publishBtnText,
 }) => {
   const { mutate: productMetafileds } = useProductMetafields();
   const { mutate: updateProductMetaData } = useUpdatePublishProductMetaData();
@@ -174,8 +175,8 @@ const ProductCard = ({
         <InfoTooltip
           text={
             productData?.story_url
-              ? "QR Code"
-              : "Publish or Republish to get QR code"
+              ? "Published Product QR Code"
+              : `${publishBtnText} to get QR code`
           }
         >
           <QRModal storyUrl={productData?.story_url} />
@@ -193,8 +194,10 @@ const ProductCard = ({
         <InfoTooltip
           text={
             productData?.story_url
-              ? "ON/OFF Story"
-              : "Publish or Republish to Activate Switch"
+              ? isPublished
+                ? "OFF to remove story from product theme"
+                : "ON to add story to product theme"
+              : `${publishBtnText} to Activate Switch`
           }
         >
           <Switch
