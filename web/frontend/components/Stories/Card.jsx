@@ -377,6 +377,24 @@ const Card = ({
     });
   };
 
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+
+  useEffect(() => {
+    let timeoutId;
+
+    if (!isButtonDisabled) {
+      setIsTooltipOpen(true);
+
+      timeoutId = setTimeout(() => {
+        setIsTooltipOpen(false);
+      }, 3000);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isButtonDisabled]);
+
   // const productStoryUrl = useMemo(
   //   () => products?.find((pro) => pro?.id === template?.products?.[0]?.id),
   //   [products, template?.products?.[0]?.id]
@@ -488,10 +506,13 @@ const Card = ({
               </Button>
 
               <Tooltip
+                isOpen={isTooltipOpen}
                 label={
                   isButtonDisabled
                     ? "No changes to publish"
-                    : `${buttonText} to add product story to theme & get QR code`
+                    : buttonText === "Publish Story"
+                    ? `${buttonText} to add product story to theme & get QR code`
+                    : `${buttonText} to add or remove product story from theme & get or remove published QR code`
                 }
               >
                 <Button
