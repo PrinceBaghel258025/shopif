@@ -46,6 +46,7 @@ const StoryPreview = ({ templateData, contents, sheetData, driverObj }) => {
           </Stack>
         ) : (
           <CarouselComponent
+            key={templateData?.id}
             productData={contents || []}
             defaultSheetData={sheetData || []}
           />
